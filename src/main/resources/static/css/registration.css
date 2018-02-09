@@ -1,4 +1,4 @@
-.control-label:after {
+.required .control-label:after {
   content:" *";color:red;
 }
 
