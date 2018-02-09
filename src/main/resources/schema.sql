@@ -38,17 +38,19 @@ WITH (OIDS=FALSE);
 CREATE TABLE "logistic_company"."role"(
 "role_id" int4 DEFAULT nextval('main_seq_id'::regclass) NOT NULL,
 "role_name" varchar(45) COLLATE "default" NOT NULL
-);
+)
+WITH (OIDS=FALSE);
 
 CREATE  TABLE  "logistic_company"."employee_role"
 (
  "employee_id" int4,
  "role_id" int4
-);
+)
+WITH (OIDS=FALSE);
 
 
 ALTER  TABLE  "logistic_company"."person" ADD  PRIMARY KEY ("person_id");
-ALTER  TABLE  "logistic_company"."employee" ADD PRIMARY KEY ("employee_id");
+ALTER  TABLE  "logistic_comp any"."employee" ADD PRIMARY KEY ("employee_id");
 ALTER  TABLE "logistic_company"."user" ADD PRIMARY KEY ("user_id");
 ALTER TABLE "logistic_company"."role" ADD PRIMARY KEY ("role_id");
 
