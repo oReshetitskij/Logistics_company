@@ -58,8 +58,9 @@ ALTER TABLE "logistic_company"."user" ADD  FOREIGN KEY ("role_id ") REFERENCES "
 ALTER  TABLE  "logistic_company"."employee_role" ADD  FOREIGN KEY  ("role_id") REFERENCES "logistic_company"."role"("role_id");
 ALTER  TABLE  "logistic_company"."employee_role" ADD  FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."employee"("employee_id");
 
+DROP TABLE IF EXISTS "logistic_company"."employee_role";
+DROP TABLE if EXISTS "logistic_company"."user";
+DROP TABLE if EXISTS "logistic_company"."employee";
+DROP  TABLE IF EXISTS "logistic_company"."person";
+DROP TABLE IF EXISTS "logistic_company"."role";
 
---
--- INSERT INTO "logistic_company"."person"(first_name, last_name, nick_name, password, registration_date, email, phone_number) VALUES ('Bogdan', 'Zinkevich', 'Zibo',121212,'1997-10-11','bogdan@gamil.com','+380687072934');
--- INSERT INTO  "logistic_company"."role"(role_name) VALUES ('ADMIN');
--- INSERT INTO  "logistic_company"."user"(user_id, "role_id ", permission_id) VALUES ('3','4','1');
