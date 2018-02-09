@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public String registration(){
+    public String login(){
         return "login";
+    }
+
+    @RequestMapping(value = "/forgot/password", method = RequestMethod.GET)
+    public String forgot(){
+        return "forgot_password";
     }
 
 }
