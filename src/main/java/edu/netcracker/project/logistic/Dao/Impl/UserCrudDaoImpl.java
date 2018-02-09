@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
 
 @Repository
 public class UserCrudDaoImpl implements UserCrudDao {
@@ -22,8 +20,6 @@ public class UserCrudDaoImpl implements UserCrudDao {
         this.jdbcTemplate=jdbcTemplate;
         this.queryService = queryService;
     }
-
-
 
     @Override
     public User save(User object) {
@@ -47,7 +43,7 @@ public class UserCrudDaoImpl implements UserCrudDao {
         String sql;
 
         try {
-            sql = "SELECT * FROM logistic_company.person WHERE person_id = ?";
+            sql = queryService.getQuery("select.user");
 
             user = jdbcTemplate.queryForObject(
                     sql,
@@ -58,7 +54,10 @@ public class UserCrudDaoImpl implements UserCrudDao {
                         userTemp.setFirstName(resultSet.getString(2));
                         userTemp.setLastName(resultSet.getString(3));
                         userTemp.setNickName(resultSet.getString(4));
+                        userTemp.setPassword(resultSet.getString(5));
+                        userTemp.setRegistrationDate(resultSet.getDate(6).toLocalDate());
                         userTemp.setEmail(resultSet.getString(7));
+                        userTemp.setPhoneNumber(resultSet.getString(8));
                         return userTemp;
                     }
 
