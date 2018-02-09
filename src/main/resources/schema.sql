@@ -74,6 +74,17 @@ CREATE TABLE "logistic_company"."registration_data"
 );
 
 
+ALTER  TABLE  "logistic_company"."person" ADD  PRIMARY KEY ("person_id");
+ALTER  TABLE  "logistic_comp any"."employee" ADD PRIMARY KEY ("employee_id");
+ALTER  TABLE "logistic_company"."user" ADD PRIMARY KEY ("user_id");
+ALTER TABLE "logistic_company"."role" ADD PRIMARY KEY ("role_id");
+
+ALTER TABLE "logistic_company"."user" ADD FOREIGN KEY("user_id") REFERENCES  "logistic_company"."person"("person_id");
+ALTER  TABLE "logistic_company"."employee" ADD  FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."person"("person_id");
+ALTER TABLE "logistic_company"."user" ADD  FOREIGN KEY ("role_id ") REFERENCES "logistic_company"."role"("role_id");
+ALTER  TABLE  "logistic_company"."employee_role" ADD  FOREIGN KEY  ("role_id") REFERENCES "logistic_company"."role"("role_id");
+ALTER  TABLE  "logistic_company"."employee_role" ADD  FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."employee"("employee_id");
+
 ALTER TABLE "logistic_company"."person"
   ADD PRIMARY KEY ("person_id");
 ALTER TABLE "logistic_company"."employee"
