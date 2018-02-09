@@ -11,13 +11,11 @@ import java.io.Serializable;
 
 public class CrudDaoImpl implements CrudDao {
 
-
     private JdbcTemplate jdbc;
 
     @Autowired
     CrudDaoImpl(JdbcTemplate jdbcTemplate)
     {
-
         this.jdbc=jdbcTemplate;
     }
 
