@@ -4,8 +4,10 @@ DROP TABLE IF EXISTS "logistic_company"."employee";
 DROP TABLE IF EXISTS "logistic_company"."person";
 DROP TABLE IF EXISTS "logistic_company"."role";
 DROP TABLE IF EXISTS "logistic_company"."registration_data";
+
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
 DROP SCHEMA IF EXISTS "logistic_company";
+
 
 CREATE SCHEMA "logistic_company";
 
@@ -48,8 +50,7 @@ CREATE TABLE "logistic_company"."employee" (
   "manager_id"   INT4,
   "work_days_id" INT4
 )
-WITH (OIDS = FALSE
-);
+WITH (OIDS = FALSE);
 
 CREATE TABLE "logistic_company"."role" (
   "role_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
