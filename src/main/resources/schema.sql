@@ -4,8 +4,12 @@ DROP TABLE IF EXISTS "logistic_company"."employee";
 DROP TABLE IF EXISTS "logistic_company"."person";
 DROP TABLE IF EXISTS "logistic_company"."role";
 DROP TABLE IF EXISTS "logistic_company"."registration_data";
+DROP TABLE IF EXISTS "logistic_company"."permission";
+DROP TABLE IF EXISTS "logistic_company"."advertisement";
+DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
 
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
+
 DROP SCHEMA IF EXISTS "logistic_company";
 
 
@@ -74,6 +78,34 @@ CREATE TABLE "logistic_company"."registration_data"
   "phone_number"         VARCHAR(45)
 );
 
+
+CREATE TABLE "logistic_company"."permission"
+(
+  "permission_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)     NOT NULL,
+  "discount"      NUMERIC,
+  "priority"      VARCHAR(45) COLLATE "default"                       NOT NULL
+)
+WITH (OIDS = FALSE
+);
+
+CREATE TABLE "logistic_company"."advertisement"
+(
+  "advertisement_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)     NOT NULL,
+  "description"           VARCHAR(1000) COLLATE "default"                     NOT NULL,
+  "type_advertisement_id" INT4                                                NOT NULL
+)
+WITH (OIDS = FALSE
+);
+
+CREATE TABLE "logistic_company"."advertisement_type"
+(
+  "type_advertisement_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
+  "advertisement_name"    VARCHAR(60) COLLATE "default"                      NOT NULL
+)
+WITH (OIDS = FALSE
+);
+
+
 ALTER TABLE "logistic_company"."person"
   ADD PRIMARY KEY ("person_id");
 ALTER TABLE "logistic_company"."employee"
@@ -84,6 +116,13 @@ ALTER TABLE "logistic_company"."role"
   ADD PRIMARY KEY ("role_id");
 ALTER TABLE "logistic_company"."registration_data"
   ADD PRIMARY KEY ("registration_data_id");
+ALTER TABLE "logistic_company"."permission"
+  ADD PRIMARY KEY ("permission_id");
+ALTER TABLE "logistic_company"."advertisement"
+  ADD PRIMARY KEY ("advertisement_id");
+ALTER TABLE "logistic_company"."advertisement_type"
+  ADD PRIMARY KEY ("type_advertisement_id");
+
 
 ALTER TABLE "logistic_company"."user"
   ADD FOREIGN KEY ("user_id") REFERENCES "logistic_company"."person" ("person_id");
@@ -95,3 +134,7 @@ ALTER TABLE "logistic_company"."employee_role"
   ADD FOREIGN KEY ("role_id") REFERENCES "logistic_company"."role" ("role_id");
 ALTER TABLE "logistic_company"."employee_role"
   ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."employee" ("employee_id");
+ALTER TABLE "logistic_company"."user"
+  ADD FOREIGN KEY ("permission_id") REFERENCES "logistic_company"."permission" ("permission_id");
+ALTER TABLE "logistic_company"."advertisement"
+  ADD FOREIGN KEY ("type_advertisement_id") REFERENCES "logistic_company".advertisement_type ("type_advertisement_id")

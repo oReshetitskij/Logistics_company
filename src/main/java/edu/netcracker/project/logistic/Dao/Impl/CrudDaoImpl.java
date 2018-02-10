@@ -3,15 +3,23 @@ package edu.netcracker.project.logistic.Dao.Impl;
 import edu.netcracker.project.logistic.Dao.CrudDao;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+
 
 import java.io.Serializable;
 
 public class CrudDaoImpl implements CrudDao {
 
+
+    private JdbcTemplate jdbc;
+
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    CrudDaoImpl(JdbcTemplate jdbcTemplate)
+    {
+
+        this.jdbc=jdbcTemplate;
+    }
 
     @Autowired
    private QueryService queryService;
@@ -19,8 +27,7 @@ public class CrudDaoImpl implements CrudDao {
     @Override
     public Object save(Object object) {
 
-
-        return null;
+        return  null;
     }
 
     @Override
