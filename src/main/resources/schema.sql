@@ -1,12 +1,14 @@
 DROP TABLE IF EXISTS "logistic_company"."employee_role";
 DROP TABLE IF EXISTS "logistic_company"."user";
-DROP TABLE IF EXISTS "logistic_company"."employee";
-DROP TABLE IF EXISTS "logistic_company"."person";
 DROP TABLE IF EXISTS "logistic_company"."role";
 DROP TABLE IF EXISTS "logistic_company"."registration_data";
 DROP TABLE IF EXISTS "logistic_company"."permission";
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
 DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
+DROP TABLE IF EXISTS "logistic_company"."work_days";
+DROP TABLE IF EXISTS "logistic_company"."week_days";
+DROP TABLE IF EXISTS "logistic_company"."employee";
+DROP TABLE IF EXISTS "logistic_company"."person";
 
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
 
@@ -105,6 +107,24 @@ CREATE TABLE "logistic_company"."advertisement_type"
 WITH (OIDS = FALSE
 );
 
+CREATE TABLE "logistic_company"."week_days"
+(
+  "day_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
+  "day_name"    VARCHAR(60) COLLATE "default"                      NOT NULL
+)
+WITH (OIDS = FALSE
+);
+
+
+CREATE TABLE "logistic_company"."work_days"
+(
+  "employee_id"      INT4        NOT NULL,
+  "day_id"           INT4        NOT NULL,
+  "start_work_date"  TIME        NOT NULL,
+  "end_work_date"    TIME        NOT NULL
+)
+WITH (OIDS = FALSE
+);
 
 
 
@@ -129,6 +149,9 @@ ALTER TABLE "logistic_company"."advertisement"
   ADD PRIMARY KEY ("advertisement_id");
 ALTER TABLE "logistic_company"."advertisement_type"
   ADD PRIMARY KEY ("type_advertisement_id");
+ALTER TABLE "logistic_company"."week_days"
+  ADD PRIMARY KEY ("day_id");
+
 
 
 ALTER TABLE "logistic_company"."user"
@@ -144,4 +167,8 @@ ALTER TABLE "logistic_company"."employee_role"
 ALTER TABLE "logistic_company"."user"
   ADD FOREIGN KEY ("permission_id") REFERENCES "logistic_company"."permission" ("permission_id");
 ALTER TABLE "logistic_company"."advertisement"
-  ADD FOREIGN KEY ("type_advertisement_id") REFERENCES "logistic_company".advertisement_type ("type_advertisement_id")
+  ADD FOREIGN KEY ("type_advertisement_id") REFERENCES "logistic_company".advertisement_type ("type_advertisement_id");
+ALTER TABLE  "logistic_company"."work_days"
+  ADD FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."employee"(employee_id);
+ALTER  TABLE  "logistic_company"."work_days"
+  ADD  FOREIGN KEY ("day_id") REFERENCES  "logistic_company"."week_days"(day_id);
