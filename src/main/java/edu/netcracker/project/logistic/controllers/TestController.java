@@ -10,9 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Optional;
 
 
@@ -48,9 +46,9 @@ public class TestController {
         return "user";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/employee")
     public String admin() {
-        return "admin";
+        return "employee";
     }
 
 }

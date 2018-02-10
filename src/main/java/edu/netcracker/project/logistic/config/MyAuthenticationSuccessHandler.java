@@ -40,23 +40,23 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     private String determineTargetUrl(Authentication authentication) {
         boolean isUser = false;
-        boolean isAdmin = false;
+        boolean isEmployee = false;
         Collection<? extends GrantedAuthority> authorities =
                 authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities){
             if (grantedAuthority.getAuthority().equals("ROLE_USER")){
                 isUser = true;
                 break;
-            } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")){
-                isAdmin = true;
+            } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_MANAGER")){
+                isEmployee = true;
                 break;
             }
         }
 
         if (isUser) {
             return "user";
-        } else if (isAdmin) {
-            return "admin";
+        } else if (isEmployee) {
+            return "employee";
         } else
             throw new IllegalStateException();
         }
