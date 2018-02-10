@@ -7,6 +7,8 @@ public interface CrudDao<T, ID extends Serializable> {
 
     T save(T  object);
 
+
+
     void delete(ID id);
 
     void  delete(T object);

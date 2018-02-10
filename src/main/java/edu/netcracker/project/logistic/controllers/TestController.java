@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.Date;
+
 @Controller
 public class TestController {
 
@@ -19,6 +21,7 @@ public class TestController {
     public String test(Model model) {
 
         Person person = personCrudDao.find_one((long) 2);
+        personCrudDao.delete((long) 1);
         System.out.println(person);
 
         return "test";

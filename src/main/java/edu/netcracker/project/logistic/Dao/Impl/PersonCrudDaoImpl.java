@@ -18,7 +18,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
     private QueryService queryService;
 
 
-        public RowMapper<Person> getMapper() {
+        protected RowMapper<Person> getMapper() {
             return (resultSet,i )->
             {
                 Person person = new Person();
@@ -64,6 +64,7 @@ return  null;
     }
 
 
+
     @Override
     public Person save(Person person) {
       return  null;
@@ -71,7 +72,12 @@ return  null;
 
     @Override
     public void delete(Long aLong) {
+        String sql;
 
+            sql = queryService.getQuery("delete.person");
+
+            jdbcTemplate.update(sql, aLong);
+        System.out.println("Person with id: " + aLong + " successfully removed");
     }
 
     @Override
