@@ -106,6 +106,13 @@ WITH (OIDS = FALSE
 );
 
 
+
+
+ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("nick_name");
+ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("email");
+ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("phone_number");
+
+
 ALTER TABLE "logistic_company"."person"
   ADD PRIMARY KEY ("person_id");
 ALTER TABLE "logistic_company"."employee"
@@ -125,7 +132,7 @@ ALTER TABLE "logistic_company"."advertisement_type"
 
 
 ALTER TABLE "logistic_company"."user"
-  ADD FOREIGN KEY ("user_id") REFERENCES "logistic_company"."person" ("person_id");
+  ADD  FOREIGN  KEY ("user_id") REFERENCES "logistic_company"."person" ("person_id");
 ALTER TABLE "logistic_company"."employee"
   ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."person" ("person_id");
 ALTER TABLE "logistic_company"."user"
