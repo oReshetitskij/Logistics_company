@@ -32,11 +32,11 @@ CREATE TABLE "logistic_company"."person" (
   "person_id"         INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "first_name"        VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"         VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "nick_name"         VARCHAR(45) COLLATE "default",
-  "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
+  "nick_name"         VARCHAR(30) COLLATE "default",
+  "password"          VARCHAR(30) COLLATE "default"                   NOT NULL,
   "registration_date" DATE,
-  "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "phone_number"      VARCHAR(45) COLLATE "default"
+  "email"             VARCHAR(254) COLLATE "default"                  NOT NULL,
+  "phone_number"      VARCHAR(15) COLLATE "default"
 )
 WITH (OIDS = FALSE
 );
@@ -56,7 +56,8 @@ CREATE TABLE "logistic_company"."employee" (
   "manager_id"   INT4,
   "work_days_id" INT4
 )
-WITH (OIDS = FALSE);
+WITH (OIDS = FALSE
+);
 
 CREATE TABLE "logistic_company"."role" (
   "role_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
@@ -71,13 +72,13 @@ CREATE TABLE "logistic_company"."employee_role"
 
 CREATE TABLE "logistic_company"."registration_data"
 (
-  "registration_data_id" INT4 DEFAULT nextval('main_seq_id') NOT NULL,
-  "first_name"           VARCHAR(45)                         NOT NULL,
-  "last_name"            VARCHAR(45)                         NOT NULL,
-  "nick_name"            VARCHAR(45),
-  "password"             VARCHAR(200)                        NOT NULL,
-  "email"                VARCHAR(45)                         NOT NULL,
-  "phone_number"         VARCHAR(45)
+  "registration_data_id" UUID         NOT NULL,
+  "first_name"           VARCHAR(45)  NOT NULL,
+  "last_name"            VARCHAR(45)  NOT NULL,
+  "user_name"            VARCHAR(30),
+  "password"             VARCHAR(30)  NOT NULL,
+  "email"                VARCHAR(254) NOT NULL,
+  "phone_number"         VARCHAR(15)
 );
 
 
@@ -109,8 +110,8 @@ WITH (OIDS = FALSE
 
 CREATE TABLE "logistic_company"."week_days"
 (
-  "day_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
-  "day_name"    VARCHAR(60) COLLATE "default"                      NOT NULL
+  "day_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
+  "day_name" VARCHAR(60) COLLATE "default"                      NOT NULL
 )
 WITH (OIDS = FALSE
 );
@@ -118,19 +119,21 @@ WITH (OIDS = FALSE
 
 CREATE TABLE "logistic_company"."work_days"
 (
-  "employee_id"      INT4        NOT NULL,
-  "day_id"           INT4        NOT NULL,
-  "start_work_date"  TIME        NOT NULL,
-  "end_work_date"    TIME        NOT NULL
+  "employee_id"     INT4 NOT NULL,
+  "day_id"          INT4 NOT NULL,
+  "start_work_date" TIME NOT NULL,
+  "end_work_date"   TIME NOT NULL
 )
 WITH (OIDS = FALSE
 );
 
 
-
-ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("nick_name");
-ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("email");
-ALTER TABLE "logistic_company"."registration_data"  ADD UNIQUE("phone_number");
+ALTER TABLE "logistic_company"."registration_data"
+  ADD UNIQUE ("user_name");
+ALTER TABLE "logistic_company"."registration_data"
+  ADD UNIQUE ("email");
+ALTER TABLE "logistic_company"."registration_data"
+  ADD UNIQUE ("phone_number");
 
 
 ALTER TABLE "logistic_company"."person"
@@ -153,9 +156,8 @@ ALTER TABLE "logistic_company"."week_days"
   ADD PRIMARY KEY ("day_id");
 
 
-
 ALTER TABLE "logistic_company"."user"
-  ADD  FOREIGN  KEY ("user_id") REFERENCES "logistic_company"."person" ("person_id");
+  ADD FOREIGN KEY ("user_id") REFERENCES "logistic_company"."person" ("person_id");
 ALTER TABLE "logistic_company"."employee"
   ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."person" ("person_id");
 ALTER TABLE "logistic_company"."user"
@@ -168,7 +170,7 @@ ALTER TABLE "logistic_company"."user"
   ADD FOREIGN KEY ("permission_id") REFERENCES "logistic_company"."permission" ("permission_id");
 ALTER TABLE "logistic_company"."advertisement"
   ADD FOREIGN KEY ("type_advertisement_id") REFERENCES "logistic_company".advertisement_type ("type_advertisement_id");
-ALTER TABLE  "logistic_company"."work_days"
-  ADD FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."employee"(employee_id);
-ALTER  TABLE  "logistic_company"."work_days"
-  ADD  FOREIGN KEY ("day_id") REFERENCES  "logistic_company"."week_days"(day_id);
+ALTER TABLE "logistic_company"."work_days"
+  ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."employee" (employee_id);
+ALTER TABLE "logistic_company"."work_days"
+  ADD FOREIGN KEY ("day_id") REFERENCES "logistic_company"."week_days" (day_id);
