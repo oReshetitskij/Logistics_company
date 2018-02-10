@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.Serializable;
 
-public class CrudDaoImpl implements CrudDao {
+public abstract class CrudDaoImpl implements CrudDao {
 
     private JdbcTemplate jdbc;
 
@@ -24,8 +24,8 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public Object save(Object object) {
+return null;
 
-        return  null;
     }
 
     @Override
@@ -48,4 +48,5 @@ public class CrudDaoImpl implements CrudDao {
     public boolean contains(Serializable serializable) {
         return false;
     }
+    protected abstract String getInsertQuery();
 }

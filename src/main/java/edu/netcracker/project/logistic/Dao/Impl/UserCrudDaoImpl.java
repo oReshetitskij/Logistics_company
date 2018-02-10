@@ -39,37 +39,30 @@ public class UserCrudDaoImpl implements UserCrudDao {
     @Override
     public User find_one(Long id) {
 
+
+
         User user;
         String sql;
-
         try {
-            sql = queryService.getQuery("select.user");
+            sql = queryService.getQuery("select.person");
 
             user = jdbcTemplate.queryForObject(
                     sql,
                     new Object[]{id},
-                    (resultSet, rowNum) -> {
-                        User userTemp = new User();
-                        userTemp.setId(resultSet.getLong(1));
-                        userTemp.setFirstName(resultSet.getString(2));
-                        userTemp.setLastName(resultSet.getString(3));
-                        userTemp.setNickName(resultSet.getString(4));
-                        userTemp.setPassword(resultSet.getString(5));
-                        userTemp.setRegistrationDate(resultSet.getDate(6).toLocalDate());
-                        userTemp.setEmail(resultSet.getString(7));
-                        userTemp.setPhoneNumber(resultSet.getString(8));
-                        return userTemp;
-                    }
-
-            );
-
-            return user;
-
+                    (resultSet, rowNum) ->
+                      new User(resultSet.getLong("person_id"),
+                                resultSet.getString("first_name"),
+                                resultSet.getString("last_name"),
+                                resultSet.getString("nick_name"),
+                                resultSet.getString("password"),
+                                resultSet.getDate("registration_date"),
+                                resultSet.getString("email"),
+                                resultSet.getString("phone_number")));
+      return user;
         }catch (EmptyResultDataAccessException e){
 
         }
-
-        return null;
+return  null;
     }
 
     @Override

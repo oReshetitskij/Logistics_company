@@ -33,7 +33,7 @@ CREATE TABLE "logistic_company"."person" (
   "first_name"        VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"         VARCHAR(45) COLLATE "default"                   NOT NULL,
   "nick_name"         VARCHAR(45) COLLATE "default",
-  "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
+  "password"          VARCHAR(16) COLLATE "default"                  NOT NULL,
   "registration_date" DATE,
   "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
   "phone_number"      VARCHAR(45) COLLATE "default"
@@ -75,7 +75,7 @@ CREATE TABLE "logistic_company"."registration_data"
   "first_name"           VARCHAR(45)                         NOT NULL,
   "last_name"            VARCHAR(45)                         NOT NULL,
   "nick_name"            VARCHAR(45),
-  "password"             VARCHAR(200)                        NOT NULL,
+  "password"             VARCHAR(16)                         NOT NULL,
   "email"                VARCHAR(45)                         NOT NULL,
   "phone_number"         VARCHAR(45)
 );

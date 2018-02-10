@@ -17,6 +17,7 @@ public class TestController {
     public String test(Model model) {
 
         User user = userCrudDao.find_one((long) 2);
+        System.out.println(user);
 
         return "test";
     }
