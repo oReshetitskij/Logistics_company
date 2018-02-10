@@ -2,14 +2,16 @@ package edu.netcracker.project.logistic.model;
 
 import java.util.UUID;
 
+
+
 public class RegistrationData {
-    UUID registrationDataId;
-    String firstName;
-    String lastName;
-    String username;
-    String password;
-    String email;
-    String phoneNumber;
+    private UUID registrationDataId;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
+    private String email;
+    private String phoneNumber;
 
     public UUID getRegistrationDataId() {
         return registrationDataId;
