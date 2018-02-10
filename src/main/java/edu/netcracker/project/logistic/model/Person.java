@@ -1,9 +1,8 @@
 package edu.netcracker.project.logistic.model;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
-public class User {
+public class Person {
 
     private Long id;
     private String firstName;
@@ -15,7 +14,7 @@ public class User {
     private String phoneNumber;
 
 
-    public User(Long id, String firstName, String lastName, String nickName, String password, Date registrationDate, String email, String phoneNumber) {
+    public Person(Long id, String firstName, String lastName, String nickName, String password, Date registrationDate, String email, String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,9 +25,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public User() {
+    public Person() {
 
     }
+
+
 
     public Long getId() {
         return id;
@@ -97,7 +98,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Person{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
