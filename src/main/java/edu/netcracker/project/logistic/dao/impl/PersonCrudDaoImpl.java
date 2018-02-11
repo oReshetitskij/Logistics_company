@@ -22,8 +22,6 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
         protected RowMapper<Person> getMapper() {
             return (resultSet,i )->
@@ -52,6 +50,9 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
 
 
 
+
+
+
     @Override
    public Person save(Person person) {
         jdbcTemplate.update(getInsertQuery(), ps -> {
@@ -59,7 +60,7 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
             ps.setObject(2,   person.getFirstName());
             ps.setObject(3,   person.getLastName());
             ps.setObject(4,   person.getNickName());
-            ps.setObject(5,   bCryptPasswordEncoder.encode(person.getPassword()));
+            ps.setObject(5,   person.getPassword());
             ps.setObject(6,   person.getRegistrationDate());
             ps.setObject(7,   person.getEmail());
             ps.setObject(8,   person.getPhoneNumber());
