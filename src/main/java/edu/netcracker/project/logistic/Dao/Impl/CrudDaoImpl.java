@@ -46,4 +46,11 @@ public abstract class CrudDaoImpl implements CrudDao {
         return false;
     }
     protected abstract String getInsertQuery();
+
+    protected abstract String getFindOneQuery();
+
+    protected abstract String getDeleteQuery();
+
+
+
 }

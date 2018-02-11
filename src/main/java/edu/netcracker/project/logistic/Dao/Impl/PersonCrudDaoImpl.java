@@ -72,17 +72,15 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
     public void save(Person person) {
 
         String sql =queryService.getQuery("insert.person");
-
-       jdbcTemplate.update(sql,
-               new Object[]{person.getId() ,
-               person.getFirstName(),
-               person.getLastName(),
-               person.getNickName(),
-               person.getPassword(),
-               person.getRegistrationDate(),
-               person.getEmail(),
-               person.getPhoneNumber()});
-
+            jdbcTemplate.update(sql,
+                    new Object[]{person.getId(),
+                            person.getFirstName(),
+                            person.getLastName(),
+                            person.getNickName(),
+                            person.getPassword(),
+                            person.getRegistrationDate(),
+                            person.getEmail(),
+                            person.getPhoneNumber()});
 
     }
 

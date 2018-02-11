@@ -3,7 +3,7 @@ package edu.netcracker.project.logistic.Dao;
 import java.io.Serializable;
 import java.util.Optional;
 
-public interface CrudDao<T, ID extends Serializable> {
+public interface CrudDao<T , ID extends Serializable> {
 
 
     void save(T  object);

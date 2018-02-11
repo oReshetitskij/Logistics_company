@@ -3,7 +3,7 @@ package edu.netcracker.project.logistic.model;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Person {
+public class Person   {
 
     private Long id;
     private String firstName;
