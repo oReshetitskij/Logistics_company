@@ -1,12 +1,14 @@
-package edu.netcracker.project.logistic.Dao.Impl;
+package edu.netcracker.project.logistic.dao.impl;
 
-import edu.netcracker.project.logistic.Dao.UserCrudDao;
+import edu.netcracker.project.logistic.dao.UserCrudDao;
 import edu.netcracker.project.logistic.model.User;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UserCrudDaoImpl implements UserCrudDao {
@@ -15,9 +17,8 @@ public class UserCrudDaoImpl implements UserCrudDao {
     private QueryService queryService;
 
     @Autowired
-    UserCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService)
-    {
-        this.jdbcTemplate=jdbcTemplate;
+    UserCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
+        this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
     }
 
@@ -27,17 +28,12 @@ public class UserCrudDaoImpl implements UserCrudDao {
     }
 
     @Override
-    public void delete(Long aLong) {
+    public void delete(Long id) {
 
     }
 
     @Override
-    public void delete(User object) {
-
-    }
-
-    @Override
-    public User find_one(Long id) {
+    public Optional<User> findOne(Long id) {
 
         User user;
         String sql;
@@ -63,13 +59,11 @@ public class UserCrudDaoImpl implements UserCrudDao {
 
             );
 
-            return user;
+            return Optional.of(user);
 
-        }catch (EmptyResultDataAccessException e){
-
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
-
-        return null;
     }
 
     @Override

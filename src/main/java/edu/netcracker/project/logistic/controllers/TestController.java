@@ -1,6 +1,6 @@
 package edu.netcracker.project.logistic.controllers;
 
-import edu.netcracker.project.logistic.Dao.UserCrudDao;
+import edu.netcracker.project.logistic.dao.UserCrudDao;
 import edu.netcracker.project.logistic.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class TestController {
     @RequestMapping(value = "/test")
     public String test(Model model) {
 
-        User user = userCrudDao.find_one((long) 2);
+        User user = userCrudDao.findOne((long) 2).get();
 
         return "test";
     }

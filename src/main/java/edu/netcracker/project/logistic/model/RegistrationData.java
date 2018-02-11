@@ -1,10 +1,9 @@
 package edu.netcracker.project.logistic.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
+import java.util.UUID;
 
-public class RegistrationForm {
+public class RegistrationData {
+    UUID registrationDataId;
     String firstName;
     String lastName;
     String username;
@@ -12,8 +11,14 @@ public class RegistrationForm {
     String email;
     String phoneNumber;
 
-    @NotNull
-    @Size(min = 1, max = 45)
+    public UUID getRegistrationDataId() {
+        return registrationDataId;
+    }
+
+    public void setRegistrationDataId(UUID registrationDataId) {
+        this.registrationDataId = registrationDataId;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -22,8 +27,6 @@ public class RegistrationForm {
         this.firstName = firstName;
     }
 
-    @NotNull
-    @Size(min = 1, max = 45)
     public String getLastName() {
         return lastName;
     }
@@ -32,8 +35,6 @@ public class RegistrationForm {
         this.lastName = lastName;
     }
 
-    @NotNull
-    @Size(min = 6, max = 30)
     public String getUsername() {
         return username;
     }
@@ -42,8 +43,6 @@ public class RegistrationForm {
         this.username = username;
     }
 
-    @NotNull
-    @Size(min = 6, max = 30)
     public String getPassword() {
         return password;
     }
@@ -52,9 +51,6 @@ public class RegistrationForm {
         this.password = password;
     }
 
-    @NotNull
-    @Email
-    @Size(min = 6, max = 254)
     public String getEmail() {
         return email;
     }
