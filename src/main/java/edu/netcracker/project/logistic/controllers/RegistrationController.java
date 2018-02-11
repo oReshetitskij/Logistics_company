@@ -27,8 +27,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String doRegistration(@Valid @ModelAttribute("registrationData") RegistrationForm registrationData,
-                                 BindingResult bindingResult) {
+    public String doRegistration(@Valid @ModelAttribute("registrationData") RegistrationForm registrationData, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
