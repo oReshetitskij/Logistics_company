@@ -1,12 +1,14 @@
-package edu.netcracker.project.logistic.config;
+package edu.netcracker.project.logistic.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
 
 
 @Configuration
@@ -18,11 +20,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     AuthenticationSuccessHandler authenticationSuccessHandler;
 
+    @Autowired
+    AuthenticationProvider authenticationProvider;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/about", "/registration").permitAll()
+                .antMatchers("/", "/index", "/registration", "/test", "/login/forgot/password").permitAll()
                 .antMatchers("/employee").hasAnyRole("ADMIN", "MANAGER")
                 .antMatchers("/user").hasAnyRole("USER")
                 .anyRequest().authenticated()
@@ -38,17 +43,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER")
-                .and()
-                .withUser("admin").password("password").roles("ADMIN")
-                .and()
-                .withUser("manager").password("password").roles("MANAGER")
-                .and()
-                .withUser("adman").password("password").roles("ADMIN", "MANAGER");
+    @Override
+    protected void configure(
+            AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider);
     }
+
+
 
 }

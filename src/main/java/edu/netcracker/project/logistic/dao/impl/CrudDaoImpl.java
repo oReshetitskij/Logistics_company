@@ -33,6 +33,11 @@ public abstract class CrudDaoImpl<T extends Object> implements CrudDao<T, Long> 
     }
 
     @Override
+    public Optional<T> findOne(String username) {
+        return Optional.empty();
+    }
+
+    @Override
     public boolean contains(Long id) {
         return false;
     }
@@ -41,6 +46,8 @@ public abstract class CrudDaoImpl<T extends Object> implements CrudDao<T, Long> 
     protected abstract String getDeleteQuery();
 
     protected   abstract  String getFindOneQuery();
+
+    protected abstract String getFindOneByUsernameQuery();
 
 
 

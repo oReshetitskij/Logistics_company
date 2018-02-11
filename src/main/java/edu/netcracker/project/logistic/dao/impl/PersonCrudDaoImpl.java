@@ -92,6 +92,21 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
         return  Optional.empty();
     }
 
+    @Override
+    public Optional<Person> findOne(String username) {
+        Person person;
+        try {
+            person = jdbcTemplate.queryForObject(
+                    getFindOneByUsernameQuery(),
+                    new Object[]{username},
+                    getMapper());
+            return Optional.ofNullable(person);
+
+        }catch (EmptyResultDataAccessException e){
+            System.err.println("Empty data");
+        }
+        return  Optional.empty();
+    }
 
     @Override
     public boolean contains(Long aLong) {
@@ -112,6 +127,11 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     @Override
     protected String getFindOneQuery() {
         return  queryService.getQuery("select.person");
+    }
+
+    @Override
+    protected String getFindOneByUsernameQuery() {
+        return queryService.getQuery("select.person.by.username");
     }
 
 
