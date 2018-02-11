@@ -78,6 +78,12 @@ public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
         return Optional.of(data);
     }
 
+    // take a look
+    @Override
+    public Optional<RegistrationData> findOne(String username) {
+        return Optional.empty();
+    }
+
     @Override
     public boolean contains(UUID uuid) {
         Optional<RegistrationData> record = findOne(uuid);

@@ -1,4 +1,4 @@
-package edu.netcracker.project.logistic.config;
+package edu.netcracker.project.logistic.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Configuration
-public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 

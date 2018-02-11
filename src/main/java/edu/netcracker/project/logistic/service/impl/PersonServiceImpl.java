@@ -35,6 +35,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Optional<Person> findOne(String username) {
+        return personCrudDao.findOne(username);
+    }
+
+    @Override
     public boolean exists(Long aLong) {
         return personCrudDao.contains(aLong);
     }

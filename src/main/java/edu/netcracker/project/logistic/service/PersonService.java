@@ -16,6 +16,8 @@ public interface PersonService {
 
     Optional<Person> findOne(Long aLong);
 
+    Optional<Person> findOne(String username);
+
     boolean exists(Long aLong);
 
 
