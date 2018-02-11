@@ -7,39 +7,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 
-import java.io.Serializable;
 import java.util.Optional;
 
-public abstract class CrudDaoImpl implements CrudDao {
-
+public abstract class CrudDaoImpl<T extends Object> implements CrudDao<T, Long> {
+    @Autowired
     private JdbcTemplate jdbc;
 
-    @Autowired
-    CrudDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbc = jdbcTemplate;
-    }
 
     @Autowired
     private QueryService queryService;
 
     @Override
-    public Object save(Object object) {
+    public T save(T object) {
         return null;
     }
 
     @Override
-    public void delete(Serializable serializable) {
+    public void delete(Long id) {
 
     }
 
     @Override
-    public Optional<Object> findOne(Serializable serializable) {
+    public Optional<T> findOne(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public boolean contains(Serializable serializable) {
+    public boolean contains(Long id) {
         return false;
     }
     protected abstract String getInsertQuery();
+
+    protected abstract String getDeleteQuery();
+
+    protected   abstract  String getFindOneQuery();
+
+
+
 }

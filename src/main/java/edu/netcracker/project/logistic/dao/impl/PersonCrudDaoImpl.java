@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @Repository
-public class PersonCrudDaoImpl implements PersonCrudDao {
+public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrudDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -40,7 +40,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
 
 
         @Autowired
-                PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService)
+        PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService)
         {
             this.jdbcTemplate = jdbcTemplate;
             this.queryService = queryService;
@@ -52,39 +52,32 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
     @Override
     public Person save(Person person) {
 
-        String sql =queryService.getQuery("insert.person");
-            jdbcTemplate.update(sql,
-                    new Object[]{person.getId(),
-                            person.getFirstName(),
-                            person.getLastName(),
-                            person.getNickName(),
-                            person.getPassword(),
-                            person.getRegistrationDate(),
-                            person.getEmail(),
-                            person.getPhoneNumber()});
-return person;
-    }
+            jdbcTemplate.update(getInsertQuery(),
+                    person.getId(),
+                    person.getFirstName(),
+                    person.getLastName(),
+                    person.getNickName(),
+                    person.getPassword(),
+                    person.getRegistrationDate(),
+                    person.getEmail(),
+                    person.getPhoneNumber());
+            return person;
+        }
+
 
     @Override
     public void delete(Long aLong) {
-        String sql;
 
-            sql = queryService.getQuery("delete.person");
-
-            jdbcTemplate.update(sql, aLong);
+            jdbcTemplate.update(getDeleteQuery(), aLong);
 
     }
 
     @Override
     public Optional<Person> findOne(Long aLong) {
         Person person;
-        String sql;
-
         try {
-            sql = queryService.getQuery("select.person");
-
             person = jdbcTemplate.queryForObject(
-                    sql,
+                    getFindOneQuery(),
                     new Object[]{aLong},
                     getMapper());
             return Optional.ofNullable(person);
@@ -101,4 +94,21 @@ return person;
        Optional<Person> person  =findOne(aLong);
        return person.isPresent();
     }
+
+    @Override
+    protected String getInsertQuery() {
+        return queryService.getQuery("upsert.person");
+    }
+
+    @Override
+    protected String getDeleteQuery() {
+        return  queryService.getQuery("delete.person");
+    }
+
+    @Override
+    protected String getFindOneQuery() {
+        return  queryService.getQuery("select.person");
+    }
+
+
 }

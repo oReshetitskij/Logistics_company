@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class RegistrationDataDao implements CrudDao<RegistrationData, UUID> {
+public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
