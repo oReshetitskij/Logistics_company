@@ -1,4 +1,4 @@
-package edu.netcracker.project.logistic.controllers.loginConfiguration;
+package edu.netcracker.project.logistic.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
