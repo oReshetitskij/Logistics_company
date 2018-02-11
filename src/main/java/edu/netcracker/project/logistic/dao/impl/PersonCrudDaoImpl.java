@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -63,6 +64,8 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
                     person.getPhoneNumber());
             return person;
         }
+
+
 
 
     @Override
