@@ -1,6 +1,7 @@
-package edu.netcracker.project.logistic.Dao.Impl;
+package edu.netcracker.project.logistic.dao.impl;
 
-import edu.netcracker.project.logistic.Dao.PersonCrudDao;
+
+import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.model.Person;
 
 import edu.netcracker.project.logistic.service.QueryService;
@@ -46,30 +47,10 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
         }
 
 
-    @Override
-    public Optional<Person> find_one(Long id) {
-        Person person;
-        String sql;
-
-        try {
-            sql = queryService.getQuery("select.person");
-
-            person = jdbcTemplate.queryForObject(
-                    sql,
-                    new Object[]{id},
-                    getMapper());
-            return Optional.ofNullable(person);
-
-        }catch (EmptyResultDataAccessException e){
-            System.err.println("Empty data");
-        }
-        return  Optional.empty();
-    }
-
 
 
     @Override
-    public void save(Person person) {
+    public Person save(Person person) {
 
         String sql =queryService.getQuery("insert.person");
             jdbcTemplate.update(sql,
@@ -81,7 +62,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
                             person.getRegistrationDate(),
                             person.getEmail(),
                             person.getPhoneNumber()});
-
+return person;
     }
 
     @Override
@@ -94,11 +75,30 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
 
     }
 
+    @Override
+    public Optional<Person> findOne(Long aLong) {
+        Person person;
+        String sql;
+
+        try {
+            sql = queryService.getQuery("select.person");
+
+            person = jdbcTemplate.queryForObject(
+                    sql,
+                    new Object[]{aLong},
+                    getMapper());
+            return Optional.ofNullable(person);
+
+        }catch (EmptyResultDataAccessException e){
+            System.err.println("Empty data");
+        }
+        return  Optional.empty();
+    }
 
 
     @Override
     public boolean contains(Long aLong) {
-       Optional<Person> person  =find_one(aLong);
+       Optional<Person> person  =findOne(aLong);
        return person.isPresent();
     }
 }

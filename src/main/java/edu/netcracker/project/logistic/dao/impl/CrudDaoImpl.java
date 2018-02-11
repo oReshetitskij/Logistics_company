@@ -1,6 +1,6 @@
-package edu.netcracker.project.logistic.Dao.Impl;
+package edu.netcracker.project.logistic.dao.impl;
 
-import edu.netcracker.project.logistic.Dao.CrudDao;
+import edu.netcracker.project.logistic.dao.CrudDao;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,18 +15,16 @@ public abstract class CrudDaoImpl implements CrudDao {
     private JdbcTemplate jdbc;
 
     @Autowired
-    CrudDaoImpl(JdbcTemplate jdbcTemplate)
-    {
-        this.jdbc=jdbcTemplate;
+    CrudDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbc = jdbcTemplate;
     }
 
     @Autowired
-   private QueryService queryService;
+    private QueryService queryService;
 
     @Override
-    public void save(Object object) {
-
-
+    public Object save(Object object) {
+        return null;
     }
 
     @Override
@@ -34,11 +32,9 @@ public abstract class CrudDaoImpl implements CrudDao {
 
     }
 
-
     @Override
-    public Optional<Object> find_one(Serializable serializable) {
-
-        return null;
+    public Optional<Object> findOne(Serializable serializable) {
+        return Optional.empty();
     }
 
     @Override
@@ -46,11 +42,4 @@ public abstract class CrudDaoImpl implements CrudDao {
         return false;
     }
     protected abstract String getInsertQuery();
-
-    protected abstract String getFindOneQuery();
-
-    protected abstract String getDeleteQuery();
-
-
-
 }

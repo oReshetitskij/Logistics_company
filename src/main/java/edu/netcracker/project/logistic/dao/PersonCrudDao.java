@@ -1,5 +1,4 @@
-package edu.netcracker.project.logistic.Dao;
-
+package edu.netcracker.project.logistic.dao;
 
 import edu.netcracker.project.logistic.model.Person;
 
