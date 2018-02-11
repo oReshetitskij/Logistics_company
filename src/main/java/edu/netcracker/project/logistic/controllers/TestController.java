@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
@@ -38,4 +39,22 @@ public class TestController {
         System.out.println(person2);
         return "test";
     }
+
+
+
+    @GetMapping("/error/403")
+    public String error403() {
+        return "/error/403";
+    }
+
+    @GetMapping("/user")
+    public String user() {
+        return "user";
+    }
+
+    @GetMapping("/employee")
+    public String admin() {
+        return "employee";
+    }
+
 }
