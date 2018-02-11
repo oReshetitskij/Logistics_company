@@ -1,4 +1,4 @@
-package edu.netcracker.project.logistic.service.serviceImpl;
+package edu.netcracker.project.logistic.service.impl;
 
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.model.Person;
