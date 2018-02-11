@@ -48,9 +48,10 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
 
     @Override
     public Optional<Person> find_one(Long id) {
-    Person person;
-     String sql;
+        Person person;
+        String sql;
 
+        try {
             sql = queryService.getQuery("select.person");
 
             person = jdbcTemplate.queryForObject(
@@ -58,6 +59,11 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
                     new Object[]{id},
                     getMapper());
             return Optional.ofNullable(person);
+
+        }catch (EmptyResultDataAccessException e){
+            System.err.println("Empty data");
+        }
+        return  Optional.empty();
     }
 
 
@@ -90,15 +96,11 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
 
     }
 
-    @Override
-    public void delete(Person object) {
-
-    }
-
 
 
     @Override
     public boolean contains(Long aLong) {
-        return false;
+       Optional<Person> person  =find_one(aLong);
+       return person.isPresent();
     }
 }

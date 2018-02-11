@@ -34,10 +34,6 @@ public abstract class CrudDaoImpl implements CrudDao {
 
     }
 
-    @Override
-    public void delete(Object object) {
-
-    }
 
     @Override
     public Optional<Object> find_one(Serializable serializable) {

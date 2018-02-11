@@ -28,7 +28,7 @@ public class TestController {
         LocalDate localDate = LocalDate.now();
         personCrudDao.delete((long) 1);
         personCrudDao.save(new Person((long)1,"first_name", "last_name"," nick_name", "1121212", localDate, "sdfffsfsdf","1232123123"));
-
+        System.out.println( personCrudDao.contains((long) 5));
         System.out.println(person);
 
         return "test";
