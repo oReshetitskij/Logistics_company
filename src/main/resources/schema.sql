@@ -32,8 +32,8 @@ CREATE TABLE "logistic_company"."person" (
   "person_id"         INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "first_name"        VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"         VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "nick_name"         VARCHAR(30) COLLATE "default",
-  "password"          VARCHAR(30) COLLATE "default"                   NOT NULL,
+  "nick_name"         VARCHAR(45) COLLATE "default",
+  "password"          VARCHAR(16) COLLATE "default"                  NOT NULL,
   "registration_date" DATE,
   "email"             VARCHAR(254) COLLATE "default"                  NOT NULL,
   "phone_number"      VARCHAR(15) COLLATE "default"
@@ -75,8 +75,8 @@ CREATE TABLE "logistic_company"."registration_data"
   "registration_data_id" UUID         NOT NULL,
   "first_name"           VARCHAR(45)  NOT NULL,
   "last_name"            VARCHAR(45)  NOT NULL,
-  "user_name"            VARCHAR(30),
-  "password"             VARCHAR(30)  NOT NULL,
+  "user_name"            VARCHAR(45),
+  "password"             VARCHAR(16)  NOT NULL,
   "email"                VARCHAR(254) NOT NULL,
   "phone_number"         VARCHAR(15)
 );
