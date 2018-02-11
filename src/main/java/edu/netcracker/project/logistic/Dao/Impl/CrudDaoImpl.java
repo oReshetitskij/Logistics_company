@@ -23,8 +23,8 @@ public abstract class CrudDaoImpl implements CrudDao {
    private QueryService queryService;
 
     @Override
-    public Object save(Object object) {
-return null;
+    public void save(Object object) {
+
 
     }
 

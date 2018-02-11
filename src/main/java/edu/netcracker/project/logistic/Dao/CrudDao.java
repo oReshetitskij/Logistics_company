@@ -5,7 +5,7 @@ import java.io.Serializable;
 public interface CrudDao<T, ID extends Serializable> {
 
 
-    T save(T  object);
+    void save(T  object);
 
 
 
