@@ -1,6 +1,7 @@
 package edu.netcracker.project.logistic.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Person {
 
@@ -9,12 +10,12 @@ public class Person {
     private String lastName;
     private String nickName;
     private String password;
-    private Date registrationDate;
+    private LocalDate registrationDate;
     private String email;
     private String phoneNumber;
 
 
-    public Person(Long id, String firstName, String lastName, String nickName, String password, Date registrationDate, String email, String phoneNumber) {
+    public Person(Long id, String firstName, String lastName, String nickName, String password, LocalDate registrationDate, String email, String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -71,11 +72,11 @@ public class Person {
         this.password = password;
     }
 
-    public Date getRegistrationDate() {
+    public LocalDate getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
     }
 

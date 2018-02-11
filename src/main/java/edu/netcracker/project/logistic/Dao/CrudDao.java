@@ -1,6 +1,7 @@
 package edu.netcracker.project.logistic.Dao;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public interface CrudDao<T, ID extends Serializable> {
 
@@ -13,7 +14,7 @@ public interface CrudDao<T, ID extends Serializable> {
 
     void  delete(T object);
 
-    T find_one(ID id);
+    Optional<T> find_one(ID id);
 
     boolean contains(ID id);
 }

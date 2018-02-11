@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public abstract class CrudDaoImpl implements CrudDao {
 
@@ -39,7 +40,7 @@ public abstract class CrudDaoImpl implements CrudDao {
     }
 
     @Override
-    public Object find_one(Serializable serializable) {
+    public Optional<Object> find_one(Serializable serializable) {
 
         return null;
     }

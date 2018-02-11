@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public class PersonCrudDaoImpl implements PersonCrudDao {
@@ -27,7 +29,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
                 person.setLastName(resultSet.getString("last_name"));
                 person.setNickName(resultSet.getString("nick_name"));
                 person.setPassword(resultSet.getString("password"));
-                person.setRegistrationDate(resultSet.getDate("registration_date"));
+                person.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
                 person.setEmail(resultSet.getString("email"));
                 person.setPhoneNumber(resultSet.getString("phone_number"));
                 return person;
@@ -45,22 +47,17 @@ public class PersonCrudDaoImpl implements PersonCrudDao {
 
 
     @Override
-    public Person find_one(Long id) {
+    public Optional<Person> find_one(Long id) {
     Person person;
      String sql;
-        try {
+
             sql = queryService.getQuery("select.person");
 
             person = jdbcTemplate.queryForObject(
                     sql,
                     new Object[]{id},
                     getMapper());
-            return person;
-
-        }catch (EmptyResultDataAccessException e){
-
-        }
-return  null;
+            return Optional.ofNullable(person);
     }
 
 
@@ -90,7 +87,7 @@ return  null;
             sql = queryService.getQuery("delete.person");
 
             jdbcTemplate.update(sql, aLong);
-        System.out.println("Person with id: " + aLong + " successfully removed");
+
     }
 
     @Override
