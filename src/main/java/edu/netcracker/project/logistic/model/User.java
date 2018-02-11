@@ -5,33 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User extends Person {
-    private List<Role> roles = new ArrayList<>();
-    private List<Permission> permissions = new ArrayList<>();
 
-    public User(Long id, String firstName, String lastName, String nickName, String password, LocalDate registrationDate, String email, String phoneNumber, List<Role> roles, List<Permission> permissions) {
+    private Role role;
+    private Permission permission;
+
+    public User(Long id, String firstName, String lastName, String nickName, String password, LocalDate registrationDate, String email, String phoneNumber, Role role, Permission permission) {
         super(id, firstName, lastName, nickName, password, registrationDate, email, phoneNumber);
-        this.roles = roles;
-        this.permissions = permissions;
-    }
-    public User()
-    {
-
-
+        this.role = role;
+        this.permission = permission;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public List<Permission> getPermissions() {
-        return permissions;
+    public Permission getPermission() {
+        return permission;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setPermission(Permission permission) {
+        this.permission = permission;
     }
 }
