@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,8 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
         protected RowMapper<Person> getMapper() {
             return (resultSet,i )->
@@ -49,23 +52,20 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
 
 
 
-
     @Override
-    public Person save(Person person) {
-
-            jdbcTemplate.update(getInsertQuery(),
-                    person.getId(),
-                    person.getFirstName(),
-                    person.getLastName(),
-                    person.getNickName(),
-                    person.getPassword(),
-                    person.getRegistrationDate(),
-                    person.getEmail(),
-                    person.getPhoneNumber());
-            return person;
-        }
-
-
+   public Person save(Person person) {
+        jdbcTemplate.update(getInsertQuery(), ps -> {
+            ps.setObject(1,   person.getId());
+            ps.setObject(2,   person.getFirstName());
+            ps.setObject(3,   person.getLastName());
+            ps.setObject(4,   person.getNickName());
+            ps.setObject(5,   bCryptPasswordEncoder.encode(person.getPassword()));
+            ps.setObject(6,   person.getRegistrationDate());
+            ps.setObject(7,   person.getEmail());
+            ps.setObject(8,   person.getPhoneNumber());
+        });
+        return person;
+            }
 
 
     @Override
