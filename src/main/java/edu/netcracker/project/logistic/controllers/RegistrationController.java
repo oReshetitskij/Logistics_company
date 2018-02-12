@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @Controller
-@RequestMapping(value = "/registration")
 public class RegistrationController {
     private final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -25,13 +25,13 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    @GetMapping
+    @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("registrationForm", new RegistrationForm());
         return "registration";
     }
 
-    @PostMapping
+    @PostMapping("/registration")
     public String doRegistration(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -41,9 +41,25 @@ public class RegistrationController {
         try {
             registrationService.register(registrationForm);
         } catch (MessagingException ex) {
-            logger.error("Exception caugth when sending confirmation mail", ex);
+            logger.error("Exception caught when sending confirmation mail", ex);
         }
 
-        return "redirect:/index";
+        return "redirect:/registration/complete";
+    }
+
+    @GetMapping("/registration/complete")
+    public String completeRegistration() {
+        return "complete_registration";
+    }
+
+    @GetMapping("/registration/confirm")
+    public String confirmEmail(@RequestParam("id") String idParam) {
+        try {
+            UUID id = UUID.fromString(idParam);
+            registrationService.confirmAccount(id);
+        } catch (IllegalArgumentException ex) {
+            return "redirect:/error/404";
+        }
+        return "confirm_email";
     }
 }

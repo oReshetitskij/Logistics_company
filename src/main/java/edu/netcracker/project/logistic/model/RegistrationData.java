@@ -1,5 +1,6 @@
 package edu.netcracker.project.logistic.model;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 
@@ -12,6 +13,7 @@ public class RegistrationData {
     private String password;
     private String email;
     private String phoneNumber;
+    private OffsetDateTime registrationDate;
 
     public UUID getRegistrationDataId() {
         return registrationDataId;
@@ -67,5 +69,13 @@ public class RegistrationData {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public OffsetDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(OffsetDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }

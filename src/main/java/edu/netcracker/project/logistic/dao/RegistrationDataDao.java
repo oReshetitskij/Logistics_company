@@ -5,10 +5,12 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,9 +18,6 @@ import java.util.UUID;
 public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
-
-
-
 
     @Autowired
     public RegistrationDataDao(JdbcTemplate jdbcTemplate, QueryService queryService) {
@@ -37,6 +36,7 @@ public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
             ps.setObject(5, registrationData.getPassword());
             ps.setObject(6, registrationData.getEmail());
             ps.setObject(7, registrationData.getPhoneNumber());
+            ps.setObject(8, registrationData.getRegistrationDate());
         });
         return registrationData;
     }
@@ -68,7 +68,13 @@ public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
                         regData.setPassword(resultSet.getString(5));
                         regData.setEmail(resultSet.getString(6));
                         regData.setPhoneNumber(resultSet.getString(7));
-
+                        regData.setRegistrationDate(
+                                OffsetDateTime.ofInstant(
+                                        Instant.ofEpochMilli(
+                                                resultSet.getTimestamp(8).getTime()),
+                                        ZoneOffset.UTC.normalized()
+                                )
+                        );
                         return regData;
                     }
             );
@@ -77,9 +83,6 @@ public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
         }
         return Optional.of(data);
     }
-
-
-
 
     @Override
     public boolean contains(UUID uuid) {

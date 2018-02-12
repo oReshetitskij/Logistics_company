@@ -78,7 +78,8 @@ CREATE TABLE "logistic_company"."registration_data"
   "user_name"            VARCHAR(45),
   "password"             VARCHAR(16)  NOT NULL,
   "email"                VARCHAR(254) NOT NULL,
-  "phone_number"         VARCHAR(15)
+  "phone_number"         VARCHAR(15),
+  "registration_date"    TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 
