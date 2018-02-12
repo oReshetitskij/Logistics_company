@@ -72,7 +72,10 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     @Override
     public void delete(Long aLong) {
 
-            jdbcTemplate.update(getDeleteQuery(), aLong);
+            jdbcTemplate.update(getDeleteQuery(), ps ->
+            {
+                ps.setObject(1, aLong);
+            });
 
     }
 
@@ -129,8 +132,8 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
         return  queryService.getQuery("select.person");
     }
 
-    @Override
-    protected String getFindOneByUsernameQuery() {
+
+    String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
     }
 

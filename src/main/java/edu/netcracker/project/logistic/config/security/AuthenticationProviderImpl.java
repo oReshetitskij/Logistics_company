@@ -2,6 +2,7 @@ package edu.netcracker.project.logistic.config.security;
 
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
+import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,6 +26,9 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     PersonService personService;
 
     @Autowired
+    RoleService roleService;
+
+    @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
@@ -45,10 +49,12 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
             throw new BadCredentialsException("1000");
         }
 
+
+
         // Get user or employee roles
         List<String> userRights = new ArrayList<>();
-        userRights.add("ROLE_ADMIN");
-        userRights.add("ROLE_MANAGER");
+        userRights.add(roleService.findAll());
+        System.out.println(userRights);
 
         return new UsernamePasswordAuthenticationToken(username, password, userRights.stream().map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList()));
 

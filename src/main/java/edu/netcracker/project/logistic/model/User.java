@@ -14,6 +14,11 @@ public class User extends Person {
         this.role = role;
         this.permission = permission;
     }
+    public User()
+    {
+
+
+    }
 
     public Role getRole() {
         return role;

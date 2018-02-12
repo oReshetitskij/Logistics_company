@@ -1,8 +1,11 @@
 package edu.netcracker.project.logistic.controllers;
 
 
+import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Person;
+import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.PersonService;
+import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,9 @@ public class TestController {
     PersonService personService;
 
     @Autowired
+    RoleService roleService;
+
+    @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/test")
@@ -35,6 +41,11 @@ public class TestController {
         System.out.println( personService.exists((long) 23));
         System.out.println(person1);
         System.out.println(person2);
+        Role role = new Role((long) 1 , "ROLE_ADMIN");
+        Role role1 = new Role((long) 2 , "ROLE_USER");
+        roleService.save(role);
+        roleService.save(role1);
+        System.out.println(roleService.findAll());
         return "test";
     }
 
