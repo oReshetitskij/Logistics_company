@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -50,28 +51,31 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
 
 
 
+
+
     @Override
-    public Person save(Person person) {
-
-            jdbcTemplate.update(getInsertQuery(),
-                    person.getId(),
-                    person.getFirstName(),
-                    person.getLastName(),
-                    person.getNickName(),
-                    person.getPassword(),
-                    person.getRegistrationDate(),
-                    person.getEmail(),
-                    person.getPhoneNumber());
-            return person;
-        }
-
-
+   public Person save(Person person) {
+        jdbcTemplate.update(getInsertQuery(), ps -> {
+            ps.setObject(1,   person.getId());
+            ps.setObject(2,   person.getFirstName());
+            ps.setObject(3,   person.getLastName());
+            ps.setObject(4,   person.getNickName());
+            ps.setObject(5,   person.getPassword());
+            ps.setObject(6,   person.getRegistrationDate());
+            ps.setObject(7,   person.getEmail());
+            ps.setObject(8,   person.getPhoneNumber());
+        });
+        return person;
+            }
 
 
     @Override
     public void delete(Long aLong) {
 
-            jdbcTemplate.update(getDeleteQuery(), aLong);
+            jdbcTemplate.update(getDeleteQuery(), ps ->
+            {
+                ps.setObject(1, aLong);
+            });
 
     }
 
@@ -91,6 +95,21 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
         return  Optional.empty();
     }
 
+    @Override
+    public Optional<Person> findOne(String username) {
+        Person person;
+        try {
+            person = jdbcTemplate.queryForObject(
+                    getFindOneByUsernameQuery(),
+                    new Object[]{username},
+                    getMapper());
+            return Optional.ofNullable(person);
+
+        }catch (EmptyResultDataAccessException e){
+            System.err.println("Empty data");
+        }
+        return  Optional.empty();
+    }
 
     @Override
     public boolean contains(Long aLong) {
@@ -111,6 +130,11 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     @Override
     protected String getFindOneQuery() {
         return  queryService.getQuery("select.person");
+    }
+
+
+    String getFindOneByUsernameQuery() {
+        return queryService.getQuery("select.person.by.username");
     }
 
 

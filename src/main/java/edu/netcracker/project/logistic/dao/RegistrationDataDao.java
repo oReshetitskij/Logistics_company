@@ -5,6 +5,7 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
+
+
 
 
     @Autowired
@@ -74,6 +77,9 @@ public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
         }
         return Optional.of(data);
     }
+
+
+
 
     @Override
     public boolean contains(UUID uuid) {
