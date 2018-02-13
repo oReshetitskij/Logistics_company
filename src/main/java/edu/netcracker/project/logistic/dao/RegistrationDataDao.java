@@ -9,13 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class RegistrationDataDao implements  CrudDao<RegistrationData, UUID> {
+public class RegistrationDataDao implements CrudDao<RegistrationData, UUID> {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 

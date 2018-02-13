@@ -6,42 +6,43 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
 
-  private JdbcTemplate jdbcTemplate ;
-  private QueryService queryService;
+    private JdbcTemplate jdbcTemplate;
+    private QueryService queryService;
 
     public RoleCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
     }
 
-   private RowMapper<Role> getMapper()
- {
-     return ((resultSet, i) ->
-     {
-       Role role = new Role();
-       role.setRole_id(resultSet.getLong("role_id"));
-       role.setRole_name(resultSet.getString("role_name"));
-   return  role;
-
-     });
-
- }
-
-   private   RowMapper<Role> getMapper_Role_name()
-    {
+    private RowMapper<Role> getMapper() {
         return ((resultSet, i) ->
         {
             Role role = new Role();
-            role.setRole_name(resultSet.getString("role_name"));
-            return  role;
+            role.setRoleId(resultSet.getLong("role_id"));
+            role.setRoleName(resultSet.getString("role_name"));
+            return role;
+
+        });
+
+    }
+
+    private RowMapper<Role> getMapper_Role_name() {
+        return ((resultSet, i) ->
+        {
+            Role role = new Role();
+            role.setRoleName(resultSet.getString("role_name"));
+            return role;
 
         });
 
@@ -49,29 +50,41 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
 
     @Override
     public Role save(Role role) {
-        jdbcTemplate.update(getInsertQuery(),ps->{
+        boolean hasPrimaryKey = role.getRoleId() != null;
 
-            ps.setObject(1, role.getRole_id());
-            ps.setObject(2, role.getRole_name());
-        });
+        if (hasPrimaryKey) {
+            jdbcTemplate.update(getUpsertQuery(), ps -> {
+                ps.setObject(1, role.getRoleId());
+                ps.setObject(2, role.getRoleName());
+            });
+        } else {
+            String query = getInsertQuery();
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-        return  role;
+            jdbcTemplate.update(psc -> {
+                PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, role.getRoleName());
+
+                return ps;
+            }, keyHolder);
+            Number key = (Number)keyHolder.getKeys().get("role_id");
+            role.setRoleId(key.longValue());
+        }
+        return role;
     }
 
     @Override
     public void delete(Long aLong) {
-  jdbcTemplate.update(getDeleteQuery(),ps->
-          {
-              ps.setObject(1, aLong);
+        jdbcTemplate.update(getDeleteQuery(), ps ->
+        {
+            ps.setObject(1, aLong);
         });
-
-
     }
 
 
     @Override
     public Optional<Role> findOne(Long aLong) {
-     Role role;
+        Role role;
         try {
             role = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
@@ -79,25 +92,30 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
                     getMapper());
             return Optional.ofNullable(role);
 
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             System.err.println("Empty data");
         }
-        return  Optional.empty();
+        return Optional.empty();
     }
 
     @Override
     public List<Role> getAllRole() {
-      return  jdbcTemplate.query(getAllRolesQuery(), getMapper_Role_name());
+        return jdbcTemplate.query(getAllRolesQuery(), getMapper_Role_name());
     }
 
     @Override
     public boolean contains(Long aLong) {
-     Optional<Role> role = findOne(aLong);
+        Optional<Role> role = findOne(aLong);
         return role.isPresent();
     }
 
     @Override
     protected String getInsertQuery() {
+        return queryService.getQuery("insert.role");
+    }
+
+    @Override
+    protected String getUpsertQuery() {
         return queryService.getQuery("upsert.role");
     }
 
@@ -107,12 +125,11 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
     }
 
     @Override
-    protected String getFindOneQuery () {
+    protected String getFindOneQuery() {
         return queryService.getQuery("select.role");
     }
 
-    private String getAllRolesQuery()
-    {
+    private String getAllRolesQuery() {
         return queryService.getQuery("role.findAll");
     }
 

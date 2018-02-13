@@ -38,7 +38,10 @@ public abstract class CrudDaoImpl<T extends Object> implements CrudDao<T, Long> 
     public boolean contains(Long id) {
         return false;
     }
+
     protected abstract String getInsertQuery();
+
+    protected abstract String getUpsertQuery();
 
     protected abstract String getDeleteQuery();
 
