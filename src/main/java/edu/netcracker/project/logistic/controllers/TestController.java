@@ -1,7 +1,6 @@
 package edu.netcracker.project.logistic.controllers;
 
 
-import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.PersonService;

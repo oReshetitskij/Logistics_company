@@ -1,42 +1,35 @@
 package edu.netcracker.project.logistic.model;
 
 public class Role {
+    private Long roleId;
+    private String roleName;
 
-
-    private Long role_id;
-    private String role_name;
-
-    public Role(Long role_id, String role_name) {
-        this.role_id = role_id;
-        this.role_name = role_name;
-    }
-    public Role()
-    {
-
-
+    public Role(Long roleId, String roleName) {
+        this.roleId = roleId;
+        this.roleName = roleName;
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public String getRole_name() {
-        return role_name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole_name(String role_name) {
-        this.role_name = role_name;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     @Override
     public String toString() {
         return "Role{" +
-                "role_id=" + role_id +
-                ", role_name='" + role_name + '\'' +
+                "roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
                 '}';
     }
 }

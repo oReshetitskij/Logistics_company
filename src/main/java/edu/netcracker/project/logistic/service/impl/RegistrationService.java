@@ -1,6 +1,5 @@
 package edu.netcracker.project.logistic.service.impl;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.RegistrationDataDao;
 import edu.netcracker.project.logistic.model.Person;
@@ -20,7 +19,6 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
