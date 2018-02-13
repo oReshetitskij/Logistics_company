@@ -6,8 +6,11 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,9 +58,17 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
                 ps.setObject(2, role.getRoleName());
             });
         } else {
-            jdbcTemplate.update(getInsertQuery(), ps -> {
-                ps.setObject(2, role.getRoleName());
-            });
+            String query = getInsertQuery();
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(psc -> {
+                PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, role.getRoleName());
+
+                return ps;
+            }, keyHolder);
+            Number key = (Number)keyHolder.getKeys().get("role_id");
+            role.setRoleId(key.longValue());
         }
         return role;
     }

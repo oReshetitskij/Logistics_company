@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Optional;
 
 
@@ -61,7 +64,10 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
                 ps.setObject(8, person.getPhoneNumber());
             });
         } else {
-            jdbcTemplate.update(getInsertQuery(), ps -> {
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(psc -> {
+                String query = getInsertQuery();
+                PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, person.getFirstName());
                 ps.setObject(2, person.getLastName());
                 ps.setObject(3, person.getNickName());
@@ -69,7 +75,11 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
                 ps.setObject(5, person.getRegistrationDate());
                 ps.setObject(6, person.getEmail());
                 ps.setObject(7, person.getPhoneNumber());
-            });
+
+                return ps;
+            }, keyHolder);
+            Number key = (Number)keyHolder.getKeys().get("person_id");
+            person.setId(key.longValue());
         }
         return person;
     }

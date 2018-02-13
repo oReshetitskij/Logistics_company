@@ -42,6 +42,12 @@ public class TestController {
         System.out.println(person2);
         Role role = new Role((long) 1 , "ROLE_ADMIN");
         Role role1 = new Role((long) 2 , "ROLE_USER");
+
+        // Check save on entity without PK
+        Role role2 = new Role();
+        role2.setRoleName("ROLE_VIP_USER");
+        roleService.save(role2);
+
         roleService.save(role);
         roleService.save(role1);
         System.out.println(roleService.findAll());
