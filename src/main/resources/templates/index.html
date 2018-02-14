@@ -7,17 +7,138 @@
 
     <title>Landing page</title>
 
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+
     <div th:replace="fragments/header :: header-bootstrap-config-IE">
     </div>
 
 </head>
 <body>
 
-    <div class= "container">
-        <h1>Landing page</h1>
-        <a th:href = "@{/login}">Login</a>
-        <a th:href = "@{/registration}">Register</a>
+<div class="jumbotron">
+    <div style="" class="container text-center">
+        <h1>client-2-client</h1>
+        <p>Fastest delivery service!</p>
     </div>
+</div>
+
+<div id="img_container">
+    <img src="images/delivery_route.jpg" class="img-responsive" alt="Image" />
+    <div class="text-block">
+        <form th:action="@{/login}">
+            <button class="btn btn-responsive btn-success btn-on-image"> Sign in </button>
+        </form>
+        <form th:action="@{/registration}">
+            <button class="btn btn-responsive btn-primary btn-on-image"> Register </button>
+        </form>
+    </div>
+</div>
+
+<div class = "container">
+    <div class="about">
+        <div class = "row">
+            <div class="col-md-2 col-sm-4 col-lg-5 text-center">
+                <img class="img-responsive-about" src="images/box_to_arms.jpg" alt="Why we image" />
+            </div>
+            <div class="col-md-10 col-sm-8 col-lg-7 text-center">
+                <h1>Why we?</h1>
+                <h4>Want to quickly transfer some thing to your friend,
+                    but there is no desire to trudge to the other end of the
+                    city for this? Now there is a way out!</h4>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class="col-md-2 col-sm-4 col-lg-5 text-center">
+                <img class="img-responsive-about" src="images/Time-For-Something-New.png" alt="No analogs image" />
+            </div>
+            <div class="col-md-10 col-sm-8 col-lg-7 text-center">
+                <h1>No analogs!</h1>
+                <h4>Regular postal services work clearly according to schedule.
+                    We offer a flexible solution that will depend only on distance
+                    to the receiver!</h4>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class="col-md-2 col-sm-4 col-lg-5 text-center">
+                <img class="img-responsive-about" src="images/cogwheel-13.png" alt="Simplicity and func image" />
+            </div>
+            <div class="col-md-10 col-sm-8 col-lg-7 text-center">
+                <h1>Simplicity and multifunctionality</h1>
+                <h4>In our application, you will never get confused.
+                    All actions are intuitive, but at the same time
+                    contain a rich functionality.</h4>
+            </div>
+        </div>
+
+        <div class = "row">
+            <div class="col-md-2 col-sm-4 col-lg-5 text-center">
+                <img class="img-responsive-about" src="images/algorithms-chalkboard.jpg" alt="New search algos image" />
+            </div>
+            <div class="col-md-10 col-sm-8 col-lg-7 text-center">
+                <h1>New search algorithms</h1>
+                <h4>Now we are looking for the nearest couriers in real time.
+                    Also, depending on the type of parcel, the corresponding
+                    machine will come to you.</h4>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<footer class="container-fluid text-center">
+
+    <div class="container-fluid bg-grey" style="margin:30px auto">
+        <h2 class="text-center">Contacts</h2>
+        <div class="row">
+            <div class="col-sm-5">
+                <p>Questions and wishes will be considered in 3 days.</p>
+                <p><span class="glyphicon glyphicon-map-marker"></span> Kyiv, Ukraine</p>
+                <p><span class="glyphicon glyphicon-phone"></span> +380 (044) 777-77-77</p>
+                <p><span class="glyphicon glyphicon-envelope"></span> client.two.client@gmail.com</p>
+            </div>
+            <div class="col-sm-7">
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <input class="form-control" id="nameSend" name="nameSend" placeholder="Your name" type="text" required="required" />
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <input class="form-control" id="emailSend" name="emailSend" placeholder="Your e-mail" type="email" required="required" />
+                    </div>
+                </div>
+                <textarea class="form-control" id="commentsSend" name="commentsSend" placeholder="Message" rows="5"></textarea><br />
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <button class="btn btn-default pull-right" type="submit">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Google Maps -->
+    <div id="googleMap" style="height:400px;width:100%;"></div>
+    <script>
+        function myMap() {
+            var myCenter = new google.maps.LatLng(50.4205186,30.5289771);
+            var mapProp = {center:myCenter, zoom:17, scrollwheel:false, draggable:false, mapTypeId:google.maps.MapTypeId.ROADMAP};
+            var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+            var marker = new google.maps.Marker({position:myCenter});
+            marker.setMap(map);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=myMap&amp;key=AIzaSyBrIO6CheUPkAXXZgac8WparZo6Z9BSSwQ"></script>
+
+    <div class="container" style="margin:30px auto">
+        <h2><small>&trade; client-2-client, 2018</small></h2>
+    </div>
+
+
+</footer>
+
 
     <div th:replace="fragments/footer :: footer">
     </div>

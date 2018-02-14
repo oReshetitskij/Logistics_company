@@ -1,0 +1,82 @@
+
+
+.jumbotron{
+    margin-bottom: 0;
+}
+
+/* Add a gray background color and some padding to the footer */
+footer {
+
+    background-color: #f2f2f2;
+    padding: 25px;
+
+}
+
+
+
+.about{
+    margin-top:50px;
+    margin-bottom:75px;
+}
+
+.about div{
+    margin-bottom:20px;
+}
+
+#img_container {
+    position:relative;
+    border:1px solid red;
+}
+
+.text-block {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.btn-on-image{
+    display:block;
+
+    text-align:left;
+}
+
+@media (max-width: 768px) {
+    .btn-responsive {
+        padding:4px 9px;
+        font-size:80%;
+        line-height: 1;
+    }
+
+    .img-responsive-about{
+        width:60%;
+        height:100%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    .btn-responsive {
+        padding: 16px 36px;
+        font-size:90%;
+        line-height: 1.8;
+    }
+
+    .img-responsive-about{
+        width:60%;
+        height:100%;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1920px) {
+    .btn-responsive {
+        padding: 32px 72px;
+        font-size:150%;
+        line-height: 2.3;
+    }
+
+    .img-responsive-about{
+        width:80%;
+        height:80%;
+    }
+}
