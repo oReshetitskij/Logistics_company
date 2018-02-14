@@ -1,18 +1,22 @@
+Drop schema logistic_company cascade;
 DROP TABLE IF EXISTS "logistic_company"."work_day";
 DROP TABLE IF EXISTS "logistic_company".employee_role;
-DROP TABLE IF EXISTS "logistic_company"."person";
-DROP TABLE IF EXISTS "logistic_company"."role";
-DROP TABLE IF EXISTS "logistic_company"."bonus";
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
 DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
 DROP TABLE IF EXISTS "logistic_company"."order";
+DROP TABLE IF EXISTS "logistic_company"."person";
+DROP TABLE IF EXISTS "logistic_company"."role";
+DROP TABLE IF EXISTS "logistic_company"."bonus";
 DROP TABLE IF EXISTS "logistic_company"."office";
 DROP TABLE IF EXISTS "logistic_company"."order_status";
 
 
 
+DROP FUNCTION IF EXISTS  logistic_company.delete_old_rows();
+
+
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
-DROP TYPE  week_day;
+-- DROP TYPE IF EXISTS logistic_company.week_day;
 
 DROP SCHEMA IF EXISTS "logistic_company";
 
@@ -182,3 +186,23 @@ ALTER TABLE "logistic_company"."order"
 
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("order_status_id") REFERENCES "logistic_company"."order_status"("order_status_id");
+
+
+CREATE FUNCTION delete_old_rows() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  row_count int;
+BEGIN
+  DELETE FROM person  WHERE registration_date < NOW() - INTERVAL '20 second' AND role_id IN (SELECT role.role_id FROM role WHERE role.role_name = 'ROLE_UNCONFIRMED') ;
+  IF found THEN
+    GET DIAGNOSTICS row_count = ROW_COUNT;
+    RAISE NOTICE 'DELETED % row(s) FROM person', row_count;
+  END IF;
+  RETURN NULL;
+END;
+$$;
+
+CREATE TRIGGER trigger_delete_old_rows
+  AFTER INSERT ON person
+EXECUTE PROCEDURE delete_old_rows();
