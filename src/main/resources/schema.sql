@@ -1,4 +1,3 @@
-Drop schema logistic_company cascade;
 DROP TABLE IF EXISTS "logistic_company"."work_day";
 DROP TABLE IF EXISTS "logistic_company".employee_role;
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
@@ -12,18 +11,18 @@ DROP TABLE IF EXISTS "logistic_company"."order_status";
 
 
 
-DROP FUNCTION IF EXISTS  logistic_company.delete_old_rows();
+DROP FUNCTION IF EXISTS logistic_company.delete_old_rows();
 
 
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
--- DROP TYPE IF EXISTS logistic_company.week_day;
+DROP TYPE IF EXISTS logistic_company.week_day;
 
 DROP SCHEMA IF EXISTS "logistic_company";
 
 
 CREATE SCHEMA "logistic_company";
 
-CREATE TYPE week_day AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' , 'Sunday');
+CREATE TYPE logistic_company.week_day AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' , 'Sunday');
 
 CREATE SEQUENCE "logistic_company"."main_seq_id"
   INCREMENT 1
@@ -188,10 +187,22 @@ ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("order_status_id") REFERENCES "logistic_company"."order_status"("order_status_id");
 
 
+INSERT INTO role(role_id, role_name) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO role(role_id, role_name) VALUES (2, 'ROLE_USER');
+INSERT INTO role(role_id, role_name) VALUES (3, 'ROLE_UNCONFIRMED');
+
+DELETE FROM person;
+
+INSERT INTO person(person_id, first_name, last_name, user_name, password, email, phone_number, role_id)
+VALUES (1, 'Bohdan' , 'Zinkevich', 'Zibo' , '12121212', 'bohdan.zsnkevich@ukr.net','+3806870729341', 1);
+INSERT INTO person(person_id, first_name, last_name, user_name, password, email, phone_number, role_id)
+VALUES (5, 'Bohdan' , 'Zinkevich', 'Zibo15' , '12121212', 'bohdan.zsnkevich@ukr.net51','+38068707293425', 3);
+INSERT INTO person(person_id, first_name, last_name, user_name, password, email, phone_number, role_id)
+VALUES (3, 'Bohdan' , 'Zinkevich', 'Zibo2' , '12121212', 'bohdan.zsnkevich@ukr.net2','+3806870729343', 3);
+
+
 CREATE FUNCTION delete_old_rows() RETURNS trigger
-LANGUAGE plpgsql
-AS $$
-DECLARE
+AS $emp_stamp$  DECLARE
   row_count int;
 BEGIN
   DELETE FROM person  WHERE registration_date < NOW() - INTERVAL '20 second' AND role_id IN (SELECT role.role_id FROM role WHERE role.role_name = 'ROLE_UNCONFIRMED') ;
@@ -200,9 +211,13 @@ BEGIN
     RAISE NOTICE 'DELETED % row(s) FROM person', row_count;
   END IF;
   RETURN NULL;
-END;
-$$;
+END
+$emp_stamp$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_delete_old_rows
   AFTER INSERT ON person
 EXECUTE PROCEDURE delete_old_rows();
+INSERT INTO person(person_id, first_name, last_name, user_name, password, email, phone_number, role_id)
+VALUES (6, 'Bohdan' , 'Zinkevich', 'Zibo56' , '12121212', 'bohdan.zsnkevich@ukr.net56','+38068707293456', 3);
+SELECT person_id, first_name, last_name, user_name, registration_date, password, email, phone_number, role_id FROM person;
+
