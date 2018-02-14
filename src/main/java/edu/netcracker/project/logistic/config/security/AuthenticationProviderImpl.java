@@ -54,7 +54,6 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         // Get user or employee roles
         List<String> userRights = new ArrayList<>();
         userRights.add(roleService.findAll());
-        System.out.println(userRights);
 
         return new UsernamePasswordAuthenticationToken(username, password, userRights.stream().map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList()));
 

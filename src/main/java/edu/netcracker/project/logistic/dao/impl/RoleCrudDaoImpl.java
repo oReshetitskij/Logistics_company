@@ -130,7 +130,7 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
     }
 
     private String getAllRolesQuery() {
-        return queryService.getQuery("role.findAll");
+        return queryService.getQuery("role.name.user");
     }
 
 
