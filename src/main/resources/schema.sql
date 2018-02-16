@@ -55,8 +55,6 @@ CREATE TABLE "logistic_company"."person" (
   "registration_date" timestamp                                       NOT NULL DEFAULT NOW(),
   "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
   "role_id"           INT4                                            NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."role" (
@@ -78,8 +76,6 @@ CREATE TABLE "logistic_company"."bonus"
   "bonus_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)         NOT NULL,
   "discount"      NUMERIC,
   "priority"      VARCHAR(45) COLLATE "default"                       NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."advertisement"
@@ -87,16 +83,12 @@ CREATE TABLE "logistic_company"."advertisement"
   "advertisement_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)     NOT NULL,
   "description"           VARCHAR(1000) COLLATE "default"                     NOT NULL,
   "type_advertisement_id" INT4                                                NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."advertisement_type"
 (
   "type_advertisement_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
   "advertisement_name"    VARCHAR(60) COLLATE "default"                      NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 
@@ -106,8 +98,6 @@ CREATE TABLE "logistic_company"."work_day"
   "week_day"         week_day    NOT NULL,
   "begin_time"       TIME        NOT NULL,
   "end_time"         TIME        NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."order"
@@ -116,12 +106,11 @@ CREATE TABLE "logistic_company"."order"
   "sender_address"    INT4                                      NOT NULL,
   "receiver_address"  INT4                                      NOT NULL,
   "delivery_time"     TIME                                      NOT NULL,
+  "courier_id"        INT4                                      NOT NULL,
   "reseiver_id"       INT4                                      NOT NULL,
   "sender_id"         INT4                                      NOT NULL,
   "office_id"         INT4                                      NOT NULL,
   "order_status_id"   INT4
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."office"
@@ -129,16 +118,12 @@ CREATE TABLE "logistic_company"."office"
   "office_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
   "name"      VARCHAR(60) COLLATE "default"                      NOT NULL,
   "address"   VARCHAR(60) COLLATE "default"                      NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 CREATE TABLE "logistic_company"."order_status"
 (
   "order_status_id"  INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)   NOT NULL,
   "status_name"      VARCHAR(60) COLLATE "default"                     NOT NULL
-)
-WITH (OIDS = FALSE
 );
 
 
@@ -229,6 +214,8 @@ ALTER TABLE "logistic_company"."order"
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("receiver_address") REFERENCES "logistic_company"."address"("address_id");
 
+ALTER TABLE "logistic_company"."order"
+  ADD  FOREIGN KEY ("courier_id") REFERENCES "logistic_company"."person"("person_id");
 
 CREATE FUNCTION delete_old_rows() RETURNS trigger
 LANGUAGE plpgsql
