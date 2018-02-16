@@ -3,6 +3,9 @@ DROP TABLE IF EXISTS "logistic_company".employee_role;
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
 DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
 DROP TABLE IF EXISTS "logistic_company"."order";
+DROP TABLE IF EXISTS "logistic_company"."contact_address";
+DROP TABLE IF EXISTS "logistic_company"."contact";
+DROP TABLE IF EXISTS "logistic_company"."address";
 DROP TABLE IF EXISTS "logistic_company"."person";
 DROP TABLE IF EXISTS "logistic_company"."role";
 DROP TABLE IF EXISTS "logistic_company"."bonus";
@@ -11,11 +14,12 @@ DROP TABLE IF EXISTS "logistic_company"."order_status";
 
 
 
+
 DROP FUNCTION IF EXISTS logistic_company.delete_old_rows();
 
 
 DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
-DROP TYPE IF EXISTS logistic_company.week_day;
+DROP TYPE If EXISTS logistic_company.week_day;
 
 DROP SCHEMA IF EXISTS "logistic_company";
 
@@ -35,15 +39,21 @@ SELECT setval('"logistic_company"."main_seq_id"', 1, TRUE);
 
 SET SEARCH_PATH TO logistic_company;
 
-CREATE TABLE "logistic_company"."person" (
-  "person_id"         INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+CREATE TABLE "logistic_company"."contact"(
+  "contact_id"        INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "first_name"        VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"         VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "phone_number"      VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "person_id"         INT4
+);
+
+CREATE TABLE "logistic_company"."person" (
+  "person_id"         INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+
   "user_name"         VARCHAR(45) COLLATE "default",
   "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
   "registration_date" timestamp                                       NOT NULL DEFAULT NOW(),
   "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "phone_number"      VARCHAR(45) COLLATE "default"                   NOT NULL,
   "role_id"           INT4                                            NOT NULL
 )
 WITH (OIDS = FALSE
@@ -103,8 +113,8 @@ WITH (OIDS = FALSE
 CREATE TABLE "logistic_company"."order"
 (
   "order_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
-  "address_sender"    VARCHAR(60) COLLATE "default"             NOT NULL,
-  "address_receiver"  VARCHAR(60) COLLATE "default"             NOT NULL,
+  "sender_address"    INT4                                      NOT NULL,
+  "receiver_address"  INT4                                      NOT NULL,
   "delivery_time"     TIME                                      NOT NULL,
   "reseiver_id"       INT4                                      NOT NULL,
   "sender_id"         INT4                                      NOT NULL,
@@ -125,15 +135,29 @@ WITH (OIDS = FALSE
 
 CREATE TABLE "logistic_company"."order_status"
 (
-  "order_status_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
-  "status_name"      VARCHAR(60) COLLATE "default"             NOT NULL
+  "order_status_id"  INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)   NOT NULL,
+  "status_name"      VARCHAR(60) COLLATE "default"                     NOT NULL
 )
 WITH (OIDS = FALSE
 );
 
+
+CREATE TABLE "logistic_company"."contact_address"
+(
+  "contact_id" INT4,
+  "address_id" INT4
+);
+
+CREATE TABLE "logistic_company"."address"
+(
+  address_id    INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+  address_name    VARCHAR(150) COLLATE "default"                NOT NULL
+);
+
+
 ALTER TABLE "logistic_company"."person"  ADD UNIQUE("user_name");
 ALTER TABLE "logistic_company"."person"  ADD UNIQUE("email");
-ALTER TABLE "logistic_company"."person"  ADD UNIQUE("phone_number");
+
 
 
 
@@ -151,6 +175,10 @@ ALTER  TABLE "logistic_company"."office"
   ADD PRIMARY KEY ("office_id");
 ALTER  TABLE "logistic_company"."order_status"
   ADD PRIMARY KEY ("order_status_id");
+ALTER TABLE "logistic_company"."contact"
+  ADD PRIMARY KEY ("contact_id");
+ALTER TABLE "logistic_company"."address"
+  ADD PRIMARY KEY (address_id);
 
 
 
@@ -175,7 +203,7 @@ ALTER TABLE  "logistic_company"."person"
 
 
 ALTER TABLE "logistic_company"."order"
-  ADD FOREIGN KEY ("reseiver_id") REFERENCES "logistic_company"."person"("person_id");
+  ADD FOREIGN KEY ("reseiver_id") REFERENCES "logistic_company"."contact"("contact_id");
 
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("sender_id") REFERENCES "logistic_company"."person"("person_id");
@@ -186,11 +214,26 @@ ALTER TABLE "logistic_company"."order"
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("order_status_id") REFERENCES "logistic_company"."order_status"("order_status_id");
 
+ALTER TABLE "logistic_company".contact
+  ADD FOREIGN KEY ("person_id") REFERENCES  "logistic_company"."person"("person_id");
 
+ALTER TABLE "logistic_company"."contact_address"
+  ADD  FOREIGN KEY ("contact_id") REFERENCES "logistic_company"."contact"("contact_id");
+
+ALTER TABLE "logistic_company"."contact_address"
+  ADD FOREIGN KEY ("address_id") REFERENCES  "logistic_company"."address"("address_id");
+
+ALTER TABLE "logistic_company"."order"
+  ADD FOREIGN KEY ("sender_address") REFERENCES "logistic_company"."address"("address_id");
+
+ALTER TABLE "logistic_company"."order"
+  ADD FOREIGN KEY ("receiver_address") REFERENCES "logistic_company"."address"("address_id");
 
 
 CREATE FUNCTION delete_old_rows() RETURNS trigger
-AS $lol$  DECLARE
+LANGUAGE plpgsql
+AS $$
+DECLARE
   row_count int;
 BEGIN
   DELETE FROM person  WHERE registration_date < NOW() - INTERVAL '20 second' AND role_id IN (SELECT role.role_id FROM role WHERE role.role_name = 'ROLE_UNCONFIRMED') ;
@@ -200,11 +243,10 @@ BEGIN
   END IF;
   RETURN NULL;
 END;
-$lol$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER trigger_delete_old_rows
   AFTER INSERT ON person
 EXECUTE PROCEDURE delete_old_rows();
 
-SELECT person_id, first_name, last_name, user_name, registration_date, password, email, phone_number, role_id FROM person;
 

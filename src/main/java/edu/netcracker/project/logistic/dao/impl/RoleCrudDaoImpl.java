@@ -1,5 +1,6 @@
 package edu.netcracker.project.logistic.dao.impl;
 
+import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.QueryService;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
+public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -109,29 +110,28 @@ public class RoleCrudDaoImpl extends CrudDaoImpl<Role> implements RoleCrudDao {
         return role.isPresent();
     }
 
-    @Override
-    protected String getInsertQuery() {
-        return queryService.getQuery("insert.role");
-    }
-
-    @Override
-    protected String getUpsertQuery() {
-        return queryService.getQuery("upsert.role");
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return queryService.getQuery("delete.role");
-    }
-
-    @Override
-    protected String getFindOneQuery() {
-        return queryService.getQuery("select.role");
-    }
-
     private String getAllRolesQuery() {
         return queryService.getQuery("role.name.user");
     }
 
 
+    @Override
+    public String getInsertQuery() {
+        return queryService.getQuery("insert.role");
+    }
+
+    @Override
+    public String getUpsertQuery() {
+        return queryService.getQuery("upsert.role");
+    }
+
+    @Override
+    public String getDeleteQuery() {
+        return queryService.getQuery("delete.role");
+    }
+
+    @Override
+    public String getFindOneQuery() {
+        return queryService.getQuery("select.role");
+    }
 }

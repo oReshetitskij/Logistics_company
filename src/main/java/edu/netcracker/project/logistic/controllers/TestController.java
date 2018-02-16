@@ -21,14 +21,20 @@ import java.util.Optional;
 @Controller
 public class TestController {
 
-    @Autowired
-    PersonService personService;
+
+   private PersonService personService;
+
+
+  private   RoleService roleService;
+
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    RoleService roleService;
-
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    public TestController(PersonService personService,RoleService roleService, BCryptPasswordEncoder passwordEncoder ) {
+        this.personService=personService;
+        this.roleService=roleService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @RequestMapping(value = "/test")
     public String test(Model model) {

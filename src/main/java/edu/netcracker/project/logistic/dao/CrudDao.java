@@ -13,4 +13,5 @@ public interface CrudDao<T, ID extends Serializable> {
 
     boolean contains(ID id);
 
+
 }

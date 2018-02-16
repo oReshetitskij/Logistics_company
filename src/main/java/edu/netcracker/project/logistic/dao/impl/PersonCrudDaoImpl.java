@@ -2,6 +2,7 @@ package edu.netcracker.project.logistic.dao.impl;
 
 
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
+import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Person;
 
 import edu.netcracker.project.logistic.service.QueryService;
@@ -18,13 +19,13 @@ import java.util.Optional;
 
 
 @Repository
-public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrudDao {
+public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
 
-    protected RowMapper<Person> getMapper() {
+    private RowMapper<Person> getMapper() {
         return (resultSet, i) ->
         {
             Person person = new Person();
@@ -134,27 +135,27 @@ public class PersonCrudDaoImpl extends CrudDaoImpl<Person> implements PersonCrud
     }
 
     @Override
-    protected String getInsertQuery() {
+    public String getInsertQuery() {
         return queryService.getQuery("insert.person");
     }
 
     @Override
-    protected String getUpsertQuery() {
+    public String getUpsertQuery() {
         return queryService.getQuery("upsert.person");
     }
 
     @Override
-    protected String getDeleteQuery() {
+    public String getDeleteQuery() {
         return queryService.getQuery("delete.person");
     }
 
     @Override
-    protected String getFindOneQuery() {
+    public String getFindOneQuery() {
         return queryService.getQuery("select.person");
     }
 
 
-    String getFindOneByUsernameQuery() {
+   private   String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
     }
 
