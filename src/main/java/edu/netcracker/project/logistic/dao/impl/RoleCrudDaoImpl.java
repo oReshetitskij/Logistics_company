@@ -104,10 +104,16 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         return jdbcTemplate.query(getAllRolesQuery(), getMapper_Role_name());
     }
 
+    @Override
+    public List<Role> getByPersonId(Long personId) {
+        return jdbcTemplate.query(getByPersonIdQuery(), getMapper());
+    }
+
     private String getAllRolesQuery() {
         return queryService.getQuery("role.name.user");
     }
 
+    private String getByPersonIdQuery() { return queryService.getQuery("select.role.by.person_id"); }
 
     @Override
     public String getInsertQuery() {
