@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <div th:replace="fragments/header :: header-bootstrap-config">
+    </div>
+
+    <title>Admin_Advertisements</title>
+
+    <div th:replace="fragments/header :: header-bootstrap-config-IE">
+    </div>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
+
+
+</head>
+<body>
+
+    <div th:replace="fragments/left_menu :: left-menu-header">
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="side-body">
+            <div class="row">
+
+                <h1 style="text-align:center"> Create new advertisement </h1>
+
+                <div class="col-lg-10 col-md-6  col-lg-offset-1">
+                    <div class="well">
+
+                        <h3 align="center">New Advertisement</h3>
+
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                <label for="advertisement_type" class="control-label">Type</label>
+                                <select class="form-control" name="" id="advertisement_type">
+                                    <option value="">Advertisement</option>
+                                    <option value="">Announcement</option>
+                                    <option value="">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="advertisement_description" class="control-label">Description</label>
+                                <textarea class="form-control" rows="5" id="advertisement_description"></textarea>
+                            </div>
+
+                            <p class="text-center"><a href="#" class="btn btn-success" role="button">Publish</a></p>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/left_menu :: left-menu-footer">
+    </div>
+
+<div th:replace="fragments/footer :: footer">
+</div>
+
+</body>
+</html>
