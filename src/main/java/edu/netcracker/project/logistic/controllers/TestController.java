@@ -75,4 +75,29 @@ public class TestController {
         return "employee";
     }
 
+    @GetMapping("/admin/advertisements")
+    public String adminAdvertisements() {
+        return "/admin/admin_advertisements";
+    }
+
+    @GetMapping("/admin/crud/employee")
+    public String adminCrudEmployee() {
+        return "/admin/admin_crud_employee";
+    }
+
+    @GetMapping("/admin/crud/office")
+    public String adminCrudOffice() {
+        return "/admin/admin_crud_office";
+    }
+
+    @GetMapping("/admin/employees")
+    public String adminEmployees() {
+        return "/admin/admin_employees";
+    }
+
+    @GetMapping("/admin/offices")
+    public String adminOffices() {
+        return "/admin/admin_offices";
+    }
+
 }

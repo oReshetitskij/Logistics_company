@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <div th:replace="fragments/header :: header-bootstrap-config">
+    </div>
+
+
+    <div th:replace="fragments/header :: header-bootstrap-config-IE">
+    </div>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
+
+
+</head>
+<body>
+
+    <div th:replace="fragments/left_menu :: left-menu-header">
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+        <div class="side-body">
+            <div class="row">
+
+                <h1 style="text-align:center"> Create/Update/Delete Employee </h1>
+
+                <div class="col-lg-10 col-md-6  col-lg-offset-1">
+
+                    <form style="" method = "" action = "">
+
+                        <div class="form-group required">
+                            <label for="first_name" class="control-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" required="required" placeholder="" />
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="last_name" class="control-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" required="required" placeholder="" />
+                        </div>
+
+                        <!-- If we create -->
+                        <div class="form-group required">
+                            <label for="username" class="control-label">Username</label>
+                            <input type="text" class="form-control" id="username" required="required" placeholder="" />
+                        </div>
+
+                        <!-- If we update -->
+                        <div class="form-group">
+                            <label for="username_read" class="control-label">Username</label>
+                            <input type="text" class="form-control" id="username_read" placeholder="" readonly="readonly" />
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="password" class="control-label">Password</label>
+                            <input type="password" class="form-control" id="password" required="required" placeholder="" />
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="repeat_password" class="control-label">Repeat password</label>
+                            <input type="password" class="form-control" id="repeat_password" required="required" placeholder="" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registration_date" class="control-label">Registration Date</label>
+                            <input type="text" class="form-control" id="registration_date" placeholder="" readonly="readonly" />
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="email" class="control-label">E-mail</label>
+                            <input type="email" class="form-control" id="email" required="required" placeholder="" />
+                        </div>
+
+                        <div class="form-group required">
+                            <label for="phone" class="control-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" required="required" placeholder="" />
+                        </div>
+
+                        <div style = "margin-top: 3em;" class="form-group btn-group-justified">
+                            <a  href="#" class="btn btn-primary">Save</a>
+                            <a  href="#" class="btn btn-danger">Delete</a>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/left_menu :: left-menu-footer">
+    </div>
+
+<div th:replace="fragments/footer :: footer">
+</div>
+
+</body>
+</html>
