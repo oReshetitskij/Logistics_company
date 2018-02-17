@@ -8,14 +8,14 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Long person_id;
+    private Long personId;
 
-    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Long person_id) {
+    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Long personId) {
         this.contactId = contactId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.person_id = person_id;
+        this.personId = personId;
     }
 
     public Contact()
@@ -55,12 +55,12 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getPerson_id() {
-        return person_id;
+    public Long getPersonId() {
+        return personId;
     }
 
-    public void setPerson_id(Long person_id) {
-        this.person_id = person_id;
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
 
@@ -72,7 +72,7 @@ public class Contact {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", person=" + person_id +
+                ", person=" + personId +
                 '}';
     }
 }
