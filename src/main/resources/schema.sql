@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS "logistic_company"."work_day";
-DROP TABLE IF EXISTS "logistic_company".employee_role;
+DROP TABLE IF EXISTS "logistic_company".person_role;
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
 DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
 DROP TABLE IF EXISTS "logistic_company"."order";
@@ -11,8 +11,6 @@ DROP TABLE IF EXISTS "logistic_company"."role";
 DROP TABLE IF EXISTS "logistic_company"."bonus";
 DROP TABLE IF EXISTS "logistic_company"."office";
 DROP TABLE IF EXISTS "logistic_company"."order_status";
-
-
 
 
 DROP FUNCTION IF EXISTS logistic_company.delete_old_rows();
@@ -49,12 +47,10 @@ CREATE TABLE "logistic_company"."contact"(
 
 CREATE TABLE "logistic_company"."person" (
   "person_id"         INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
-
   "user_name"         VARCHAR(45) COLLATE "default",
   "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
   "registration_date" timestamp                                       NOT NULL DEFAULT NOW(),
-  "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "role_id"           INT4                                            NOT NULL
+  "email"             VARCHAR(45) COLLATE "default"                   NOT NULL
 );
 
 CREATE TABLE "logistic_company"."role" (
@@ -63,9 +59,9 @@ CREATE TABLE "logistic_company"."role" (
   "bonus_id" INT4
 );
 
-CREATE TABLE "logistic_company"."employee_role"
+CREATE TABLE "logistic_company"."person_role"
 (
-  "employee_id" INT4,
+  "person_id" INT4,
   "role_id"     INT4
 );
 
@@ -168,11 +164,11 @@ ALTER TABLE "logistic_company"."address"
 
 
 
-ALTER TABLE "logistic_company"."employee_role"
+ALTER TABLE "logistic_company"."person_role"
   ADD FOREIGN KEY ("role_id") REFERENCES "logistic_company"."role" ("role_id");
 
-ALTER TABLE "logistic_company"."employee_role"
-  ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."person" ("person_id");
+ALTER TABLE "logistic_company"."person_role"
+  ADD FOREIGN KEY ("person_id") REFERENCES "logistic_company"."person" ("person_id")  ON DELETE CASCADE ;
 
 ALTER TABLE "logistic_company"."role"
   ADD FOREIGN KEY ("bonus_id") REFERENCES "logistic_company"."bonus" ("bonus_id");
@@ -182,9 +178,6 @@ ALTER TABLE "logistic_company"."advertisement"
 
 ALTER TABLE  "logistic_company"."work_day"
   ADD FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."person"(person_id);
-
-ALTER TABLE  "logistic_company"."person"
-  ADD FOREIGN KEY ("role_id") REFERENCES "logistic_company"."role"("role_id");
 
 
 ALTER TABLE "logistic_company"."order"
@@ -223,17 +216,15 @@ AS $$
 DECLARE
   row_count int;
 BEGIN
-  DELETE FROM person  WHERE registration_date < NOW() - INTERVAL '20 second' AND role_id IN (SELECT role.role_id FROM role WHERE role.role_name = 'ROLE_UNCONFIRMED') ;
+  DELETE  FROM person  WHERE person.registration_date < NOW() - INTERVAL '20 second' AND person_id IN (SELECT person_id  FROM person_role WHERE role_id IN (SELECT  logistic_company.role.role_id FROM logistic_company.role WHERE role_name = 'ROLE_UNCONFIRMED'));
   IF found THEN
     GET DIAGNOSTICS row_count = ROW_COUNT;
-    RAISE NOTICE 'DELETED % row(s) FROM person', row_count;
   END IF;
-  RETURN NULL;
+  RAISE NOTICE 'DELETED % row(s) FROM person', row_count;
+  RETURN  NULL;
 END;
 $$;
 
 CREATE TRIGGER trigger_delete_old_rows
   AFTER INSERT ON person
 EXECUTE PROCEDURE delete_old_rows();
-
-
