@@ -12,11 +12,17 @@ import java.util.Optional;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    PersonCrudDao personCrudDao;
+  private   BCryptPasswordEncoder passwordEncoder;
+
+
+   private   PersonCrudDao personCrudDao;
+
+   @Autowired
+    public PersonServiceImpl(BCryptPasswordEncoder passwordEncoder, PersonCrudDao personCrudDao) {
+        this.passwordEncoder = passwordEncoder;
+        this.personCrudDao = personCrudDao;
+    }
 
     @Override
     public void savePerson(Person person) {

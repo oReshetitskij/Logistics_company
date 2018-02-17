@@ -24,6 +24,11 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
+    @Autowired
+    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.queryService = queryService;
+    }
 
     private RowMapper<Person> getMapper() {
         return (resultSet, i) ->
@@ -39,11 +44,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
     }
 
 
-    @Autowired
-    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.queryService = queryService;
-    }
+
 
 
     @Override

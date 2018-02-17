@@ -1,7 +1,9 @@
 package edu.netcracker.project.logistic.controllers;
 
 
+import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
+import edu.netcracker.project.logistic.service.ContactService;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -27,6 +30,9 @@ public class TestController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
+    private ContactService contactService;
+
+    @Autowired
     public TestController(PersonService personService,RoleService roleService, BCryptPasswordEncoder passwordEncoder ) {
         this.personService=personService;
         this.roleService=roleService;
@@ -36,10 +42,15 @@ public class TestController {
     @RequestMapping(value = "/test")
     public String test(Model model) {
         Optional<Person> person = personService.findOne((long) 2);
-        LocalDate localDate = LocalDate.now();
+        LocalDateTime localDate = LocalDateTime.now();
         personService.delete((long) 23);
         Person person1 = new Person((long)23,"nick_name", "1121212", localDate, "sdfffsfsdf");
         Person person2 = new Person((long)23,"nick_name", "1121212", localDate, "sdfffsfsdf");
+        Contact contact = new Contact((long) 1 ,"lol", "lol", "+2312312313", (long) 1);
+        Contact contact1 = new Contact((long) 1 ,"lol1", "lol1", "+23123123123", (long) 2);
+        contactService.saveContact(contact);
+        contactService.saveContact(contact1);
+        System.out.println(contact1);
         personService.savePerson(person1);
         personService.savePerson(person2);
         System.out.println( personService.exists((long) 23));

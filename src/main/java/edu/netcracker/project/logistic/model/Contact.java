@@ -1,19 +1,21 @@
 package edu.netcracker.project.logistic.model;
 
+import org.springframework.security.access.method.P;
+
 public class Contact {
 
     private Long contactId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Person person;
+    private Long person_id;
 
-    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Person person) {
+    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Long person_id) {
         this.contactId = contactId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.person = person;
+        this.person_id = person_id;
     }
 
     public Contact()
@@ -53,13 +55,15 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Person getPerson() {
-        return person;
+    public Long getPerson_id() {
+        return person_id;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPerson_id(Long person_id) {
+        this.person_id = person_id;
     }
+
+
 
     @Override
     public String toString() {
@@ -68,7 +72,7 @@ public class Contact {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", person=" + person +
+                ", person=" + person_id +
                 '}';
     }
 }

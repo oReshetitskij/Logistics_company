@@ -60,12 +60,12 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
 
     @Override
     public String getInsertQuery() {
-        return queryService.getQuery("insert.person_role")
+        return queryService.getQuery("insert.person_role");
     }
 
     @Override
     public String getUpsertQuery() {
-        return null;
+        return null ;
     }
 
     @Override
