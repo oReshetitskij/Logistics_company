@@ -28,7 +28,7 @@ public class RegistrationLinkDaoImpl implements RegistrationLinkDao, QueryDao {
         boolean hasPrimaryKey = registrationLink.getRegistrationLinkId() != null;
 
         if (hasPrimaryKey) {
-            jdbcTemplate.update(getUpsertQuery(), ps -> {
+            jdbcTemplate.update(getInsertQuery(), ps -> {
                 ps.setObject(1, registrationLink.getRegistrationLinkId());
                 ps.setObject(2, registrationLink.getPersonId());
             });
@@ -53,6 +53,7 @@ public class RegistrationLinkDaoImpl implements RegistrationLinkDao, QueryDao {
         try {
             registrationLink = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
+                    new Object[]{uuid},
                     (resultSet, i) -> {
                         RegistrationLink link = new RegistrationLink();
                         link.setRegistrationLinkId(resultSet.getObject("registration_link_id", UUID.class));
