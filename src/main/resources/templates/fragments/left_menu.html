@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
+</head>
+
+<body>
+    <div th:fragment="left-menu-header">
+
+        <div class="row">
+
+            <!-- Menu -->
+            <div class="side-menu">
+
+                <nav class="navbar navbar-default" role="navigation">
+
+                    <div class="navbar-header">
+                        <div class="brand-wrapper">
+                            <button type="button" class="navbar-toggle">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="side-menu-container">
+                        <ul class="nav navbar-nav">
+
+                            <li><a href="#"><span class="glyphicon glyphicon-off"></span>Log out</a></li>
+
+                            <li class="panel panel-default" id="dropdown">
+                                <a data-toggle="collapse" href="#dropdown-lvl1">
+                                    <span class="glyphicon glyphicon-user"></span> Administrator <span class="caret"></span>
+                                </a>
+
+                                <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a th:href = "@{/admin/employees}" href="#">Employee List</a></li>
+                                            <li><a th:href = "@{/admin/crud/employee}" href="#">Create new employee</a></li>
+                                            <li><a th:href = "@{/admin/offices}" href="#">Office List</a></li>
+                                            <li><a th:href = "@{/admin/crud/office}" href="#">Create new office</a></li>
+                                            <li><a th:href = "@{/admin/advertisements}" href="#">Publish advertisement</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+                </nav>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div th:fragment="left-menu-footer">
+        <script th:href="@{/js/admin.js}" src="../static/js/admin.js"></script>
+    </div>
+</body>
+
+</html>
