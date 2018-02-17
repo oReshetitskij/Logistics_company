@@ -100,13 +100,27 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
     }
 
     @Override
+    public Optional<Role> getByName(String name) {
+        try {
+            Role role = jdbcTemplate.queryForObject(
+                    getFindByNameQuery(),
+                    new Object[] { name },
+                    getMapper()
+            );
+            return Optional.of(role);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Role> getAllRole() {
         return jdbcTemplate.query(getAllRolesQuery(), getMapper_Role_name());
     }
 
     @Override
     public List<Role> getByPersonId(Long personId) {
-        return jdbcTemplate.query(getByPersonIdQuery(), getMapper());
+        return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId},getMapper());
     }
 
     private String getAllRolesQuery() {
@@ -134,4 +148,6 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
     public String getFindOneQuery() {
         return queryService.getQuery("select.role");
     }
+
+    private String getFindByNameQuery() { return queryService.getQuery("select.role.by.name"); }
 }

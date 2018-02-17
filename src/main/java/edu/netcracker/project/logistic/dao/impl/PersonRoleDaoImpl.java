@@ -2,6 +2,7 @@ package edu.netcracker.project.logistic.dao.impl;
 
 import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
+import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.PersonRole;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +24,6 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
     }
-
 
     @Override
     public PersonRole save(PersonRole personRole) {

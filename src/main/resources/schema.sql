@@ -34,7 +34,7 @@ CREATE SEQUENCE "logistic_company"."main_seq_id"
   START 1
   CACHE 10;
 
-SELECT setval('"logistic_company"."main_seq_id"', 1, TRUE);
+SELECT setval('"logistic_company"."main_seq_id"', 100, TRUE);
 
 SET SEARCH_PATH TO logistic_company;
 
