@@ -21,11 +21,11 @@ public class Contact {
 
     }
 
-    public Long getContact_id() {
+    public Long getContactId() {
         return contactId;
     }
 
-    public void setContact_id(Long contactId) {
+    public void setContactId(Long contactId) {
         this.contactId = contactId;
     }
 

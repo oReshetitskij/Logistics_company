@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS logistic_company.registration_link;
 DROP TABLE IF EXISTS "logistic_company"."work_day";
 DROP TABLE IF EXISTS "logistic_company".person_role;
 DROP TABLE IF EXISTS "logistic_company"."advertisement";
@@ -135,12 +136,16 @@ CREATE TABLE "logistic_company"."address"
   address_name    VARCHAR(150) COLLATE "default"                NOT NULL
 );
 
+CREATE TABLE logistic_company.registration_link
+(
+  registration_link_id UUID NOT NULL,
+  person_id INT4 NOT NULL
+);
+
 
 ALTER TABLE "logistic_company"."person"  ADD UNIQUE("user_name");
 ALTER TABLE "logistic_company"."person"  ADD UNIQUE("email");
-
-
-
+ALTER TABLE logistic_company.registration_link ADD UNIQUE (person_id);
 
 ALTER TABLE "logistic_company"."person"
   ADD PRIMARY KEY ("person_id");
@@ -160,11 +165,10 @@ ALTER TABLE "logistic_company"."contact"
   ADD PRIMARY KEY ("contact_id");
 ALTER TABLE "logistic_company"."address"
   ADD PRIMARY KEY (address_id);
+ALTER TABLE logistic_company.registration_link
+  ADD PRIMARY KEY (registration_link_id);
 
-
-
-
-ALTER TABLE "logistic_company"."person_role"
+  ALTER TABLE "logistic_company"."person_role"
   ADD FOREIGN KEY ("role_id") REFERENCES "logistic_company"."role" ("role_id");
 
 ALTER TABLE "logistic_company"."person_role"
@@ -178,7 +182,6 @@ ALTER TABLE "logistic_company"."advertisement"
 
 ALTER TABLE  "logistic_company"."work_day"
   ADD FOREIGN KEY ("employee_id") REFERENCES  "logistic_company"."person"(person_id);
-
 
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("reseiver_id") REFERENCES "logistic_company"."contact"("contact_id");
@@ -209,6 +212,9 @@ ALTER TABLE "logistic_company"."order"
 
 ALTER TABLE "logistic_company"."order"
   ADD  FOREIGN KEY ("courier_id") REFERENCES "logistic_company"."person"("person_id");
+
+ALTER TABLE logistic_company.registration_link
+    ADD FOREIGN KEY (person_id) REFERENCES logistic_company.person (person_id);
 
 CREATE FUNCTION delete_old_rows() RETURNS trigger
 LANGUAGE plpgsql

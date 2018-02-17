@@ -32,7 +32,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
             person.setId(resultSet.getLong("person_id"));
             person.setUserName(resultSet.getString("user_name"));
             person.setPassword(resultSet.getString("password"));
-            person.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
+            person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
             person.setEmail(resultSet.getString("email"));
             return person;
         };
@@ -94,7 +94,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
                     getFindOneQuery(),
                     new Object[]{aLong},
                     getMapper());
-            return Optional.ofNullable(person);
+            return Optional.of(person);
 
         } catch (EmptyResultDataAccessException e) {
             System.err.println("Empty data");
@@ -116,12 +116,6 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
             System.err.println("Empty data");
         }
         return Optional.empty();
-    }
-
-    @Override
-    public boolean contains(Long aLong) {
-        Optional<Person> person = findOne(aLong);
-        return person.isPresent();
     }
 
     @Override
