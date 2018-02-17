@@ -30,7 +30,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
         {
             Person person = new Person();
             person.setId(resultSet.getLong("person_id"));
-            person.setNickName(resultSet.getString("user_name"));
+            person.setUserName(resultSet.getString("user_name"));
             person.setPassword(resultSet.getString("password"));
             person.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
             person.setEmail(resultSet.getString("email"));
@@ -53,7 +53,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
         if (hasPrimaryKey) {
             jdbcTemplate.update(getUpsertQuery(), ps -> {
                 ps.setObject(1, person.getId());
-                ps.setObject(2, person.getNickName());
+                ps.setObject(2, person.getUserName());
                 ps.setObject(3, person.getPassword());
                 ps.setObject(4, person.getRegistrationDate());
                 ps.setObject(5, person.getEmail());
@@ -63,7 +63,7 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
             jdbcTemplate.update(psc -> {
                 String query = getInsertQuery();
                 PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, person.getNickName());
+                ps.setObject(1, person.getUserName());
                 ps.setObject(2, person.getPassword());
                 ps.setObject(3, person.getRegistrationDate());
                 ps.setObject(4, person.getEmail());
