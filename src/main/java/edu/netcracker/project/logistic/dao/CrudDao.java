@@ -11,7 +11,7 @@ public interface CrudDao<T, ID extends Serializable> {
 
     Optional<T> findOne(ID id);
 
-    boolean contains(ID id);
-
-
+    default boolean contains(ID id) {
+        return findOne(id).isPresent();
+    }
 }

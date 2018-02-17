@@ -91,7 +91,7 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
                     getFindOneQuery(),
                     new Object[]{aLong},
                     getMapper());
-            return Optional.ofNullable(role);
+            return Optional.of(role);
 
         } catch (EmptyResultDataAccessException e) {
             System.err.println("Empty data");
@@ -105,15 +105,15 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
     }
 
     @Override
-    public boolean contains(Long aLong) {
-        Optional<Role> role = findOne(aLong);
-        return role.isPresent();
+    public List<Role> getByPersonId(Long personId) {
+        return jdbcTemplate.query(getByPersonIdQuery(), getMapper());
     }
 
     private String getAllRolesQuery() {
         return queryService.getQuery("role.name.user");
     }
 
+    private String getByPersonIdQuery() { return queryService.getQuery("select.role.by.person_id"); }
 
     @Override
     public String getInsertQuery() {
