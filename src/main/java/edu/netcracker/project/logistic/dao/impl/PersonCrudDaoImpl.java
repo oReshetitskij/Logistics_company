@@ -15,11 +15,11 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Optional;
+import java.util.*;
 
 
 @Repository
-public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
+public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -42,10 +42,6 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
             return person;
         };
     }
-
-
-
-
 
     @Override
     public Person save(Person person) {
@@ -70,16 +66,14 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
                 ps.setObject(4, person.getEmail());
                 return ps;
             }, keyHolder);
-            Number key = (Number)keyHolder.getKeys().get("person_id");
+            Number key = (Number) keyHolder.getKeys().get("person_id");
             person.setId(key.longValue());
         }
         return person;
     }
 
-
     @Override
     public void delete(Long aLong) {
-
         jdbcTemplate.update(getDeleteQuery(), ps ->
         {
             ps.setObject(1, aLong);
@@ -120,6 +114,28 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
     }
 
     @Override
+    public Set<String> findDuplicateFields(Person person) {
+        List<Person> matches = jdbcTemplate.query(
+                getFindByEmailOrUsernameQuery(),
+                pss -> {
+                    pss.setString(1, person.getEmail());
+                    pss.setString(2, person.getUserName());
+                },
+                getMapper()
+        );
+
+        Set<String> duplicateFields = new HashSet<>();
+        for (Person match: matches) {
+            if (match.getUserName().equals(person.getUserName())) {
+                duplicateFields.add("username");
+            } else if (match.getEmail().equals(person.getEmail())) {
+                duplicateFields.add("email");
+            }
+        }
+        return duplicateFields;
+    }
+
+    @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.person");
     }
@@ -139,10 +155,9 @@ public class PersonCrudDaoImpl  implements PersonCrudDao,QueryDao {
         return queryService.getQuery("select.person");
     }
 
-
-   private   String getFindOneByUsernameQuery() {
+    private String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
     }
 
-
+    private String getFindByEmailOrUsernameQuery() { return queryService.getQuery("select.person.by.email.or.username"); }
 }

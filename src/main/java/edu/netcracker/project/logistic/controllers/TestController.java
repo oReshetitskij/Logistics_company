@@ -3,7 +3,6 @@ package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
-import edu.netcracker.project.logistic.service.ContactService;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class TestController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private ContactService contactService;
-
-    @Autowired
     public TestController(PersonService personService,RoleService roleService, BCryptPasswordEncoder passwordEncoder ) {
         this.personService=personService;
         this.roleService=roleService;
@@ -48,8 +44,8 @@ public class TestController {
         Person person2 = new Person((long)23,"nick_name", "1121212", localDate, "sdfffsfsdf");
         Contact contact = new Contact((long) 1 ,"lol", "lol", "+2312312313", (long) 1);
         Contact contact1 = new Contact((long) 1 ,"lol1", "lol1", "+23123123123", (long) 2);
-        contactService.saveContact(contact);
-        contactService.saveContact(contact1);
+        // contactService.saveContact(contact);
+        // contactService.saveContact(contact1);
         System.out.println(contact1);
         personService.savePerson(person1);
         personService.savePerson(person2);
