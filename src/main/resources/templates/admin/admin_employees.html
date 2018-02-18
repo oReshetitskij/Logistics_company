@@ -2,12 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-    <div th:replace="fragments/header :: header-bootstrap-config">
-    </div>
+    <th:block th:replace="fragments/header :: header-bootstrap-config" />
 
 
-    <div th:replace="fragments/header :: header-bootstrap-config-IE">
-    </div>
+    <th:block th:replace="fragments/header :: header-bootstrap-config-IE" />
 
     <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
 

@@ -5,20 +5,18 @@ import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
+    private PasswordEncoder passwordEncoder;
 
+    private PersonCrudDao personCrudDao;
 
-  private   BCryptPasswordEncoder passwordEncoder;
-
-
-   private   PersonCrudDao personCrudDao;
-
-   @Autowired
+    @Autowired
     public PersonServiceImpl(BCryptPasswordEncoder passwordEncoder, PersonCrudDao personCrudDao) {
         this.passwordEncoder = passwordEncoder;
         this.personCrudDao = personCrudDao;
@@ -26,8 +24,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void savePerson(Person person) {
-    person.setPassword(passwordEncoder.encode(person.getPassword()));
-    personCrudDao.save(person);
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
+        personCrudDao.save(person);
     }
 
     @Override
