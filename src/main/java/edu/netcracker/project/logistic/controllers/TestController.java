@@ -1,7 +1,11 @@
 package edu.netcracker.project.logistic.controllers;
 
 
+
+import edu.netcracker.project.logistic.dao.ContactDao;
+import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.model.Contact;
+import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
@@ -20,9 +24,13 @@ import java.util.Optional;
 @Controller
 public class TestController {
 
+@Autowired
+private OfficeDao officeDao;
 
    private PersonService personService;
 
+   @Autowired
+    ContactDao contactDao;
 
   private   RoleService roleService;
 
@@ -37,21 +45,20 @@ public class TestController {
 
     @RequestMapping(value = "/test")
     public String test(Model model) {
-        Optional<Person> person = personService.findOne((long) 2);
+
         LocalDateTime localDate = LocalDateTime.now();
-        personService.delete((long) 23);
-        Person person1 = new Person((long)23,"nick_name", "1121212", localDate, "sdfffsfsdf");
-        Person person2 = new Person((long)23,"nick_name", "1121212", localDate, "sdfffsfsdf");
-        Contact contact = new Contact((long) 1 ,"lol", "lol", "+2312312313", (long) 1);
-        Contact contact1 = new Contact((long) 1 ,"lol1", "lol1", "+23123123123", (long) 2);
-        // contactService.saveContact(contact);
-        // contactService.saveContact(contact1);
-        System.out.println(contact1);
+
+        Person person1 = new Person(1L,"nick_name", "1121212", localDate, "sdfffsfsdf");
         personService.savePerson(person1);
-        personService.savePerson(person2);
-        System.out.println( personService.exists((long) 23));
-        System.out.println(person1);
-        System.out.println(person2);
+        Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313", 1L);
+        Office office = new Office(1L, "werewr", "werer");
+        officeDao.save(office);
+        officeDao.findOne(1L);
+        officeDao.contains(1L);
+        officeDao.delete(1L);
+        contactDao.save(contact);
+        contactDao.findOne(1L);
+        System.out.println(contact);
         return "test";
     }
 

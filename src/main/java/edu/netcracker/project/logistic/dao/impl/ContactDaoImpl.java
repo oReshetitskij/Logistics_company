@@ -7,6 +7,7 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,17 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
         this.queryService = queryService;
     }
 
+    private RowMapper<Contact> getMapper() {
+        return (resultSet, i) ->
+        {
+            Contact c = new Contact();
+            c.setContactId(resultSet.getLong("contact_id"));
+            c.setFirstName(resultSet.getString("first_name"));
+            c.setLastName(resultSet.getString("last_name"));
+            c.setPersonId(resultSet.getLong("person_id"));
+            return c;
+        };
+    }
     @Override
     public Contact save(Contact contact) {
         boolean hasPrimaryKey = contact.getContactId() != null;
@@ -56,9 +68,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update(getDeleteQuery(), ps -> {
-            ps.setObject(1, id);
-        });
+        jdbcTemplate.update(getDeleteQuery(), ps -> ps.setObject(1, id));
     }
 
     @Override
@@ -66,14 +76,8 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
         try {
             Contact contact = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
-                    (resultSet, i) -> {
-                        Contact c = new Contact();
-                        c.setContactId(resultSet.getLong("contact_id"));
-                        c.setFirstName(resultSet.getString("first_name"));
-                        c.setLastName(resultSet.getString("last_name"));
-                        c.setPersonId(resultSet.getLong("person_id"));
-                        return c;
-                    });
+                    new Object[]{id},
+                     getMapper());
             return Optional.of(contact);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

@@ -222,6 +222,8 @@ ALTER TABLE "logistic_company"."order"
 ALTER TABLE logistic_company.registration_link
   ADD FOREIGN KEY (person_id) REFERENCES logistic_company.person (person_id);
 
+
+
 CREATE FUNCTION delete_old_rows()
   RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -246,6 +248,7 @@ BEGIN
   RETURN NULL;
 END;
 $$;
+
 
 CREATE TRIGGER trigger_delete_old_rows
   AFTER INSERT

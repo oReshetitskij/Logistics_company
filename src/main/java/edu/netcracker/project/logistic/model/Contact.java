@@ -1,6 +1,6 @@
 package edu.netcracker.project.logistic.model;
 
-import org.springframework.security.access.method.P;
+
 
 public class Contact {
 
