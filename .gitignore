@@ -42,3 +42,5 @@ out/
 
 Logistics_company.iml
 
+# Project sensitive data
+src/main/resources/mail.properties
