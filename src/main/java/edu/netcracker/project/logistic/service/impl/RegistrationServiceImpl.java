@@ -10,6 +10,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -31,6 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private RoleCrudDao roleDao;
     private ContactDao contactDao;
     private PersonRoleDao personRoleDao;
+    private PasswordEncoder passwordEncoder;
 
     private JavaMailSender sender;
     private TemplateEngine templateEngine;
@@ -42,7 +45,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                                    TemplateEngine templateEngine, Environment env,
                                    HttpServletRequest request, PersonCrudDao personDao,
                                    RegistrationLinkDao registrationLinkDao, RoleCrudDao roleDao,
-                                   ContactDao contactDao, PersonRoleDao personRoleDao) {
+                                   ContactDao contactDao, PersonRoleDao personRoleDao,
+                                   PasswordEncoder passwordEncoder) {
         this.personDao = personDao;
         this.registrationLinkDao = registrationLinkDao;
         this.personRoleDao = personRoleDao;
@@ -52,6 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.templateEngine = templateEngine;
         this.env = env;
         this.request = request;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -155,7 +160,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Person data = new Person();
 
         data.setUserName(form.getUsername());
-        data.setPassword(form.getPassword());
+        data.setPassword(passwordEncoder.encode(form.getPassword()));
         data.setEmail(form.getEmail());
         data.setRegistrationDate(LocalDateTime.now());
 
@@ -169,7 +174,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         data.setLastName(form.getLastName());
         data.setPhoneNumber(form.getPhoneNumber());
 
-        return data;
+        return data;    
     }
 
     private UUID generateId() {
