@@ -9,35 +9,33 @@
 
     <th:block th:replace="fragments/header :: header-bootstrap-config-IE" />
 
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="/static/css/admin.css" />
+
 </head>
 <body>
 
-    <div class="container">
 
-        <div class="starter-template">
+            <div th:replace="fragments/left_menu :: left-menu-header">
+            </div>
+
+            <!-- Main Content -->
+            <div class="container-fluid">
+                <div class="side-body">
+                    <div class="row">
+
             <h1>Employee page</h1>
 
             <h1 th:inline="text">Hello, employee!</h1>
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" value="Sign Out"/>
-            </form>
 
-            <h1>Roles</h1>
+            <h3>All your functions are on your left!</h3>
 
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
-                <div th:replace="fragments/admin :: admin-fragment">
-                </div>
-            </div>
-            <div sec:authorize="hasRole('ROLE_MANAGER')">
-                <div th:replace="fragments/manager :: manager-fragment">
+
+                    </div>
                 </div>
             </div>
 
 
-        </div>
 
-    </div>
-    <!-- /.container -->
 
     <div th:replace="fragments/footer :: footer">
     </div>

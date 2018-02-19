@@ -57,7 +57,6 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
             throw new BadCredentialsException("1000");
         }
 
-        // Get user or employee roles
         List<Role> userRights = roleService.findRolesByPersonId(person.get().getId());
 
         return new UsernamePasswordAuthenticationToken(username, password, userRights.stream().map(x -> new SimpleGrantedAuthority(x.getRoleName())).collect(Collectors.toList()));
