@@ -57,6 +57,7 @@ CREATE TABLE "logistic_company"."person" (
 CREATE TABLE "logistic_company"."role" (
   "role_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "role_name" VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "is_employee_role" BOOLEAN NOT NULL,
   "bonus_id"  INT4
 );
 
