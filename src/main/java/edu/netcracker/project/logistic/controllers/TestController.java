@@ -4,8 +4,10 @@ package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.dao.ContactDao;
 // import edu.netcracker.project.logistic.dao.OfficeDao;
+import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.model.Contact;
 // import edu.netcracker.project.logistic.model.Office;
+import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
@@ -24,8 +26,8 @@ import java.util.Optional;
 @Controller
 public class TestController {
 
-// @Autowired
-// private OfficeDao officeDao;
+ @Autowired
+ private OfficeDao officeDao;
 
    private PersonService personService;
 
@@ -51,11 +53,11 @@ public class TestController {
         Person person1 = new Person(1L,"nick_name", "1121212", localDate, "sdfffsfsdf");
         personService.savePerson(person1);
         Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313", 1L);
-        // Office office = new Office(1L, "werewr", "werer");
-        // officeDao.save(office);
-        // officeDao.findOne(1L);
-        // officeDao.contains(1L);
-        // officeDao.delete(1L);
+         Office office = new Office(1L, "werewr", "werer");
+         officeDao.save(office);
+         officeDao.findOne(1L);
+         officeDao.contains(1L);
+         officeDao.delete(1L);
         contactDao.save(contact);
         contactDao.findOne(1L);
         System.out.println(contact);
@@ -77,31 +79,6 @@ public class TestController {
     @GetMapping("/employee")
     public String admin() {
         return "employee";
-    }
-
-    @GetMapping("/admin/advertisements")
-    public String adminAdvertisements() {
-        return "/admin/admin_advertisements";
-    }
-
-    @GetMapping("/admin/crud/employee")
-    public String adminCrudEmployee() {
-        return "/admin/admin_crud_employee";
-    }
-
-    @GetMapping("/admin/crud/office")
-    public String adminCrudOffice() {
-        return "/admin/admin_crud_office";
-    }
-
-    @GetMapping("/admin/employees")
-    public String adminEmployees() {
-        return "/admin/admin_employees";
-    }
-
-    @GetMapping("/admin/offices")
-    public String adminOffices() {
-        return "/admin/admin_offices";
     }
 
 }
