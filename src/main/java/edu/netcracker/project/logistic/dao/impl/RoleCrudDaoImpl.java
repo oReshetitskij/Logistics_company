@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,7 +121,11 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
 
     @Override
     public List<Role> getByPersonId(Long personId) {
-        return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId},getMapper());
+        try {
+            return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId}, getMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            return Collections.emptyList();
+        }
     }
 
     private String getAllRolesQuery() {
