@@ -99,6 +99,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
         return Optional.empty();
     }
 
+
     @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.office");
