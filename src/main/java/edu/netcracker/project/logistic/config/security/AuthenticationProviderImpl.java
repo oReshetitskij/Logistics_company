@@ -45,21 +45,21 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String username = authentication.getPrincipal() + "";
-        String password = authentication.getCredentials() + "";
+        String inputUsername = authentication.getPrincipal() + "";
+        String inputPassword = authentication.getCredentials() + "";
 
-        Optional<Person> person = personService.findOne(username);
+        Optional<Person> savedPerson = personService.findOne(inputUsername);
 
-        if (!person.isPresent()){
+        if (!savedPerson.isPresent()){
             throw new BadCredentialsException("1000");
         }
-        if (!passwordEncoder.matches(password, person.get().getPassword())){
+        if (!passwordEncoder.matches(inputPassword, savedPerson.get().getPassword())){
             throw new BadCredentialsException("1000");
         }
 
-        List<Role> userRights = roleService.findRolesByPersonId(person.get().getId());
+        List<Role> userRights = roleService.findRolesByPersonId(savedPerson.get().getId());
 
-        return new UsernamePasswordAuthenticationToken(username, password, userRights.stream().map(x -> new SimpleGrantedAuthority(x.getRoleName())).collect(Collectors.toList()));
+        return new UsernamePasswordAuthenticationToken(inputUsername, inputPassword, userRights.stream().map(x -> new SimpleGrantedAuthority(x.getRoleName())).collect(Collectors.toList()));
 
 
     }

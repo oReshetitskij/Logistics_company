@@ -1,5 +1,8 @@
 package edu.netcracker.project.logistic.config.security;
 
+import edu.netcracker.project.logistic.controllers.RegistrationController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +21,7 @@ import java.util.Collection;
 @Configuration
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
@@ -26,13 +30,12 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         clearAuthenticationAttributes(request);
     }
 
-
-
     private void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(authentication);
 
         if (response.isCommitted()){
-            // debug
+            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            return;
         }
 
         redirectStrategy.sendRedirect(request, response, targetUrl);
@@ -44,10 +47,14 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         Collection<? extends GrantedAuthority> authorities =
                 authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities){
-            if (grantedAuthority.getAuthority().equals("ROLE_USER")){
+
+            String authority = grantedAuthority.getAuthority();
+
+            if (authority.equals("ROLE_USER")){
                 isUser = true;
                 break;
-            } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_MANAGER")){
+            } else if (authority.equals("ROLE_ADMIN") || authority.equals("ROLE_MANAGER") ||
+                    authority.equals("ROLE_COURIER") || authority.equals("ROLE_CALL_CENTER_AGENT")){
                 isEmployee = true;
                 break;
             }

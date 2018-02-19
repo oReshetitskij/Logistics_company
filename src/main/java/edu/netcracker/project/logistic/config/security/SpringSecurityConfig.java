@@ -17,25 +17,33 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    AuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @Autowired
-    AuthenticationProvider authenticationProvider;
-
-    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    private AuthenticationProvider authenticationProvider;
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public SpringSecurityConfig(AccessDeniedHandler accessDeniedHandler,
+                                AuthenticationSuccessHandler authenticationSuccessHandler,
+                                AuthenticationProvider authenticationProvider,
+                                BCryptPasswordEncoder passwordEncoder
+                                ){
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationProvider = authenticationProvider;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/index", "/registration", "/registration/complete", "/registration/confirm", "/test", "/login/forgot/password").permitAll()
-                .antMatchers("/employee").hasAnyRole("ADMIN", "MANAGER")
+                .antMatchers("/employee").hasAnyRole("ADMIN", "MANAGER", "COURIER", "CALL_CENTER_AGENT")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/manager/**").hasAnyRole("MANAGER")
+                .antMatchers("/courier/**").hasAnyRole("COURIER")
+                .antMatchers("/call-center-agent/**").hasAnyRole("CALL_CENTER_AGENT")
                 .antMatchers("/user").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .and()
