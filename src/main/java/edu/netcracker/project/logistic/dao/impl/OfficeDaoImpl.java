@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -44,10 +46,12 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
         };
     }
 
+
+
+
     @Override
     public Office save(Office office) {
         boolean hasPrimaryKey = office.getOfficeId() != null;
-
         if (hasPrimaryKey) {
             jdbcTemplate.update(getUpsertQuery(), ps -> {
                 ps.setObject(1,  office.getOfficeId());
@@ -64,7 +68,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
                 ps.setObject(2, office.getAddress());
                 return ps;
             }, keyHolder);
-            Number key = (Number) keyHolder.getKeys().get("contact_id");
+            Number key = (Number) keyHolder.getKeys().get("office_id");
             office.setOfficeId(key.longValue());
         }
         logger.info("Office saved");
@@ -98,7 +102,10 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
 
         return Optional.empty();
     }
-
+    @Override
+    public List<Office> allOffices() {
+        return  jdbcTemplate.query(getAllOffices(),getMapper()) ;
+    }
 
     @Override
     public String getInsertQuery() {
@@ -119,4 +126,10 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     public String getFindOneQuery() {
         return queryService.getQuery("select.office");
     }
+
+    private String getAllOffices()
+    {
+        return queryService.getQuery("all.office");
+    }
+
 }

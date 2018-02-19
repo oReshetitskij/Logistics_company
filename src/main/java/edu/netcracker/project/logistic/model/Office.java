@@ -5,8 +5,8 @@ public class Office {
     private String  name;
     private String address;
 
-    public Office(Long officeId, String name, String address) {
-        this.officeId = officeId;
+    public Office(String name, String address) {
+
         this.name = name;
         this.address = address;
     }
