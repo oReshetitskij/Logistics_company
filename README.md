@@ -1,12 +1,17 @@
 # Logistics_company
 
+## Environment requirements
+* Maven 3.3+
+* PostgreSQL 10+
+* SMTP server
+
 ## Setting up development environment
 Environment configuration is made using Spring Boot configuration files. List of common configuration properties can be found [here](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html)
 
 ### Database
 All connection parameters (*spring.datasource.\**) are specified in [application.properties](src/main/resources/application.properties) file.
 
-### Mail
+### SMTP server
 Mail server parameters (*spring.mail.\**) must be specified in *mail.properties* file, which should be placed in *resources* folder.
 
 ## Usage
