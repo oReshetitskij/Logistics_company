@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head>
     <meta charset="utf-8" />
@@ -14,8 +15,6 @@
 
 <body>
     <div th:fragment="left-menu-header">
-
-        <div class="row">
 
             <!-- Menu -->
             <div class="side-menu">
@@ -36,14 +35,15 @@
                     <div class="side-menu-container">
                         <ul class="nav navbar-nav">
 
-                            <li><a href="#"><span class="glyphicon glyphicon-off"></span>Log out</a></li>
 
-                            <li class="panel panel-default" id="dropdown">
-                                <a data-toggle="collapse" href="#dropdown-lvl1">
+                            <li><a th:href="@{/logout}" th:method="post" href="#"><span class="glyphicon glyphicon-off"></span>Log out</a></li>
+
+                            <li sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown panel panel-default">
+                                <a data-toggle="collapse" href="#dropdown-admin">
                                     <span class="glyphicon glyphicon-user"></span> Administrator <span class="caret"></span>
                                 </a>
 
-                                <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                <div id="dropdown-admin" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <ul class="nav navbar-nav">
                                             <li><a th:href = "@{/admin/employees}" href="#">Employee List</a></li>
@@ -56,6 +56,21 @@
                                 </div>
                             </li>
 
+                            <li sec:authorize="hasRole('ROLE_MANAGER')" class="dropdown panel panel-default">
+                                <a data-toggle="collapse" href="#dropdown-manager">
+                                    <span class="glyphicon glyphicon-user"></span> Manager <span class="caret"></span>
+                                </a>
+
+                                <div id="dropdown-manager" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <ul class="nav navbar-nav">
+                                            <li><a href="#">Manager Func 1</a></li>
+                                            <li><a href="#">Manager Func 2</a></li>
+                                            <li><a href="#">Manager Func 3</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
 
 
                         </ul>
@@ -63,12 +78,12 @@
                 </nav>
 
             </div>
-        </div>
+
 
     </div>
 
     <div th:fragment="left-menu-footer">
-        <script th:href="@{/js/admin.js}" src="../static/js/admin.js"></script>
+        <script language="JavaScript" type="text/javascript" th:src="@{/js/admin.js}" src="../static/js/admin.js"></script>
     </div>
 </body>
 

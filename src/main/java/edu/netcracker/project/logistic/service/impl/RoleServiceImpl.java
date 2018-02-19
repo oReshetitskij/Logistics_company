@@ -6,6 +6,7 @@ import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +38,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public String findAll() {
         return String.valueOf(roleCrudDao.getAllRole());
+    }
+
+    @Override
+    public List<Role> findRolesByPersonId(Long id) {
+        return roleCrudDao.getByPersonId(id);
     }
 }

@@ -1,6 +1,7 @@
 package edu.netcracker.project.logistic.config.security;
 
 import edu.netcracker.project.logistic.model.Person;
+import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,40 +23,43 @@ import java.util.stream.Collectors;
 @Component
 public class AuthenticationProviderImpl implements AuthenticationProvider {
 
-    @Autowired
+
     PersonService personService;
-
-    @Autowired
     RoleService roleService;
-
-    @Autowired
     BCryptPasswordEncoder passwordEncoder;
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    public AuthenticationProviderImpl(PersonService personService,
+                                      RoleService roleService,
+                                      BCryptPasswordEncoder passwordEncoder,
+                                      JdbcTemplate jdbcTemplate) {
+        this.personService = personService;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String username = authentication.getPrincipal() + "";
-        String password = authentication.getCredentials() + "";
+        String inputUsername = authentication.getPrincipal() + "";
+        String inputPassword = authentication.getCredentials() + "";
 
-        Optional<Person> person = personService.findOne(username);
+        Optional<Person> savedPerson = personService.findOne(inputUsername);
 
-        if (!person.isPresent()){
+        if (!savedPerson.isPresent()){
             throw new BadCredentialsException("1000");
         }
-        if (!passwordEncoder.matches(password, person.get().getPassword())){
+        if (!passwordEncoder.matches(inputPassword, savedPerson.get().getPassword())){
             throw new BadCredentialsException("1000");
         }
 
+        List<Role> userRights = roleService.findRolesByPersonId(savedPerson.get().getId());
 
-
-        // Get user or employee roles
-        List<String> userRights = new ArrayList<>();
-        userRights.add(roleService.findAll());
-
-        return new UsernamePasswordAuthenticationToken(username, password, userRights.stream().map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList()));
+        return new UsernamePasswordAuthenticationToken(inputUsername, inputPassword, userRights.stream().map(x -> new SimpleGrantedAuthority(x.getRoleName())).collect(Collectors.toList()));
 
 
     }

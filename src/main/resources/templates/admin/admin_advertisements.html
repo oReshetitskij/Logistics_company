@@ -10,9 +10,10 @@
 
     <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
 
-
 </head>
 <body>
+
+    <div class="row">
 
     <div th:replace="fragments/left_menu :: left-menu-header">
     </div>
@@ -53,12 +54,13 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer">
+    </div>
 
     <div th:replace="fragments/left_menu :: left-menu-footer">
     </div>
-
-<div th:replace="fragments/footer :: footer">
-</div>
 
 </body>
 </html>
