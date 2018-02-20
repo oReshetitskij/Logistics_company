@@ -14,6 +14,12 @@ All connection parameters (*spring.datasource.\**) are specified in [application
 ### SMTP server
 Mail server parameters (*spring.mail.\**) must be specified in *mail.properties* file, which should be placed in *resources* folder.
 
+### Bootstrap
+For local usage these files must be placed in *src/main/resources/static/local/* folder.
+* "bootstrap.min.css" 3.3.7+
+* "bootstrap.min.js" 3.3.7+
+* "jquery.min.js" 3.3.1+
+
 ## Usage
 ### IDEA
 Run configuration for IDEA is included.
