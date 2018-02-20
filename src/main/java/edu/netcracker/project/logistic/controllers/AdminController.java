@@ -47,6 +47,11 @@ public class AdminController {
         return "redirect:/admin/advertisements?success";
     }
 
+    @GetMapping("/employees")
+    public String adminEmployees(){
+        return "/admin/admin_employees";
+    }
+
     @GetMapping("/crud/employee")
     public String adminCrudEmployee() {
         return "/admin/admin_crud_employee";
