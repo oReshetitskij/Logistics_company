@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AdminController {
 
 
-    private OfficeService officeService;
+    OfficeService officeService;
 
     @Autowired
     public AdminController(OfficeService officeService) {

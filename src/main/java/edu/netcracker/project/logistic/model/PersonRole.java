@@ -16,7 +16,7 @@ public class PersonRole implements Serializable {
         }
     */
 
-    private Long personId;
+    private Long personId   ;
     private Long roleId;
 
     public Long getPersonId() {

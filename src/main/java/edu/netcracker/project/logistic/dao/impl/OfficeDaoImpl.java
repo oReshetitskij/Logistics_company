@@ -3,6 +3,7 @@ package edu.netcracker.project.logistic.dao.impl;
 import ch.qos.logback.classic.Logger;
 import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
+import edu.netcracker.project.logistic.model.Address;
 import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.slf4j.LoggerFactory;
@@ -37,16 +38,15 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     private RowMapper<Office> getMapper() {
         return (resultSet, i) ->
         {
+            Address address = new Address();
         Office office = new Office();
             office.setOfficeId(resultSet.getLong("office_id"));
             office.setName(resultSet.getString("name"));
-            office.setAddress(resultSet.getString("address"));
+            office.setAddress(address);
 
             return office;
         };
     }
-
-
 
 
     @Override
@@ -56,7 +56,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
             jdbcTemplate.update(getUpsertQuery(), ps -> {
                 ps.setObject(1,  office.getOfficeId());
                 ps.setObject(2,  office.getName());
-                ps.setObject(3,   office.getAddress());
+                ps.setObject(3,  office.getAddress().getId());
 
             });
         } else {
@@ -65,7 +65,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
                 String query = getInsertQuery();
                 PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, office.getName());
-                ps.setObject(2, office.getAddress());
+                ps.setObject(2, office.getAddress().getId());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("office_id");
