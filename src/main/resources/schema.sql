@@ -77,7 +77,9 @@ CREATE TABLE "logistic_company"."bonus"
 CREATE TABLE "logistic_company"."advertisement"
 (
   "advertisement_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)     NOT NULL,
+  "name"                  VARCHAR(200) COLLATE "default"                      NOT NULL,
   "description"           VARCHAR(1000) COLLATE "default"                     NOT NULL,
+  "publication_date"      TIMESTAMP                                           NOT NULL DEFAULT NOW(),
   "type_advertisement_id" INT4                                                NOT NULL
 );
 

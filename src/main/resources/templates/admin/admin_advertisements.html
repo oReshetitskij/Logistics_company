@@ -26,27 +26,40 @@
                 <h1 style="text-align:center"> Create new advertisement </h1>
 
                 <div class="col-lg-10 col-md-6  col-lg-offset-1">
+
+                    <div th:if="${param.success}">
+                        <div class="alert alert-success">
+                            Advertisement has been successfully saved.
+                        </div>
+                    </div>
+
                     <div class="well">
 
                         <h3 align="center">New Advertisement</h3>
 
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" method="post" th:action= "@{/admin/advertisements}" th:object="${advertisement}" >
 
                             <div class="form-group">
                                 <label for="advertisement_type" class="control-label">Type</label>
-                                <select class="form-control" name="" id="advertisement_type">
-                                    <option value="">Advertisement</option>
-                                    <option value="">Announcement</option>
-                                    <option value="">Other</option>
+                                <select class="form-control" name="" id="advertisement_type" th:field="*{type.name}">
+                                    <option value="Advertisement">Advertisement</option>
+                                    <option value="Announcement">Announcement</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="advertisement_description" class="control-label">Description</label>
-                                <textarea class="form-control" rows="5" id="advertisement_description"></textarea>
+                            <div class="form-group required">
+                                <label for="name" class="control-label">Caption</label>
+                                <input type="text" class="form-control" id="name" placeholder=""
+                                th:field="*{name}"/>
                             </div>
 
-                            <p class="text-center"><a href="#" class="btn btn-success" role="button">Publish</a></p>
+                            <div class="form-group">
+                                <label for="description" class="control-label">Description</label>
+                                <textarea class="form-control" rows="5" id="description" th:field="*{description}"></textarea>
+                            </div>
+
+                            <p class="text-center"><input type="submit"  class="btn btn-success" value="Publish" /></p>
                         </form>
 
                     </div>
