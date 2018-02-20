@@ -55,43 +55,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
-                            </tr>
-                            <tr>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Peremohy Ave, 37</td>
-                                <td>6</td>
-                                <td><a href="#" >Update</a></td>
+                            <tr th:each="office : ${offices}">
+                                <td th:text="${office.officeId}"></td>
+                                <td th:text="${office.address}"></td>
+                                <td th:text="${office.name}"></td>
                             </tr>
                             </tbody>
                         </table>

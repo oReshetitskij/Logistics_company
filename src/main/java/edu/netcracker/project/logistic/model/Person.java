@@ -10,8 +10,7 @@ public class Person   {
     private LocalDateTime registrationDate;
     private String email;
 
-    public Person(Long id, String userName, String password, LocalDateTime registrationDate, String email) {
-        this.id = id;
+    public Person(String userName, String password, LocalDateTime registrationDate, String email) {
         this.userName = userName;
         this.password = password;
         this.registrationDate = registrationDate;
@@ -22,6 +21,7 @@ public  Person()
 {
 
 }
+
 
 
     public Long getId() {

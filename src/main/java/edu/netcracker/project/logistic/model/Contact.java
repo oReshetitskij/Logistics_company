@@ -3,19 +3,18 @@ package edu.netcracker.project.logistic.model;
 
 
 public class Contact {
-
     private Long contactId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Long personId;
+    private Person person;
 
-    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Long personId) {
+    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Person person) {
         this.contactId = contactId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.personId = personId;
+        this.person = person;
     }
 
     public Contact()
@@ -55,12 +54,12 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getPersonId() {
-        return personId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setPersonId(Long personId) {
-        this.personId = personId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
 
@@ -72,7 +71,7 @@ public class Contact {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", person=" + personId +
+                ", person=" + person +
                 '}';
     }
 }
