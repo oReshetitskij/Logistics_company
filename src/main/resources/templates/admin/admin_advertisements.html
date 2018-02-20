@@ -29,7 +29,7 @@
 
                     <div th:if="${param.success}">
                         <div class="alert alert-success">
-                            Advertisement has been successfully saved.
+                            Advertisement has been successfully published.
                         </div>
                     </div>
 
@@ -51,12 +51,14 @@
                             <div class="form-group required">
                                 <label for="name" class="control-label">Caption</label>
                                 <input type="text" class="form-control" id="name" placeholder=""
+                                required="required" minlength="3" maxlength="200"
                                 th:field="*{name}"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="description" class="control-label">Description</label>
-                                <textarea class="form-control" rows="5" id="description" th:field="*{description}"></textarea>
+                                <textarea class="form-control" rows="5" id="description" th:field="*{description}"
+                                          required="required" minlength="10" maxlength="1000"></textarea>
                             </div>
 
                             <p class="text-center"><input type="submit"  class="btn btn-success" value="Publish" /></p>
