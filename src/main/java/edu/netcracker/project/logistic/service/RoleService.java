@@ -20,4 +20,6 @@ public interface RoleService {
     String findAll();
 
     List<Role> findRolesByPersonId(Long id);
+
+    List<Role> findEmployeeRoles();
 }

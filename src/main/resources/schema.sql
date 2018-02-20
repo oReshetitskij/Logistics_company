@@ -42,8 +42,7 @@ CREATE TABLE "logistic_company"."contact" (
   "contact_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "first_name"   VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"    VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "phone_number" VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "person_id"    INT4
+  "phone_number" VARCHAR(45) COLLATE "default"                   NOT NULL
 );
 
 CREATE TABLE "logistic_company"."person" (
@@ -51,13 +50,15 @@ CREATE TABLE "logistic_company"."person" (
   "user_name"         VARCHAR(45) COLLATE "default",
   "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
   "registration_date" TIMESTAMP                                       NOT NULL DEFAULT NOW(),
-  "email"             VARCHAR(45) COLLATE "default"                   NOT NULL
+  "email"             VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "contact_id"        INT4                                            NOT NULL
 );
 
 CREATE TABLE "logistic_company"."role" (
-  "role_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
-  "role_name" VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "bonus_id"  INT4
+  "role_id"          INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+  "role_name"        VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "is_employee_role" BOOLEAN                                         NOT NULL,
+  "bonus_id"         INT4
 );
 
 CREATE TABLE "logistic_company"."person_role"
@@ -148,6 +149,8 @@ ALTER TABLE "logistic_company"."person"
   ADD UNIQUE ("user_name");
 ALTER TABLE "logistic_company"."person"
   ADD UNIQUE ("email");
+ALTER TABLE "logistic_company"."person"
+  ADD UNIQUE ("contact_id");
 ALTER TABLE logistic_company.registration_link
   ADD UNIQUE (person_id);
 
@@ -203,9 +206,6 @@ ALTER TABLE "logistic_company"."order"
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("order_status_id") REFERENCES "logistic_company"."order_status" ("order_status_id");
 
-ALTER TABLE "logistic_company".contact
-  ADD FOREIGN KEY ("person_id") REFERENCES "logistic_company"."person" ("person_id");
-
 ALTER TABLE "logistic_company"."contact_address"
   ADD FOREIGN KEY ("contact_id") REFERENCES "logistic_company"."contact" ("contact_id");
 
@@ -223,7 +223,6 @@ ALTER TABLE "logistic_company"."order"
 
 ALTER TABLE logistic_company.registration_link
   ADD FOREIGN KEY (person_id) REFERENCES logistic_company.person (person_id);
-
 
 
 CREATE FUNCTION delete_old_rows()

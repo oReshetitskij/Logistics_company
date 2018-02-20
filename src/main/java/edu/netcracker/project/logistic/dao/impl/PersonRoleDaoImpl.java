@@ -2,17 +2,16 @@ package edu.netcracker.project.logistic.dao.impl;
 
 import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
-import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.PersonRole;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
@@ -27,7 +26,7 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
 
     @Override
     public PersonRole save(PersonRole personRole) {
-        jdbcTemplate.update(getInsertQuery(), ps -> {
+        jdbcTemplate.update(getUpsertQuery(), ps -> {
             ps.setObject(1, personRole.getPersonId());
             ps.setObject(2, personRole.getRoleId());
         });
@@ -61,13 +60,27 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
     }
 
     @Override
+    public void deleteMany(List<PersonRole> personRoles) {
+        List<Object[]> batchParams =
+                personRoles
+                        .stream()
+                        .map(pr -> new Object[]{pr.getPersonId(), pr.getRoleId()})
+                        .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(
+                getDeleteQuery(),
+                batchParams
+        );
+    }
+
+    @Override
     public String getInsertQuery() {
-        return queryService.getQuery("insert.person_role");
+        return null;
     }
 
     @Override
     public String getUpsertQuery() {
-        return null ;
+        return queryService.getQuery("upsert.person_role");
     }
 
     @Override
