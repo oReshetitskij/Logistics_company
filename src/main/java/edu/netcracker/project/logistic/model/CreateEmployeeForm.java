@@ -2,7 +2,7 @@ package edu.netcracker.project.logistic.model;
 
 import javax.validation.constraints.NotNull;
 
-public class NewEmployeeForm {
+public class CreateEmployeeForm {
     private Person employee;
     private Long roleId;
 

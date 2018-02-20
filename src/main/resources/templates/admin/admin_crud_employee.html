@@ -24,7 +24,7 @@
         <div class="side-body">
             <div class="row">
 
-                <h1 style="text-align:center"> Create/Update/Delete Employee </h1>
+                <h1 style="text-align:center"> Employee profile </h1>
 
                 <div class="col-lg-10 col-md-6  col-lg-offset-1">
 
@@ -55,14 +55,16 @@
                             <label for="password" class="control-label">Password</label>
                             <input type="password" class="form-control" id="password" placeholder=""
                                    required="required" minlength="6" maxlength="30"
-                                   th:field="*{employee.password}"/>
+                                   th:value="${form.employee.password}"
+                                   th:field="*{employee.password}" />
                         </div>
 
                         <div class="form-group required">
                             <label for="repeat_password" class="control-label">Repeat password</label>
                             <input type="password" class="form-control" id="repeat_password" placeholder=""
                                    required="required" minlength="6" maxlength="30"
-                                   oninput="validate(this)"/>
+                                   oninput="validate(this)"
+                                   th:value="${form.employee.password}" />
                         </div>
 
                         <div class="form-group required">
@@ -97,22 +99,22 @@
                     <!-- Form for updating employee -->
                     <form style="" method = "post"
                           th:if="${!newEmployee}"
-                          th:action = "@{'/admin/crud/employee/' + ${emp.id}}"
-                          th:object="emp"
+                          th:action = "@{'/admin/crud/employee/' + ${form.employee.id}}"
+                          th:object="${form}"
                     >
 
                         <div class="form-group required">
                             <label for="first_name" class="control-label">First Name</label>
                             <input type="text" class="form-control" id="first_name" placeholder=""
                                    required="required" minlength="1" maxlength="45"
-                                   th:field="*{firstName}"/>
+                                   th:field="*{employee.contact.firstName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="last_name" class="control-label">Last Name</label>
                             <input type="text" class="form-control" id="last_name" placeholder=""
                                    required="required" minlength="1" maxlength="45"
-                                th:field="*{lastName}"/>
+                                th:field="*{employee.contact.lastName}"/>
                         </div>
 
                         <div class="form-group required">
@@ -126,7 +128,7 @@
                             <label for="password" class="control-label">Password</label>
                             <input type="password" class="form-control" id="password" placeholder=""
                                    required="required" minlength="6" maxlength="30"
-                                   th:field="*{password}"/>
+                                   th:field="*{employee.password}" th:value="*{employee.password}" />
                         </div>
 
                         <div class="form-group required">
@@ -138,25 +140,26 @@
                         <div class="form-group">
                             <label for="registration_date" class="control-label">Registration Date</label>
                             <input type="text" class="form-control" id="registration_date" placeholder="" readonly="readonly"
-                                th:field="*{registrationDate}"/>
+                                th:field="*{employee.registrationDate}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="email" class="control-label">E-mail</label>
                             <input type="email" class="form-control" id="email" placeholder=""
                                    required="required" minlength="6" maxlength="254"
-                                   th:field="*{email}"/>
+                                   th:field="*{employee.email}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" class="form-control" id="phone" placeholder=""
                                    required="required" minlength="7" maxlength="15"
-                                   th:field="*{phoneNumber}"/>
+                                   th:field="*{employee.contact.phoneNumber}"/>
                         </div>
 
                         <div style = "margin-top: 3em;" class="form-group">
                             <button class="btn btn-primary">Update</button>
+                            <button class="btn btn-danger">Delete</button>
                         </div>
 
                     </form>
