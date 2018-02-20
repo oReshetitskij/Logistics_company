@@ -3,10 +3,10 @@ package edu.netcracker.project.logistic.model;
 public class Office {
     private Long officeId;
     private String  name;
-    private String address;
+    private Address address;
 
-    public Office(Long officeId, String name, String address) {
-        this.officeId = officeId;
+    public Office(String name, Address address) {
+
         this.name = name;
         this.address = address;
     }
@@ -33,11 +33,20 @@ public class Office {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Office{" +
+                "officeId=" + officeId +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                '}';
     }
 }
