@@ -74,6 +74,20 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
     }
 
     @Override
+    public void saveMany(List<PersonRole> personRoles) {
+        List<Object[]> batchParams =
+                personRoles
+                        .stream()
+                        .map(pr -> new Object[]{pr.getPersonId(), pr.getRoleId()})
+                        .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(
+                getUpsertQuery(),
+                batchParams
+        );
+    }
+
+    @Override
     public String getInsertQuery() {
         return null;
     }

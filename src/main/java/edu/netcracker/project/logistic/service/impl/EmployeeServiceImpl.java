@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -40,9 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional(rollbackFor = DataIntegrityViolationException.class)
     @Override
-    public Person save(Person employee, Long roleId) {
-        boolean previouslyNotRegistered = employee.getRegistrationDate() == null;
-        if (previouslyNotRegistered) {
+    public Person save(Person employee, List<Long> roleIds) {
+        boolean previouslyRegistered = employee.getRegistrationDate() != null;
+        if (!previouslyRegistered) {
             employee.setRegistrationDate(LocalDateTime.now());
             contactDao.save(employee.getContact());
         }
@@ -50,12 +51,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         personDao.save(employee);
         contactDao.save(employee.getContact());
 
-        PersonRole employeeRole = new PersonRole();
-        employeeRole.setPersonId(employee.getId());
-        employeeRole.setRoleId(roleId);
+        List<PersonRole> currentEmployeeRoles =
+                roleDao.getByPersonId(employee.getId())
+                        .stream()
+                        .filter(Role::isEmployeeRole)
+                        .map(r -> new PersonRole(employee.getId(), r.getRoleId()))
+                        .collect(Collectors.toList());
+
+        List<PersonRole> employeeRolesToAdd =
+                roleIds
+                        .stream()
+                        .map(roleId -> new PersonRole(employee.getId(), roleId))
+                        .collect(Collectors.toList());
 
         try {
-            personRoleDao.save(employeeRole);
+            if (previouslyRegistered) {
+                personRoleDao.deleteMany(currentEmployeeRoles);
+            }
+            personRoleDao.saveMany(employeeRolesToAdd);
         } catch (DataIntegrityViolationException ex) {
             logger.error("Trying to give employee  role which not exists.");
             throw ex;

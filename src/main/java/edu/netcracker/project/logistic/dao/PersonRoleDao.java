@@ -9,4 +9,5 @@ import java.util.Set;
 
 public interface PersonRoleDao extends CrudDao<PersonRole, PersonRole> {
     void deleteMany(List<PersonRole> personRoles);
+    void saveMany(List<PersonRole> personRoles);
 }

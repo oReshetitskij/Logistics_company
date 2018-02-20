@@ -106,12 +106,12 @@ public class AdminController {
     @PostMapping("/crud/employee/{id}")
     public String updateEmployee(@PathVariable int id, Model model, BindingResult result,
                                     @ModelAttribute("form") EmployeeForm form) {
-        throw new UnsupportedOperationException();
+        
     }
 
     @PostMapping("/crud/employee/{id}/delete")
-    public String deleteEmployee(@PathVariable int id) {
-        throw new UnsupportedOperationException();
+    public String deleteEmployee(@PathVariable Long id) {
+        employeeService.delete(id);
     }
 
     @GetMapping("/crud/employee")
