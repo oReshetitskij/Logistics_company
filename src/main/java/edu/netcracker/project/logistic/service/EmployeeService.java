@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeService {
-    Person save(Person employee, Role role);
+    Person save(Person employee, Long roleId);
     void delete(Long id);
     Optional<Person> findOne(Long id);
     List<Person> findAll();

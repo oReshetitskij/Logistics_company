@@ -9,4 +9,5 @@ public interface RoleCrudDao  extends CrudDao<Role, Long>{
    List<Role> getAllRole();
    List<Role> getByPersonId(Long personId);
    Optional<Role> getByName(String name);
+   List<Role> findEmployeeRoles();
 }

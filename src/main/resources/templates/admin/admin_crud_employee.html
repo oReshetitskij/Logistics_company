@@ -30,86 +30,109 @@
 
                     <!-- Form for creating employee -->
                     <form style="" th:method = "post" th:action = "@{/admin/crud/employee/}"
-                        th:object="${emp}">
+                        th:if="${newEmployee}" th:object="${form}">
 
                         <div class="form-group required">
                             <label for="first_name" class="control-label">First Name</label>
                             <input type="text" class="form-control" id="first_name" required="required" placeholder=""
-                                   th:field="*{firstName}"/>
+                                   th:field="*{employee.contact.firstName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="last_name" class="control-label">Last Name</label>
                             <input type="text" class="form-control" id="last_name" required="required" placeholder=""
-                                   th:field="*{lastName}"/>
+                                   th:field="*{employee.contact.lastName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="username" class="control-label">Username</label>
-                            <input type="text" class="form-control" id="username" required="required" placeholder="" />
+                            <input type="text" class="form-control" id="username" placeholder=""
+                                   required="required" minlength="6" maxlength="30"
+                                   th:field="*{employee.userName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="password" class="control-label">Password</label>
-                            <input type="password" class="form-control" id="password" required="required" placeholder=""
-                                   th:field="*{password}"/>
+                            <input type="password" class="form-control" id="password" placeholder=""
+                                   required="required" minlength="6" maxlength="30"
+                                   th:field="*{employee.password}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="repeat_password" class="control-label">Repeat password</label>
-                            <input type="password" class="form-control" id="repeat_password" required="required" placeholder="" />
+                            <input type="password" class="form-control" id="repeat_password" placeholder=""
+                                   required="required" minlength="6" maxlength="30"
+                                   oninput="validate(this)"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="email" class="control-label">E-mail</label>
-                            <input type="email" class="form-control" id="email" required="required" placeholder=""
-                                   th:field="*{email}"/>
+                            <input type="email" class="form-control" id="email" placeholder=""
+                                   required="required" minlength="6" maxlength="254"
+                                   th:field="*{employee.email}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="phone" class="control-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" required="required" placeholder=""
-                                   th:field="*{phoneNumber}"/>
+                            <input type="text" class="form-control" id="phone" placeholder=""
+                                   required="required" minlength="7" maxlength="15"
+                                   th:field="*{employee.contact.phoneNumber}"/>
                         </div>
 
-                        <div style = "margin-top: 3em;" class="form-group btn-group-justified">
+                        <div>
+                            <label for="role" class="control-label">Role</label>
+                            <select id="role" class="form-control" th:field="*{roleId}">
+                                <option th:each="role: ${roles}"
+                                        th:value="${role.roleId}"
+                                        th:with="name = ${#strings.toLowerCase(#strings.substring(role.roleName, 5))}"
+                                        th:text="${#strings.capitalize(name)}">Role</option>
+                            </select>
+                        </div>
+
+                        <div style = "margin-top: 3em;" class="form-group">
                             <button class="btn btn-primary">Save</button>
                         </div>
                     </form>
 
                     <!-- Form for updating employee -->
                     <form style="" method = "post"
-                          th:action = "@{/admin/crud/employee/${emp.id}}"
+                          th:if="${!newEmployee}"
+                          th:action = "@{'/admin/crud/employee/' + ${emp.id}}"
                           th:object="emp"
                     >
 
                         <div class="form-group required">
                             <label for="first_name" class="control-label">First Name</label>
-                            <input type="text" class="form-control" id="first_name" required="required" placeholder=""
-                                th:field="*{firstName}"/>
+                            <input type="text" class="form-control" id="first_name" placeholder=""
+                                   required="required" minlength="1" maxlength="45"
+                                   th:field="*{firstName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="last_name" class="control-label">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" required="required" placeholder=""
+                            <input type="text" class="form-control" id="last_name" placeholder=""
+                                   required="required" minlength="1" maxlength="45"
                                 th:field="*{lastName}"/>
                         </div>
 
-                        <div class="form-group">
-                            <label for="username_read" class="control-label">Username</label>
-                            <input type="text" class="form-control" id="username_read" placeholder="" readonly="readonly"
-                                th:field="*{username}"/>
+                        <div class="form-group required">
+                            <label for="username" class="control-label">Username</label>
+                            <input type="text" class="form-control" id="username" placeholder="" readonly="readonly"
+                                   required="required" minlength="6" maxlength="30"
+                                   th:field="*{employee.userName}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="password" class="control-label">Password</label>
-                            <input type="password" class="form-control" id="password" required="required" placeholder=""
-                                th:field="*{password}"/>
+                            <input type="password" class="form-control" id="password" placeholder=""
+                                   required="required" minlength="6" maxlength="30"
+                                   th:field="*{password}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="repeat_password" class="control-label">Repeat password</label>
-                            <input type="password" class="form-control" id="repeat_password" required="required" placeholder="" />
+                            <input type="password" class="form-control" id="repeat_password" placeholder=""
+                                   required="required" minlength="6" maxlength="30" />
                         </div>
 
                         <div class="form-group">
@@ -120,17 +143,19 @@
 
                         <div class="form-group required">
                             <label for="email" class="control-label">E-mail</label>
-                            <input type="email" class="form-control" id="email" required="required" placeholder=""
-                                th:field="*{email}"/>
+                            <input type="email" class="form-control" id="email" placeholder=""
+                                   required="required" minlength="6" maxlength="254"
+                                   th:field="*{email}"/>
                         </div>
 
                         <div class="form-group required">
                             <label for="phone" class="control-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" required="required" placeholder=""
-                                th:field="*{phoneNumber}"/>
+                            <input type="text" class="form-control" id="phone" placeholder=""
+                                   required="required" minlength="7" maxlength="15"
+                                   th:field="*{phoneNumber}"/>
                         </div>
 
-                        <div style = "margin-top: 3em;" class="form-group btn-group-justified">
+                        <div style = "margin-top: 3em;" class="form-group">
                             <button class="btn btn-primary">Update</button>
                         </div>
 

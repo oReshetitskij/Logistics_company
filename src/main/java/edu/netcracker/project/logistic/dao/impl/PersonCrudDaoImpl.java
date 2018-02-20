@@ -74,6 +74,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 ps.setObject(2, person.getPassword());
                 ps.setObject(3, person.getRegistrationDate());
                 ps.setObject(4, person.getEmail());
+                ps.setObject(5, person.getContact().getContactId());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("person_id");

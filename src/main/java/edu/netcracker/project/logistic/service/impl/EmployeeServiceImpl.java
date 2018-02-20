@@ -1,5 +1,6 @@
 package edu.netcracker.project.logistic.service.impl;
 
+import edu.netcracker.project.logistic.dao.ContactDao;
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.RoleCrudDao;
@@ -14,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +24,15 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
     private final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
+    private ContactDao contactDao;
     private PersonCrudDao personDao;
     private PersonRoleDao personRoleDao;
     private RoleCrudDao roleDao;
 
     @Autowired
-    public EmployeeServiceImpl(PersonCrudDao personDao, PersonRoleDao personRoleDao, RoleCrudDao roleDao) {
+    public EmployeeServiceImpl(ContactDao contactDao, PersonCrudDao personDao,
+                               PersonRoleDao personRoleDao, RoleCrudDao roleDao) {
+        this.contactDao = contactDao;
         this.personDao = personDao;
         this.personRoleDao = personRoleDao;
         this.roleDao = roleDao;
@@ -35,12 +40,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional(rollbackFor = DataIntegrityViolationException.class)
     @Override
-    public Person save(Person employee, Role role) {
+    public Person save(Person employee, Long roleId) {
+        boolean previouslyNotRegistered = employee.getRegistrationDate() == null;
+        if (previouslyNotRegistered) {
+            employee.setRegistrationDate(LocalDateTime.now());
+            contactDao.save(employee.getContact());
+        }
+
         personDao.save(employee);
+        contactDao.save(employee.getContact());
 
         PersonRole employeeRole = new PersonRole();
         employeeRole.setPersonId(employee.getId());
-        employeeRole.setRoleId(role.getRoleId());
+        employeeRole.setRoleId(roleId);
 
         try {
             personRoleDao.save(employeeRole);

@@ -33,19 +33,20 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
             Role role = new Role();
             role.setRoleId(resultSet.getLong("role_id"));
             role.setRoleName(resultSet.getString("role_name"));
+            role.setEmployeeRole(resultSet.getBoolean("is_employee_role"));
             return role;
 
         });
 
     }
 
-    private RowMapper<Role> getMapper_Role_name() {
+    private RowMapper<Role> getMapperForAll() {
         return ((resultSet, i) ->
         {
             Role role = new Role();
             role.setRoleName(resultSet.getString("role_name"));
+            role.setEmployeeRole(resultSet.getBoolean("is_employee_role"));
             return role;
-
         });
 
     }
@@ -116,13 +117,25 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
 
     @Override
     public List<Role> getAllRole() {
-        return jdbcTemplate.query(getAllRolesQuery(), getMapper_Role_name());
+        return jdbcTemplate.query(getAllRolesQuery(), getMapperForAll());
     }
 
     @Override
     public List<Role> getByPersonId(Long personId) {
         try {
             return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId}, getMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public List<Role> findEmployeeRoles() {
+        try {
+            return jdbcTemplate.query(
+                    getEmployeeRoles(),
+                    getMapper()
+            );
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
         }
@@ -155,4 +168,8 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
     }
 
     private String getFindByNameQuery() { return queryService.getQuery("select.role.by.name"); }
+
+    private String getEmployeeRoles() {
+        return queryService.getQuery("select.role.employee");
+    }
 }

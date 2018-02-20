@@ -67,16 +67,6 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!--<tr>-->
-                                <!--<td>1</td>-->
-                                <!--<td>First</td>-->
-                                <!--<td>Last</td>-->
-                                <!--<td>2018-02-16 15:44:02.663752</td>-->
-                                <!--<td>mail@gmail.com</td>-->
-                                <!--<td>+380777777777</td>-->
-                                <!--<td>Manager</td>-->
-                                <!--<td><a href="#" >Update</a></td>-->
-                            <!--</tr>-->
                             <tr th:each="emp, iter: ${employees}">
                                 <td th:text="${iter.index + 1}">1</td>
                                 <td th:text="${emp.contact.firstName}">First</td>

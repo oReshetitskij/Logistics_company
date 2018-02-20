@@ -3,20 +3,7 @@ package edu.netcracker.project.logistic.model;
 import java.io.Serializable;
 
 public class PersonRole implements Serializable {
-    /*
-        class PersonRole {
-            private PersonRoleKey id;
-            private Person person;
-            private Role Role;
-
-            static PersonRoleKey {
-                private Long personId;
-                private Long roleId;
-            }
-        }
-    */
-
-    private Long personId   ;
+    private Long personId;
     private Long roleId;
 
     public Long getPersonId() {
