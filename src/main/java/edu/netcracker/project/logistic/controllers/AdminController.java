@@ -1,7 +1,12 @@
 package edu.netcracker.project.logistic.controllers;
 
+import edu.netcracker.project.logistic.model.Advertisement;
+import edu.netcracker.project.logistic.model.AdvertisementType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -9,7 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     @GetMapping("/advertisements")
-    public String adminAdvertisements() {
+    public String adminAdvertisements(Model model) {
+        Advertisement advertisement = new Advertisement();
+        advertisement.setType(new AdvertisementType());
+        model.addAttribute("advertisement", advertisement);
+        return "/admin/admin_advertisements";
+    }
+
+    @PostMapping("/advertisements")
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement) {
+        String a = "2";
         return "/admin/admin_advertisements";
     }
 
