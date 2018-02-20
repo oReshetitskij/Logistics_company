@@ -34,12 +34,10 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
     private RowMapper<Contact> getMapper() {
         return (resultSet, i) ->
         {
-            Person person = new Person();
             Contact c = new Contact();
             c.setContactId(resultSet.getLong("contact_id"));
             c.setFirstName(resultSet.getString("first_name"));
             c.setLastName(resultSet.getString("last_name"));
-            c.setPerson(person);
             return c;
         };
     }
@@ -55,7 +53,6 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
                 ps.setObject(2, contact.getFirstName());
                 ps.setObject(3, contact.getLastName());
                 ps.setObject(4, contact.getPhoneNumber());
-                ps.setObject(5, contact.getPerson().getId());
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -65,7 +62,6 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
                 ps.setObject(1, contact.getFirstName());
                 ps.setObject(2, contact.getLastName());
                 ps.setObject(3, contact.getPhoneNumber());
-                ps.setObject(4, contact.getPerson().getId());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("contact_id");

@@ -1,34 +1,67 @@
 package edu.netcracker.project.logistic.controllers;
 
-import edu.netcracker.project.logistic.dao.OfficeDao;
-import edu.netcracker.project.logistic.dao.impl.OfficeDaoImpl;
 import edu.netcracker.project.logistic.model.Office;
+import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.OfficeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
+import edu.netcracker.project.logistic.service.EmployeeService;
+import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
-
+    EmployeeService employeeService;
 
     OfficeService officeService;
 
     @Autowired
-    public AdminController(OfficeService officeService) {
+    public AdminController(OfficeService officeService, EmployeeService employeeService) {
         this.officeService = officeService;
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/offices")
-    public String getAllOffice(Model model)
-    {
+    public String getAllOffice(Model model) {
         model.addAttribute("offices", officeService.allOffices());
         return "/admin/admin_offices";
+    }
+
+    @GetMapping("/employees")
+    public String getAllEmployees(Model model) {
+        model.addAttribute("employees", employeeService.findAll());
+
+        return "/admin/admin_employees";
+    }
+
+
+    @GetMapping("/crud/employee")
+    public String adminCrudEmployee(Model model) {
+        model.addAttribute("newEmployee", true);
+        model.addAttribute("emp", new Person());
+        return "/admin/admin_crud_employee";
+    }
+
+    @PostMapping("/crud/employee")
+    public String creatEmployee(Model model, @ModelAttribute("emp") Person employee, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/admin/admin_crud_employee";
+        }
+
+        return "/admin/admin_crud_employee";
+    }
+
+    @GetMapping("/crud/employee/{id}")
+    public String updateEmployee(@PathVariable int id, Model model) {
+        model.addAttribute("newEmployee", false);
+        return "/admin/admin_crud_employee";
     }
 
     @GetMapping("/crud/office")
@@ -43,33 +76,4 @@ public class AdminController {
         officeService.save(office);
         return "redirect:/admin/offices";
     }
-
-
-
-//
-//    @GetMapping("/advertisements")
-//    public String adminAdvertisements() {
-//        return "/admin/admin_advertisements";
-//    }
-//
-//    @GetMapping("/crud/employee")
-//    public String adminCrudEmployee() {
-//        return "/admin/admin_crud_employee";
-//    }
-//
-//    @GetMapping("/crud/office")
-//    public String adminCrudOffice() {
-//        return "/admin/admin_crud_office";
-//    }
-//
-//    @GetMapping("/employees")
-//    public String adminEmployees() {
-//        return "/admin/admin_employees";
-//    }
-//
-//    @GetMapping("/offices")
-//    public String adminOffices() {
-//        return "/admin/admin_offices";
-//    }
-
 }

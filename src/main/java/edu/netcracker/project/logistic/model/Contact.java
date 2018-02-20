@@ -7,14 +7,12 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Person person;
 
-    public Contact(Long contactId, String firstName, String lastName, String phoneNumber, Person person) {
+    public Contact(Long contactId, String firstName, String lastName, String phoneNumber) {
         this.contactId = contactId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.person = person;
     }
 
     public Contact()
@@ -54,14 +52,6 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
 
 
     @Override
@@ -71,7 +61,6 @@ public class Contact {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", person=" + person +
                 '}';
     }
 }

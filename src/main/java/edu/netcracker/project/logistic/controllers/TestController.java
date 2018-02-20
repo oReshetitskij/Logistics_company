@@ -66,7 +66,7 @@ public class TestController {
 
         Person person1 = new Person("nick_name", "1121212", localDate, "sdfffsfsdf");
         personService.savePerson(person1);
-        Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313", person1);
+        Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313");
         contactDao.save(contact);
          Office office = new Office( "werewr", address1);
         System.out.println(office);

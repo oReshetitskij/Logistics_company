@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -76,6 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!hasUserRole) personDao.delete(employeeId);
     }
 
+    @Override
     public Optional<Person> findOne(Long id) {
         boolean hasEmployeeRoles = roleDao.getByPersonId(id)
                 .stream()
@@ -86,6 +86,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return personDao.findOne(id);
+    }
+
+    @Override
+    public List<Person> findAll() {
+        return personDao.findAllEmployees();
     }
 
     @Override

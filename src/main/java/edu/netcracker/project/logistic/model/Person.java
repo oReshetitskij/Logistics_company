@@ -2,13 +2,14 @@ package edu.netcracker.project.logistic.model;
 
 import java.time.LocalDateTime;
 
-public class Person   {
+public class Person {
 
     private Long id;
     private String userName;
     private String password;
     private LocalDateTime registrationDate;
     private String email;
+    private Contact contact;
 
     public Person(String userName, String password, LocalDateTime registrationDate, String email) {
         this.userName = userName;
@@ -17,10 +18,9 @@ public class Person   {
         this.email = email;
     }
 
-public  Person()
-{
+    public Person() {
 
-}
+    }
 
 
 
@@ -65,8 +65,13 @@ public  Person()
         this.email = email;
     }
 
+    public Contact getContact() {
+        return contact;
+    }
 
-
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
     @Override
     public String toString() {
@@ -76,6 +81,7 @@ public  Person()
                 ", password='" + password + '\'' +
                 ", registrationDate=" + registrationDate +
                 ", email='" + email + '\'' +
+                ", contact=" + contact +
                 '}';
     }
 }

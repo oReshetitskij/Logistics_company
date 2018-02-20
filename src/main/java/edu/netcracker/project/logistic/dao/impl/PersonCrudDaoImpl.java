@@ -3,6 +3,7 @@ package edu.netcracker.project.logistic.dao.impl;
 
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
+import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 
 import edu.netcracker.project.logistic.service.QueryService;
@@ -39,6 +40,15 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
             person.setPassword(resultSet.getString("password"));
             person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
             person.setEmail(resultSet.getString("email"));
+
+            Contact contact = new Contact();
+            contact.setContactId(resultSet.getLong("contact_id"));
+            contact.setFirstName(resultSet.getString("first_name"));
+            contact.setLastName(resultSet.getString("last_name"));
+            contact.setPhoneNumber(resultSet.getString("phone_number"));
+
+            person.setContact(contact);
+
             return person;
         };
     }
@@ -136,6 +146,30 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
     }
 
     @Override
+    public List<Person> findAll() {
+        try {
+            return jdbcTemplate.query(
+                    getFindAllQuery(),
+                    getMapper()
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public List<Person> findAllEmployees() {
+        try {
+            return jdbcTemplate.query(
+                    getFindAllEmployeesQuery(),
+                    getMapper()
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.person");
     }
@@ -154,6 +188,10 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
     public String getFindOneQuery() {
         return queryService.getQuery("select.person");
     }
+
+    private String getFindAllQuery() { return queryService.getQuery("all.person"); }
+
+    public String getFindAllEmployeesQuery() { return queryService.getQuery("select.person.employee"); }
 
     private String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
