@@ -40,17 +40,15 @@ public class AdminController {
 
     @Autowired
     public AdminController(OfficeService officeService, EmployeeService employeeService,
-                           ContactService contactService, RoleService roleService) {
+                           ContactService contactService, RoleService roleService,
+                           AdvertisementService advertisementService) {
         this.officeService = officeService;
         this.employeeService = employeeService;
         this.contactService = contactService;
         this.roleService = roleService;
-    }
-
-    public AdminController(OfficeService officeService, AdvertisementService advertisementService) {
-        this.officeService = officeService;
         this.advertisementService = advertisementService;
     }
+
 
     @GetMapping("/advertisements")
     public String adminAdvertisements(Model model) {
