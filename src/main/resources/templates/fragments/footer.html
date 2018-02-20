@@ -5,10 +5,32 @@
 <body>
 <div th:fragment="footer">
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+    <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- jQuery local fallback -->
+    <script type="text/javascript">
+        <![CDATA[
+        window.jQuery || document.write('<script src="../../static/local/jquery-3.3.1.min.js"><\/script>')
+        ]]>
+    </script>
+    <!-- Bootstrap JS CDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS local fallback -->
+    <script>
+        <![CDATA[
+        if(typeof($.fn.modal) === 'undefined') {document.write('<script src="../../static/local/bootstrap.min.js"><\/script>')}
+        ]]>
+    </script>
+    <!-- Bootstrap CSS local fallback -->
+    <div id="bootstrapCssTest" class="hidden"></div>
+    <script>
+        $(function() {
+            if ($('#bootstrapCssTest').is(':visible')) {
+                $("head").prepend('<link rel="stylesheet" href="../../static/local/bootstrap.min.css" />');
+            }
+        });
+    </script>
 
 
 </div>
