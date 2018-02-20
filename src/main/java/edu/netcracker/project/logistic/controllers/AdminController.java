@@ -2,6 +2,8 @@ package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.model.Advertisement;
 import edu.netcracker.project.logistic.model.AdvertisementType;
+import edu.netcracker.project.logistic.service.AdvertisementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
+    private AdvertisementService advertisementService;
+
+    @Autowired
+    public AdminController(AdvertisementService advertisementService){
+        this.advertisementService = advertisementService;
+    }
+
     @GetMapping("/advertisements")
     public String adminAdvertisements(Model model) {
         Advertisement advertisement = new Advertisement();
@@ -22,9 +31,10 @@ public class AdminController {
     }
 
     @PostMapping("/advertisements")
-    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement) {
-        String a = "2";
-        return "/admin/admin_advertisements";
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement, Model model) {
+        advertisementService.save(advertisement);
+        model.addAttribute("success", new Object());
+        return "redirect:/admin/advertisements?success";
     }
 
     @GetMapping("/crud/employee")

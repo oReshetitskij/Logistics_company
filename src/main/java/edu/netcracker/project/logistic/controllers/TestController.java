@@ -64,21 +64,6 @@ public class TestController {
 //        contactDao.findOne(1L);
 //        System.out.println(contact);
 
-        Advertisement advertisement = new Advertisement();
-        advertisement.setName("Caption");
-        advertisement.setDescription("Description");
-        advertisement.setType(new AdvertisementType());
-        advertisement.getType().setName("Other");
-
-        Advertisement advertisement2 = new Advertisement();
-        advertisement2.setName("Caption");
-        advertisement2.setDescription("Description");
-        advertisement2.setType(new AdvertisementType());
-        advertisement2.getType().setName("Advertisement");
-
-        advertisementDao.save(advertisement);
-        advertisementDao.save(advertisement2);
-
 
         return "test";
     }

@@ -33,20 +33,6 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
         this.advertisementTypeDao = advertisementTypeDao;
     }
 
-    private RowMapper<Advertisement> getMapper() {
-        return (resultSet, i) ->
-        {
-            Advertisement a = new Advertisement();
-            a.setId(resultSet.getLong("advertisement_id"));
-            a.setName(resultSet.getString("name"));
-            a.setDescription(resultSet.getString("description"));
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            Optional<AdvertisementType> type = advertisementTypeDao.getByName(a.getType().getName());
-            a.setType(type.get());
-            return a;
-        };
-    }
-
     @Override
     public Advertisement save(Advertisement advertisement) {
 
