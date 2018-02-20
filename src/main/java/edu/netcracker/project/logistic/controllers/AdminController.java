@@ -4,8 +4,16 @@ import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.ContactService;
 import edu.netcracker.project.logistic.service.OfficeService;
 import edu.netcracker.project.logistic.service.RoleService;
+
+import edu.netcracker.project.logistic.model.Advertisement;
+import edu.netcracker.project.logistic.model.AdvertisementType;
+import edu.netcracker.project.logistic.model.Office;
+
+import edu.netcracker.project.logistic.service.AdvertisementService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +31,12 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
-    EmployeeService employeeService;
-    OfficeService officeService;
-    ContactService contactService;
-    RoleService roleService;
+    private EmployeeService employeeService;
+    private OfficeService officeService;
+    private ContactService contactService;
+    private RoleService roleService;
+    private AdvertisementService advertisementService;
+
 
     @Autowired
     public AdminController(OfficeService officeService, EmployeeService employeeService,
@@ -37,8 +47,27 @@ public class AdminController {
         this.roleService = roleService;
     }
 
+    public AdminController(OfficeService officeService, AdvertisementService advertisementService) {
+        this.officeService = officeService;
+        this.advertisementService = advertisementService;
+    }
+
+    @GetMapping("/advertisements")
+    public String adminAdvertisements(Model model) {
+        Advertisement advertisement = new Advertisement();
+        advertisement.setType(new AdvertisementType());
+        model.addAttribute("advertisement", advertisement);
+        return "/admin/admin_advertisements";
+    }
+
+    @PostMapping("/advertisements")
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement, Model model) {
+        advertisementService.save(advertisement);
+        return "redirect:/admin/advertisements?success";
+    }
+
     @GetMapping("/offices")
-    public String getAllOffice(Model model) {
+    public String getAllOffice(Model model){
         model.addAttribute("offices", officeService.allOffices());
         return "/admin/admin_offices";
     }

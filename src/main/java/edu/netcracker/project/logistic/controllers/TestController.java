@@ -1,19 +1,18 @@
 package edu.netcracker.project.logistic.controllers;
 
-
-
-import edu.netcracker.project.logistic.dao.ContactDao;
-// import edu.netcracker.project.logistic.dao.OfficeDao;
-import edu.netcracker.project.logistic.dao.OfficeDao;
-import edu.netcracker.project.logistic.dao.impl.ContactDaoImpl;
 import edu.netcracker.project.logistic.model.Address;
 import edu.netcracker.project.logistic.model.Contact;
-// import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.model.Person;
+
+import edu.netcracker.project.logistic.dao.OfficeDao;
+import edu.netcracker.project.logistic.dao.ContactDao;
+import edu.netcracker.project.logistic.dao.impl.ContactDaoImpl;
+
 import edu.netcracker.project.logistic.service.AddressService;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -54,8 +53,7 @@ public class TestController {
 
     @RequestMapping(value = "/test")
     public String test(Model model) {
-
-
+      
         Address address = new Address("м. Київ");
         Address address1 = new Address((long)3,"м. Житомир");
         addressService.save(address);
@@ -76,9 +74,9 @@ public class TestController {
         contactDao.save(contact);
         contactDao.findOne(1L);
         System.out.println(contact);
+
         return "test";
     }
-
 
 
     @GetMapping("/error/403")

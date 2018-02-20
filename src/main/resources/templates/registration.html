@@ -31,16 +31,16 @@
             <form action="#" method="post" th:action="@{/registration}" th:object="${registrationForm}">
 
                 <div class="form-group required">
-                    <label for="firstName" class="control-label">Name</label>
                     <div class="row">
                         <div class="col-sm-6 col-md-6">
+                            <label for="firstName" class="control-label">First Name</label>
                             <input type="text" class="form-control" id="firstName" placeholder="First name"
                                    required="required" minlength="1" maxlength="45"
                                    th:field="*{firstName}"/>
                         </div>
                         <div class="col-sm-6 col-md-6">
-                            <input type="text" class="form-control" id="lastName"
-                                   placeholder="Last name"
+                            <label for="lastName" class="control-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Last name"
                                    required="required" minlength="1" maxlength="45"
                                    th:field="*{lastName}"/>
                         </div>

@@ -26,4 +26,9 @@ VALUES (5, 'stanis1', '$2a$10$x8wKe1tpGVJTE4zkHRbDj.OXXblGefWRjjdWw82e5s.m3OjHXG
 
 INSERT INTO person_role(person_id, role_id) VALUES (4,2);
 INSERT INTO person_role(person_id, role_id) VALUES (5,1);
+
 INSERT INTO person_role(person_id, role_id) VALUES (5, 4);
+
+INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (1, 'Advertisement');
+INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (2, 'Announcement');
+INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (3, 'Other');
