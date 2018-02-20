@@ -2,13 +2,12 @@ package edu.netcracker.project.logistic.controllers;
 
 
 
+import edu.netcracker.project.logistic.dao.AdvertisementDao;
 import edu.netcracker.project.logistic.dao.ContactDao;
 // import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.dao.OfficeDao;
-import edu.netcracker.project.logistic.model.Contact;
+import edu.netcracker.project.logistic.model.*;
 // import edu.netcracker.project.logistic.model.Office;
-import edu.netcracker.project.logistic.model.Office;
-import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,9 @@ public class TestController {
  @Autowired
  private OfficeDao officeDao;
 
+ @Autowired
+    AdvertisementDao advertisementDao;
+
    private PersonService personService;
 
    @Autowired
@@ -48,19 +50,36 @@ public class TestController {
     @RequestMapping(value = "/test")
     public String test(Model model) {
 
-        LocalDateTime localDate = LocalDateTime.now();
+//        LocalDateTime localDate = LocalDateTime.now();
+//
+//        Person person1 = new Person(1L,"nick_name", "1121212", localDate, "sdfffsfsdf");
+//        personService.savePerson(person1);
+//        Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313", 1L);
+//         Office office = new Office(1L, "werewr", "werer");
+//         officeDao.save(office);
+//         officeDao.findOne(1L);
+//         officeDao.contains(1L);
+//         officeDao.delete(1L);
+//        contactDao.save(contact);
+//        contactDao.findOne(1L);
+//        System.out.println(contact);
 
-        Person person1 = new Person(1L,"nick_name", "1121212", localDate, "sdfffsfsdf");
-        personService.savePerson(person1);
-        Contact contact = new Contact( 1L ,"lol", "lol", "+2312312313", 1L);
-         Office office = new Office(1L, "werewr", "werer");
-         officeDao.save(office);
-         officeDao.findOne(1L);
-         officeDao.contains(1L);
-         officeDao.delete(1L);
-        contactDao.save(contact);
-        contactDao.findOne(1L);
-        System.out.println(contact);
+        Advertisement advertisement = new Advertisement();
+        advertisement.setName("Caption");
+        advertisement.setDescription("Description");
+        advertisement.setType(new AdvertisementType());
+        advertisement.getType().setName("Other");
+
+        Advertisement advertisement2 = new Advertisement();
+        advertisement2.setName("Caption");
+        advertisement2.setDescription("Description");
+        advertisement2.setType(new AdvertisementType());
+        advertisement2.getType().setName("Advertisement");
+
+        advertisementDao.save(advertisement);
+        advertisementDao.save(advertisement2);
+
+
         return "test";
     }
 
