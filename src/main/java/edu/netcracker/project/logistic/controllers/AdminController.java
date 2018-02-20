@@ -28,12 +28,8 @@ public class AdminController {
     OfficeService officeService;
 
     @Autowired
-    public AdminController(OfficeService officeService) {
+    public AdminController(OfficeService officeService, AdvertisementService advertisementService) {
         this.officeService = officeService;
-    }
-
-    @Autowired
-    public AdminController(AdvertisementService advertisementService){
         this.advertisementService = advertisementService;
     }
 
@@ -54,10 +50,10 @@ public class AdminController {
     @GetMapping("/crud/employee")
     public String adminCrudEmployee() {
         return "/admin/admin_crud_employee";
+    }
 
     @GetMapping("/offices")
-    public String getAllOffice(Model model)
-    {
+    public String getAllOffice(Model model){
         model.addAttribute("offices", officeService.allOffices());
         return "/admin/admin_offices";
     }
