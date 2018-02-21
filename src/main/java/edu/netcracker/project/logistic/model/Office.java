@@ -11,6 +11,12 @@ public class Office {
         this.address = address;
     }
 
+    public Office(Long officeId, String name, Address address) {
+        this.officeId = officeId;
+        this.name = name;
+        this.address = address;
+    }
+
     public Office()
     {
 
