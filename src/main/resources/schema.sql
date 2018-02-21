@@ -98,7 +98,7 @@ CREATE TABLE "logistic_company"."order"
   "order_id"          INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
   "creation_date"     TIMESTAMP                                          NOT NULL DEFAULT NOW(),
   "delivery_time"     TIME                                               NOT NULL,
-  "order_status_time" INTERVAL,
+  "order_status_time" TIMESTAMP                                          NOT NULL DEFAULT NOW(),
   "courier_id"        INT4                                               NOT NULL,
   "reseiver_id"       INT4                                               NOT NULL,
   "sender_id"         INT4                                               NOT NULL,
