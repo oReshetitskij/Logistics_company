@@ -4,14 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
 
 
 @Configuration
@@ -19,20 +20,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private AccessDeniedHandler accessDeniedHandler;
     private AuthenticationSuccessHandler authenticationSuccessHandler;
-    private AuthenticationProvider authenticationProvider;
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     public SpringSecurityConfig(AccessDeniedHandler accessDeniedHandler,
                                 AuthenticationSuccessHandler authenticationSuccessHandler,
-                                AuthenticationProvider authenticationProvider,
-                                BCryptPasswordEncoder passwordEncoder
-                                ){
+                                UserDetailsService userDetailsService
+    ) {
         this.accessDeniedHandler = accessDeniedHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationProvider = authenticationProvider;
-        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,7 +53,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
                 .permitAll()
+                .and()
+                .rememberMe()
+                .key("unique-and-secret")
+                .userDetailsService(userDetailsService)
+                .rememberMeCookieName("remember-me-cookie-name")
+                .tokenValiditySeconds(60*60)
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
@@ -61,12 +69,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(
             AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider);
+        auth.authenticationProvider(authenticationProvider());
     }
 
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return passwordEncoder;
+        return new BCryptPasswordEncoder(10);
     }
 }
