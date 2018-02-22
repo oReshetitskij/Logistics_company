@@ -3,7 +3,6 @@ package edu.netcracker.project.logistic.dao.impl;
 import edu.netcracker.project.logistic.dao.ContactDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
-import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,13 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
         this.queryService = queryService;
     }
 
-    private RowMapper<Contact> getMapper() {
+    public ContactDaoImpl()
+    {
+
+
+    }
+
+   public RowMapper<Contact> getMapperContact() {
         return (resultSet, i) ->
         {
             Contact c = new Contact();
@@ -82,7 +87,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
             Contact contact = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
                     new Object[]{id},
-                     getMapper());
+                    getMapperContact());
             return Optional.of(contact);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

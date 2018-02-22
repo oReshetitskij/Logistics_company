@@ -1,6 +1,5 @@
 package edu.netcracker.project.logistic.dao.impl;
 
-import ch.qos.logback.classic.Logger;
 import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Address;
@@ -11,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +36,11 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     private RowMapper<Office> getMapper() {
         return (resultSet, i) ->
         {
-            Address address = new Address();
-        Office office = new Office();
+            Address address =new Address();
+            address.setId(resultSet.getLong("address_id"));
+            address.setName(resultSet.getString("address_name"));
+
+            Office office = new Office();
             office.setOfficeId(resultSet.getLong("office_id"));
             office.setName(resultSet.getString("name"));
             office.setAddress(address);
@@ -61,7 +62,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(psc -> {
+                    jdbcTemplate.update(psc -> {
                 String query = getInsertQuery();
                 PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, office.getName());
@@ -102,6 +103,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
 
         return Optional.empty();
     }
+
     @Override
     public List<Office> allOffices() {
         return  jdbcTemplate.query(getAllOffices(),getMapper()) ;

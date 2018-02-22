@@ -1,26 +1,12 @@
 package edu.netcracker.project.logistic.controllers;
 
+import edu.netcracker.project.logistic.dao.impl.AddressDaoImpl;
 import edu.netcracker.project.logistic.model.*;
-import edu.netcracker.project.logistic.service.ContactService;
-import edu.netcracker.project.logistic.service.OfficeService;
-import edu.netcracker.project.logistic.service.RoleService;
-
-import edu.netcracker.project.logistic.model.Advertisement;
-import edu.netcracker.project.logistic.model.AdvertisementType;
-import edu.netcracker.project.logistic.model.Office;
-
-import edu.netcracker.project.logistic.service.AdvertisementService;
-
+import edu.netcracker.project.logistic.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import edu.netcracker.project.logistic.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,19 +22,21 @@ public class AdminController {
     private ContactService contactService;
     private RoleService roleService;
     private AdvertisementService advertisementService;
-
+    private AddressService addressService;
+    @Autowired
+    private AddressDaoImpl addressDao;
 
     @Autowired
-    public AdminController(OfficeService officeService, EmployeeService employeeService,
+    public AdminController(EmployeeService employeeService, OfficeService officeService,
                            ContactService contactService, RoleService roleService,
-                           AdvertisementService advertisementService) {
-        this.officeService = officeService;
+                           AdvertisementService advertisementService, AddressService addressService) {
         this.employeeService = employeeService;
+        this.officeService = officeService;
         this.contactService = contactService;
         this.roleService = roleService;
         this.advertisementService = advertisementService;
+        this.addressService = addressService;
     }
-
 
     @GetMapping("/advertisements")
     public String adminAdvertisements(Model model) {
@@ -65,7 +53,7 @@ public class AdminController {
     }
 
     @GetMapping("/offices")
-    public String getAllOffice(Model model){
+    public String getAllOffice(Model model) {
         model.addAttribute("offices", officeService.allOffices());
         return "/admin/admin_offices";
     }
@@ -88,9 +76,9 @@ public class AdminController {
 
         List<Role> roles =
                 roleService.findRolesByPersonId(emp.getId())
-                    .stream()
-                    .filter(Role::isEmployeeRole)
-                    .collect(Collectors.toList());
+                        .stream()
+                        .filter(Role::isEmployeeRole)
+                        .collect(Collectors.toList());
 
         EmployeeForm employeeForm = new EmployeeForm();
         employeeForm.setEmployee(emp);
@@ -103,7 +91,7 @@ public class AdminController {
 
     @PostMapping("/crud/employee/{id}")
     public String updateEmployee(@PathVariable int id, Model model, BindingResult result,
-                                    @ModelAttribute("form") EmployeeForm form) {
+                                 @ModelAttribute("form") EmployeeForm form) {
         throw new UnsupportedOperationException();
     }
 
@@ -144,14 +132,15 @@ public class AdminController {
     }
 
     @GetMapping("/crud/office")
-    public String createOffice(Model model)
-    {
-       model.addAttribute("office", new Office());
+    public String createOffice(Model model) {
+        Office office = new Office();
+        office.setAddress(new Address());
+        model.addAttribute("office", new Office());
         return "/admin/admin_crud_office";
     }
 
     @PostMapping("/crud/office")
-    public String saveOffice(Office office) {
+    public String saveOffice(@ModelAttribute("office") Office office) {
         officeService.save(office);
         return "redirect:/admin/offices";
     }

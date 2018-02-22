@@ -31,7 +31,7 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
         return (resultSet, i) ->
         {
             Address address =new Address();
-            address.setId(resultSet.getLong("address_id"));
+//            address.setId(resultSet.getLong("address_id"));
             address.setName(resultSet.getString("address_name"));
             return address;
         };
@@ -90,6 +90,7 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
         }
     }
 
+
     @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.address");
@@ -107,6 +108,6 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
 
     @Override
     public String getFindOneQuery() {
-        return null;
+      return   queryService.getQuery("select.address");
     }
 }

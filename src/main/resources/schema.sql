@@ -50,8 +50,8 @@ CREATE TABLE "logistic_company"."person" (
   "user_name"         VARCHAR(45) COLLATE "default",
   "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
   "registration_date" TIMESTAMP                                       NOT NULL DEFAULT NOW(),
-  "manager_id"        INT                                             NOT NULL,
-  "email"        VARCHAR(45) COLLATE "default"                        NOT NULL,
+  "manager_id"        INT,
+  "email"             VARCHAR(45) COLLATE "default"                        NOT NULL,
   "contact_id"        INT4                                            NOT NULL
 );
 

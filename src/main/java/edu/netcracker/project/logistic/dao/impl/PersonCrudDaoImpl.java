@@ -5,7 +5,6 @@ import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
-
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,7 +30,12 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         this.queryService = queryService;
     }
 
-    private RowMapper<Person> getMapper() {
+    public   PersonCrudDaoImpl()
+    {
+
+    }
+
+    public  RowMapper<Person> getMapper() {
         return (resultSet, i) ->
         {
             Person person = new Person();
@@ -170,6 +174,8 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         }
     }
 
+
+
     @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.person");
@@ -190,9 +196,12 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         return queryService.getQuery("select.person");
     }
 
+
+
+
     private String getFindAllQuery() { return queryService.getQuery("all.person"); }
 
-    public String getFindAllEmployeesQuery() { return queryService.getQuery("select.person.employee"); }
+    private String getFindAllEmployeesQuery() { return queryService.getQuery("select.person.employee"); }
 
     private String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
