@@ -6,6 +6,14 @@ public class PersonRole implements Serializable {
     private Long personId;
     private Long roleId;
 
+    public PersonRole() {
+    }
+
+    public PersonRole(Long personId, Long roleId) {
+        this.personId = personId;
+        this.roleId = roleId;
+    }
+
     public Long getPersonId() {
         return personId;
     }

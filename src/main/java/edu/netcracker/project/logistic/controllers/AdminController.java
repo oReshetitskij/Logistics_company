@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -96,8 +97,9 @@ public class AdminController {
     }
 
     @PostMapping("/crud/employee/{id}/delete")
-    public String deleteEmployee(@PathVariable int id) {
-        throw new UnsupportedOperationException();
+    public String deleteEmployee(@PathVariable Long id) {
+        employeeService.delete(id);
+        return "/admin/admin_employees";
     }
 
     @GetMapping("/crud/employee")
@@ -127,7 +129,7 @@ public class AdminController {
 
             return "/admin/admin_crud_employee";
         }
-        employeeService.save(form.getEmployee(), form.getRoleId());
+        employeeService.save(form.getEmployee(), Collections.singletonList(form.getRoleId()));
         return "redirect:/admin/employees";
     }
 
