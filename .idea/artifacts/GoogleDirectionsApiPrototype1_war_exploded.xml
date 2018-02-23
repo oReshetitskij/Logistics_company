@@ -1,0 +1,27 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="GoogleDirectionsApiPrototype1:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/GoogleDirectionsApiPrototype1_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="GoogleDirectionsApiPrototype1/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="GoogleDirectionsApiPrototype1" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="C:/Program Files/Java/appengine-java-sdk-1.9.62/appengine-api-1.0-sdk-1.2.1.jar" />
+          <element id="library" level="application" name="appengine-api-1.0-sdk-1.2.0" />
+          <element id="library" level="project" name="appengine-tools-sdk-1.2.1" />
+          <element id="library" level="project" name="appengine-api" />
+          <element id="library" level="application" name="joda-time-2.9.9" />
+          <element id="library" level="application" name="okio-1.14.0" />
+          <element id="library" level="project" name="httpcore-4.4.5" />
+          <element id="library" level="project" name="log4j" />
+          <element id="library" level="project" name="gson-2.8.2" />
+          <element id="library" level="application" name="slf4j-api-1.7.10" />
+          <element id="library" level="application" name="slf4j-log4j12-1.7.10" />
+          <element id="library" level="project" name="okhttp3" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

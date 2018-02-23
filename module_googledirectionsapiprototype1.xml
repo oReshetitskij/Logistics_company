@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_googledirectionsapiprototype1" default="compile.module.googledirectionsapiprototype1">
+  <dirname property="module.googledirectionsapiprototype1.basedir" file="${ant.file.module_googledirectionsapiprototype1}"/>
+  
+  <property name="module.jdk.home.googledirectionsapiprototype1" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.googledirectionsapiprototype1" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.googledirectionsapiprototype1" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.googledirectionsapiprototype1" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="googledirectionsapiprototype1.output.dir" value="${module.googledirectionsapiprototype1.basedir}/out/production/GoogleDirectionsApiPrototype1"/>
+  <property name="googledirectionsapiprototype1.testoutput.dir" value="${module.googledirectionsapiprototype1.basedir}/out/test/GoogleDirectionsApiPrototype1"/>
+  
+  <path id="googledirectionsapiprototype1.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="googledirectionsapiprototype1.module.production.classpath">
+    <path refid="${module.jdk.classpath.googledirectionsapiprototype1}"/>
+    <path refid="library.gson-2.8.2.classpath"/>
+    <path refid="library.httpcore-4.4.5.classpath"/>
+    <path refid="library.okhttp3.classpath"/>
+    <path refid="library.slf4j-api-1.7.10.classpath"/>
+    <path refid="library.slf4j-log4j12-1.7.10.classpath"/>
+    <path refid="library.appengine-api-1.0-sdk-1.2.0.classpath"/>
+    <path refid="library.appengine-tools-sdk-1.2.1.classpath"/>
+    <path refid="library.appengine-api.classpath"/>
+    <path refid="library.joda-time-2.9.9.classpath"/>
+    <path refid="library.okio-1.14.0.classpath"/>
+  </path>
+  
+  <path id="googledirectionsapiprototype1.runtime.production.module.classpath">
+    <pathelement location="${googledirectionsapiprototype1.output.dir}"/>
+    <path refid="library.slf4j-log4j12-1.7.10.classpath"/>
+    <path refid="library.appengine-api-1.0-sdk-1.2.0.classpath"/>
+    <path refid="library.appengine-tools-sdk-1.2.1.classpath"/>
+    <path refid="library.appengine-api.classpath"/>
+    <path refid="library.joda-time-2.9.9.classpath"/>
+    <path refid="library.okio-1.14.0.classpath"/>
+  </path>
+  
+  <path id="googledirectionsapiprototype1.module.classpath">
+    <path refid="${module.jdk.classpath.googledirectionsapiprototype1}"/>
+    <pathelement location="${googledirectionsapiprototype1.output.dir}"/>
+    <path refid="library.gson-2.8.2.classpath"/>
+    <path refid="library.httpcore-4.4.5.classpath"/>
+    <path refid="library.okhttp3.classpath"/>
+    <path refid="library.slf4j-api-1.7.10.classpath"/>
+    <path refid="library.slf4j-log4j12-1.7.10.classpath"/>
+    <path refid="library.appengine-api-1.0-sdk-1.2.0.classpath"/>
+    <path refid="library.appengine-tools-sdk-1.2.1.classpath"/>
+    <path refid="library.appengine-api.classpath"/>
+    <path refid="library.joda-time-2.9.9.classpath"/>
+    <path refid="library.okio-1.14.0.classpath"/>
+  </path>
+  
+  <path id="googledirectionsapiprototype1.runtime.module.classpath">
+    <pathelement location="${googledirectionsapiprototype1.testoutput.dir}"/>
+    <pathelement location="${googledirectionsapiprototype1.output.dir}"/>
+    <path refid="library.gson-2.8.2.classpath"/>
+    <path refid="library.httpcore-4.4.5.classpath"/>
+    <path refid="library.okhttp3.classpath"/>
+    <path refid="library.slf4j-api-1.7.10.classpath"/>
+    <path refid="library.slf4j-log4j12-1.7.10.classpath"/>
+    <path refid="library.appengine-api-1.0-sdk-1.2.0.classpath"/>
+    <path refid="library.appengine-tools-sdk-1.2.1.classpath"/>
+    <path refid="library.appengine-api.classpath"/>
+    <path refid="library.joda-time-2.9.9.classpath"/>
+    <path refid="library.okio-1.14.0.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.googledirectionsapiprototype1">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.googledirectionsapiprototype1">
+    <patternset refid="excluded.from.module.googledirectionsapiprototype1"/>
+  </patternset>
+  
+  <path id="googledirectionsapiprototype1.module.sourcepath">
+    <dirset dir="${module.googledirectionsapiprototype1.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="googledirectionsapiprototype1.module.test.sourcepath">
+    <dirset dir="${module.googledirectionsapiprototype1.basedir}">
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.googledirectionsapiprototype1" depends="compile.module.googledirectionsapiprototype1.production,compile.module.googledirectionsapiprototype1.tests" description="Compile module GoogleDirectionsApiPrototype1"/>
+  
+  <target name="compile.module.googledirectionsapiprototype1.production" depends="register.custom.compilers" description="Compile module GoogleDirectionsApiPrototype1; production classes">
+    <mkdir dir="${googledirectionsapiprototype1.output.dir}"/>
+    <javac2 destdir="${googledirectionsapiprototype1.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.googledirectionsapiprototype1}/javac">
+      <compilerarg line="${compiler.args.googledirectionsapiprototype1}"/>
+      <bootclasspath refid="googledirectionsapiprototype1.module.bootclasspath"/>
+      <classpath refid="googledirectionsapiprototype1.module.production.classpath"/>
+      <src refid="googledirectionsapiprototype1.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.googledirectionsapiprototype1"/>
+    </javac2>
+    
+    <copy todir="${googledirectionsapiprototype1.output.dir}">
+      <fileset dir="${module.googledirectionsapiprototype1.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.googledirectionsapiprototype1.tests" depends="register.custom.compilers,compile.module.googledirectionsapiprototype1.production" description="compile module GoogleDirectionsApiPrototype1; test classes" unless="skip.tests">
+    <mkdir dir="${googledirectionsapiprototype1.testoutput.dir}"/>
+    <javac2 destdir="${googledirectionsapiprototype1.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.googledirectionsapiprototype1}/javac">
+      <compilerarg line="${compiler.args.googledirectionsapiprototype1}"/>
+      <bootclasspath refid="googledirectionsapiprototype1.module.bootclasspath"/>
+      <classpath refid="googledirectionsapiprototype1.module.classpath"/>
+      <src refid="googledirectionsapiprototype1.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.googledirectionsapiprototype1"/>
+    </javac2>
+    
+    <copy todir="${googledirectionsapiprototype1.testoutput.dir}">
+      <fileset dir="${module.googledirectionsapiprototype1.basedir}/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.googledirectionsapiprototype1" description="cleanup module">
+    <delete dir="${googledirectionsapiprototype1.output.dir}"/>
+    <delete dir="${googledirectionsapiprototype1.testoutput.dir}"/>
+  </target>
+</project>

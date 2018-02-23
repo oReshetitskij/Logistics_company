@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Logistics_company.iml" filepath="$PROJECT_DIR$/Logistics_company.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GoogleDirectionsApiPrototype1.iml" filepath="$PROJECT_DIR$/GoogleDirectionsApiPrototype1.iml" />
     </modules>
   </component>
 </project>

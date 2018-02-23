@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/GoogleDirectionsApiPrototype1"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/resources"/>
+	</contentEntry>
+	<levels>
+		<level name="gson-2.8.2" value="project"/>
+		<level name="httpcore-4.4.5" value="project"/>
+		<level name="slf4j-api-1.7.10" value="project"/>
+		<level name="slf4j-log4j12-1.7.10" value="project"/>
+		<level name="appengine-tools-sdk-1.2.1" value="project"/>
+		<level name="appengine-api" value="project"/>
+		<level name="okhttp3" value="project"/>
+		<level name="log4j" value="project"/>
+	</levels>
+</component>
