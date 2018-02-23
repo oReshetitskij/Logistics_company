@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
+    final static String API_KEY = "AIzaSyBHUNATkvBBtqWEF8roNL_EJEF-IQ1THP0";
 
     private static final String fromAddr = "Украина, Киев, улица Политехническая, 11";
     private static final String toAddr = "Украина, Киев, улица Пушкина, 5";
@@ -15,16 +16,26 @@ public class Main {
     private static GeoApiContext context;
 
     public static void main(String[] args) {
-        DirectionsPrev();
-        GeocodingPrev();
-        DistanceMatrixPrev();
-    }
 
-    public static void DirectionsPrev() {
-        final String API_KEY = "AIzaSyBHUNATkvBBtqWEF8roNL_EJEF-IQ1THP0";
         context = new GeoApiContext.Builder()
                 .apiKey(API_KEY)
                 .build();
+
+        DirectionsPrev();
+        GeocodingPrev();
+        DistanceMatrixPrev();
+        MapsPrev();
+    }
+
+
+    public static void MapsPrev() {
+
+        StaticMap staticMap = new StaticMap();
+        staticMap.key(API_KEY);
+    }
+
+    public static void DirectionsPrev() {
+
 
         DirectionsApiRequest req = DirectionsApi.newRequest(context);
 
@@ -70,10 +81,7 @@ public class Main {
     }
 
     public static void GeocodingPrev() {
-        final String API_KEY = "AIzaSyASCAb7p_gBcpp5IPISi6mqT719x_oZARo";
-        context = new GeoApiContext.Builder()
-                .apiKey(API_KEY)
-                .build();
+        //final String API_KEY = "AIzaSyASCAb7p_gBcpp5IPISi6mqT719x_oZARo";
 
         GeocodingApiRequest req = GeocodingApi.newRequest(context);
 
@@ -92,17 +100,12 @@ public class Main {
         }
         String location = result[0].formattedAddress;
         LatLng geoLocation = result[0].geometry.location;
-        System.out.println("addres of: "+fromAddr+
+        System.out.println("address of: "+fromAddr+
                 "\nis: "+location+
                 "\ngeo location is: "+geoLocation+"\n");
     }
 
     public static void  DistanceMatrixPrev(){
-        final String API_KEY = "AIzaSyBHUNATkvBBtqWEF8roNL_EJEF-IQ1THP0";
-
-        context = new GeoApiContext.Builder()
-                .apiKey(API_KEY)
-                .build();
 
         DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
 
@@ -132,11 +135,6 @@ public class Main {
     }
 
     public static String AutonomusLatLngToAdress(LatLng geoLocation){
-        final  String API_KEY = "AIzaSyASCAb7p_gBcpp5IPISi6mqT719x_oZARo";
-        GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey(API_KEY)
-                .build();
-
 
         GeocodingApiRequest req = GeocodingApi.newRequest(context);
 

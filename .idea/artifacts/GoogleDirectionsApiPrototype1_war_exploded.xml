@@ -20,6 +20,24 @@
           <element id="library" level="application" name="slf4j-api-1.7.10" />
           <element id="library" level="application" name="slf4j-log4j12-1.7.10" />
           <element id="library" level="project" name="okhttp3" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/okhttp3.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.ejb.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.jms.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/gson-2.8.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/okio-1.14.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.servlet.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.resource.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/joda-time-2.9.9.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.annotation.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/slf4j-api-1.7.10.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.persistence.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.servlet.jsp.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.transaction.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/slf4j-log4j12-1.7.10.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/appengine-tools-sdk-1.2.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/appengine-api-1.0-sdk-1.2.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/annotations-java8.jar" />
         </element>
       </element>
     </root>
