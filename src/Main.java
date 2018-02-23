@@ -30,11 +30,27 @@ public class Main {
 
     public static void MapsPrev() {
 
-        StaticMap staticMap = new StaticMap();
-        staticMap.key(API_KEY);
+        LatLng[] points = DirectionsPrev().overviewPolyline.decodePath().toArray(new LatLng[]{});
+
+        StaticMap map = new StaticMap().key(API_KEY)
+                .center("Kiev")
+                .type(StaticMap.Type.SATELLITE)
+                .size(600, 600)
+                .path(new StaticMap.Path(StaticMap.Path.Style.DEFAULT, points ))
+                .marker(points[0].lat,points[0].lng)
+                .marker(points[points.length-1].lat,points[points.length-1].lng)
+                ;
+        try {
+           //load(map.toURL()); // load into your image view
+
+            System.out.println(map.toURL());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public static void DirectionsPrev() {
+    public static  DirectionsRoute DirectionsPrev() {
 
 
         DirectionsApiRequest req = DirectionsApi.newRequest(context);
@@ -78,6 +94,7 @@ public class Main {
                 //System.out.println(AutonomusLatLngToAdress(ll)+"\t"+ll); USE CAREFULLY
         }
         System.out.println();
+        return routes[0];
     }
 
     public static void GeocodingPrev() {

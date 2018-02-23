@@ -2,6 +2,7 @@ package com.google.maps;
 
 import com.google.maps.internal.PolyLine;
 import com.google.maps.internal.UrlBuilder;
+import com.google.maps.model.LatLng;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
@@ -549,6 +550,12 @@ public final class StaticMap {
             this.address = address;
         }
 
+        public GeoPoint(LatLng latlng, String address) {
+            this.latitude = latlng.lat;
+            this.longitude = latlng.lng;
+            this.address = address == null ? "" : address;
+        }
+
         public boolean hasCoordinates() {
             return latitude != null && longitude != null;
         }
@@ -805,6 +812,14 @@ public final class StaticMap {
             if(points == null || points.length == 0) throw new IllegalArgumentException("you must specify geopoints");
             this.style = style;
             this.points = points;
+        }
+
+        public Path(@Nullable Style style, LatLng...points) {
+            if(points == null || points.length == 0) throw new IllegalArgumentException("you must specify geopoints");
+            this.style = style;
+            this.points = new GeoPoint[points.length];
+            for(int i = 0; i < points.length; i++)
+                this.points[i] = new GeoPoint(points[i],null);
         }
 
         @Override
