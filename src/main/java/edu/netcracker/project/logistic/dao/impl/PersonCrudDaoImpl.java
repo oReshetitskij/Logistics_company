@@ -24,12 +24,16 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
+    private RowMapper<Contact> contactMapper;
 
     @Autowired
-    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
+    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService, RowMapper<Contact> contactMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
+        this.contactMapper = contactMapper;
     }
+
+
 
     private RowMapper<Person> getMapper() {
         return (resultSet, i) ->
@@ -41,12 +45,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
             person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
             person.setEmail(resultSet.getString("email"));
 
-            Contact contact = new Contact();
-            contact.setContactId(resultSet.getLong("contact_id"));
-            contact.setFirstName(resultSet.getString("first_name"));
-            contact.setLastName(resultSet.getString("last_name"));
-            contact.setPhoneNumber(resultSet.getString("phone_number"));
-
+            Contact contact = contactMapper.mapRow(resultSet, i);
             person.setContact(contact);
 
             return person;
@@ -136,7 +135,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         );
 
         Set<String> duplicateFields = new HashSet<>();
-        for (Person match: matches) {
+        for (Person match : matches) {
             if (match.getUserName().equals(person.getUserName())) {
                 duplicateFields.add("username");
             } else if (match.getEmail().equals(person.getEmail())) {
@@ -190,13 +189,19 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         return queryService.getQuery("select.person");
     }
 
-    private String getFindAllQuery() { return queryService.getQuery("all.person"); }
+    private String getFindAllQuery() {
+        return queryService.getQuery("all.person");
+    }
 
-    public String getFindAllEmployeesQuery() { return queryService.getQuery("select.person.employee"); }
+    public String getFindAllEmployeesQuery() {
+        return queryService.getQuery("select.person.employee");
+    }
 
     private String getFindOneByUsernameQuery() {
         return queryService.getQuery("select.person.by.username");
     }
 
-    private String getFindByEmailOrUsernameQuery() { return queryService.getQuery("select.person.by.email.or.username"); }
+    private String getFindByEmailOrUsernameQuery() {
+        return queryService.getQuery("select.person.by.email.or.username");
+    }
 }

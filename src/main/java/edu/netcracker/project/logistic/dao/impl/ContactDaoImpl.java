@@ -14,11 +14,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
 @Repository
-public class ContactDaoImpl implements ContactDao, QueryDao {
+public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
@@ -31,17 +33,13 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
         this.queryService = queryService;
     }
 
-    private RowMapper<Contact> getMapper() {
-        return (resultSet, i) ->
-        {
-            Contact c = new Contact();
-            c.setContactId(resultSet.getLong("contact_id"));
-            c.setFirstName(resultSet.getString("first_name"));
-            c.setLastName(resultSet.getString("last_name"));
-            return c;
-        };
+    public Contact mapRow(ResultSet rs, int i) throws SQLException {
+        Contact c = new Contact();
+        c.setContactId(rs.getLong("contact_id"));
+        c.setFirstName(rs.getString("first_name"));
+        c.setLastName(rs.getString("last_name"));
+        return c;
     }
-
 
     @Override
     public Contact save(Contact contact) {
@@ -82,7 +80,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao {
             Contact contact = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
                     new Object[]{id},
-                     getMapper());
+                    this);
             return Optional.of(contact);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
