@@ -110,7 +110,7 @@ CREATE TABLE "logistic_company"."office"
 (
   "office_id"    INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
   "name"         VARCHAR(60) COLLATE "default"                      NOT NULL,
-  "address_id"   INT4                                               NOT NULL
+  "address_id"   INT4
 );
 
 CREATE TABLE "logistic_company"."order_status"
@@ -128,8 +128,8 @@ CREATE TABLE "logistic_company"."address_contact"
 
 CREATE TABLE "logistic_company"."address"
 (
-  address_id   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
-  address_name VARCHAR(150) COLLATE "default"                  NOT NULL
+  "address_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+  "address_name"  VARCHAR(150) COLLATE "default"                  NOT NULL
 );
 
 CREATE TABLE logistic_company.registration_link

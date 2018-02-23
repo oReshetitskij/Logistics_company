@@ -2,7 +2,6 @@ package edu.netcracker.project.logistic.dao.impl;
 
 import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
-import edu.netcracker.project.logistic.model.Address;
 import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,9 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     private QueryService queryService;
 
     @Autowired
+    private AddressDaoImpl addressService;
+
+    @Autowired
     public OfficeDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
@@ -36,14 +38,10 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     private RowMapper<Office> getMapper() {
         return (resultSet, i) ->
         {
-            Address address =new Address();
-            address.setId(resultSet.getLong("address_id"));
-            address.setName(resultSet.getString("address_name"));
-
             Office office = new Office();
             office.setOfficeId(resultSet.getLong("office_id"));
             office.setName(resultSet.getString("name"));
-            office.setAddress(address);
+            office.setAddress(addressService.findOne1(resultSet.getLong("address_id")));
 
             return office;
         };
@@ -55,14 +53,14 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
         boolean hasPrimaryKey = office.getOfficeId() != null;
         if (hasPrimaryKey) {
             jdbcTemplate.update(getUpsertQuery(), ps -> {
-                ps.setObject(1,  office.getOfficeId());
-                ps.setObject(2,  office.getName());
-                ps.setObject(3,  office.getAddress().getId());
+                ps.setObject(1, office.getOfficeId());
+                ps.setObject(2, office.getName());
+                ps.setObject(3, office.getAddress().getId());
 
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-                    jdbcTemplate.update(psc -> {
+            jdbcTemplate.update(psc -> {
                 String query = getInsertQuery();
                 PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, office.getName());
@@ -105,8 +103,18 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     }
 
     @Override
+    public Office findByDepartment(String department) {
+
+        return jdbcTemplate.queryForObject(
+                getAllOfficesByDepartment(),
+                new Object[]{department},
+                getMapper());
+
+    }
+
+    @Override
     public List<Office> allOffices() {
-        return  jdbcTemplate.query(getAllOffices(),getMapper()) ;
+        return jdbcTemplate.query(getAllOffices(), getMapper());
     }
 
     @Override
@@ -129,9 +137,11 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
         return queryService.getQuery("select.office");
     }
 
-    private String getAllOffices()
-    {
+    private String getAllOffices() {
         return queryService.getQuery("all.office");
     }
 
+    private String getAllOfficesByDepartment() {
+        return queryService.getQuery("all.office.by.department");
+    }
 }

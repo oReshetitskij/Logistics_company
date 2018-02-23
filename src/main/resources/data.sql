@@ -32,3 +32,6 @@ INSERT INTO person_role(person_id, role_id) VALUES (5, 4);
 INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (1, 'Advertisement');
 INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (2, 'Announcement');
 INSERT INTO advertisement_type(type_advertisement_id, advertisement_name) VALUES (3, 'Other');
+INSERT INTO address(address_id, address_name) VALUES (1,'sdsdsdsdsdds');
+INSERT INTO office(office_id ,name,address_id) VALUES (1, 'werwerwer', 1);
+INSERT INTO office(office_id ,name,address_id) VALUES (2, 'dddddddddd', 1);

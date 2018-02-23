@@ -2,6 +2,7 @@ package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.dao.ContactDao;
 import edu.netcracker.project.logistic.dao.OfficeDao;
+import edu.netcracker.project.logistic.dao.impl.AddressDaoImpl;
 import edu.netcracker.project.logistic.model.Address;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Office;
@@ -33,6 +34,7 @@ public class TestController {
    @Autowired
     ContactDao contactDao;
 
+   AddressDaoImpl addressDao;
   private   RoleService roleService;
 
     private BCryptPasswordEncoder passwordEncoder;
@@ -46,12 +48,11 @@ public class TestController {
 
     @RequestMapping(value = "/test")
     public String test(Model model) {
-      
         Address address = new Address("м. Київ");
         Address address1 = new Address((long)3,"м. Житомир");
         addressService.save(address);
         addressService.save(address1);
-
+        addressService.findOne(3L);
 
         LocalDateTime localDate = LocalDateTime.now();
         Contact contact = new Contact( 10L ,"lol", "lol", "+2312312313");
@@ -61,7 +62,7 @@ public class TestController {
         personService.findOne("nick_nam23e");
          Office office = new Office( 1l, "werewr", address1);
         Office office1 = new Office( 1l, "werew1r", address);
-        addressService.findOne(3L);
+        officeDao.findByDepartment("м. Київ");
         System.out.println(office);
          officeDao.save(office);
          officeDao.save(office1);

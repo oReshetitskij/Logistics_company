@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class OfficeServiceImpl implements OfficeService {
 
-    OfficeDao officeDao;
+    private OfficeDao officeDao;
 
 
     @Autowired
@@ -40,5 +40,10 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     public List<Office> allOffices() {
         return officeDao.allOffices();
+    }
+
+    @Override
+    public Office findByDepartment(String department) {
+        return officeDao.findByDepartment(department);
     }
 }

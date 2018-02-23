@@ -133,15 +133,44 @@ public class AdminController {
 
     @GetMapping("/crud/office")
     public String createOffice(Model model) {
-        Office office = new Office();
-        office.setAddress(new Address());
+
         model.addAttribute("office", new Office());
         return "/admin/admin_crud_office";
     }
 
+
+    @GetMapping("/office/update/{id}")
+    public String updateOffice(@PathVariable long id, Model model) {
+        model.addAttribute("office", officeService.findOne(id));
+        return "/admin/admin_crud_office";
+    }
+
+    @GetMapping("/office/delete/{id}")
+    public String deleteOffice(@PathVariable Long id) {
+
+        officeService.delete(id);
+        return "redirect:/admin/offices";
+    }
+
     @PostMapping("/crud/office")
-    public String saveOffice(@ModelAttribute("office") Office office) {
+    public String saveOffice(@ModelAttribute("office") OfficeForm officeForm) {
+        Office office = new Office(
+                officeForm.getOfficeId(),
+                officeForm.getName(),
+                addressDao.findOne1(officeForm.getAddress())
+        );
+        System.out.println(office);
         officeService.save(office);
         return "redirect:/admin/offices";
     }
+
+    @PostMapping("/FindOfficeByDepartment")
+    public String  findByDepartment(@RequestParam String department, Model model)
+    {
+
+       model.addAttribute("offices", officeService.findByDepartment(department));
+        return "/admin/admin_offices";
+
+    }
+
 }

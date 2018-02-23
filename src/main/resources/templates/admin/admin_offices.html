@@ -38,11 +38,16 @@
                             <div class="form-group">
                                 <label for="department_number" class="control-label">Department Number</label>
                                 <input type="text" class="form-control" id="department_number" />
-                            </div>
+                             </div>
 
-                            <p class="text-center"><a href="#" class="btn btn-danger glyphicon glyphicon-search" role="button"></a></p>
                         </form>
+                        <form method="post" action="/admin/FindOfficeByDepartment">
+                            <label for="offices">Department name:</label>
 
+                            <input type="text" id="offices" name="department" placeholder="name "/>
+                            <br/>
+                            <input type="submit" value="send"/>
+                        </form>
                     </div>
 
                     <div class="table-responsive">
@@ -59,6 +64,11 @@
                                 <td th:text="${office.officeId}"></td>
                                 <td th:text="${office.address}"></td>
                                 <td th:text="${office.name}"></td>
+                                <td>
+                                    <a class="material-icons button delete" th:href="${'/admin/office/delete/' + office.officeId}">delete</a>
+                                    <a class="material-icons button delete" th:href="${'/admin/office/update/' + office.officeId}">edit</a>
+                                </td>
+
                             </tr>
                             </tbody>
                         </table>

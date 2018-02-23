@@ -26,12 +26,11 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
-    private RowMapper<Address> getMapper()
-    {
+    private RowMapper<Address> getMapper() {
         return (resultSet, i) ->
         {
-            Address address =new Address();
-//            address.setId(resultSet.getLong("address_id"));
+            Address address = new Address();
+            address.setId(resultSet.getLong("address_id"));
             address.setName(resultSet.getString("address_name"));
             return address;
         };
@@ -47,7 +46,7 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
 
     @Override
     public Address save(Address address) {
-        boolean hasPrimaryKey =address.getId() != null;
+        boolean hasPrimaryKey = address.getId() != null;
 
         if (hasPrimaryKey) {
             jdbcTemplate.update(getUpsertQuery(), ps -> {
@@ -71,8 +70,8 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
 
     @Override
     public void delete(Long aLong) {
-     jdbcTemplate.update(getDeleteQuery() , ps -> ps.setObject(1, aLong)) ;
-     logger.info("Delete address");
+        jdbcTemplate.update(getDeleteQuery(), ps -> ps.setObject(1, aLong));
+        logger.info("Delete address");
     }
 
 
@@ -90,6 +89,16 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
         }
     }
 
+    public Address findOne1(Long aLong) {
+
+        Address address = jdbcTemplate.queryForObject(
+                getFindOneQuery(),
+                new Object[]{aLong},
+                getMapper());
+        logger.info("Find1 address");
+        return address;
+
+    }
 
     @Override
     public String getInsertQuery() {
@@ -108,6 +117,6 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
 
     @Override
     public String getFindOneQuery() {
-      return   queryService.getQuery("select.address");
+        return queryService.getQuery("select.address");
     }
 }
