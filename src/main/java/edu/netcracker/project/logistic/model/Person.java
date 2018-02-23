@@ -11,11 +11,12 @@ public class Person {
     private String email;
     private Contact contact;
 
-    public Person(String userName, String password, LocalDateTime registrationDate, String email) {
+    public Person(String userName, String password, LocalDateTime registrationDate, String email, Contact contact) {
         this.userName = userName;
         this.password = password;
         this.registrationDate = registrationDate;
         this.email = email;
+        this.contact = contact;
     }
 
     public Person() {
