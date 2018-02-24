@@ -2,7 +2,7 @@ package edu.netcracker.project.logistic.exception;
 
 import java.util.*;
 
-public class NonUniqueRecordException extends Exception {
+public class NonUniqueRecordException extends RuntimeException {
     private Set<String> fields;
 
     public NonUniqueRecordException(String field) {

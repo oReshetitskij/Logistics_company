@@ -17,6 +17,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -91,6 +93,19 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         }
     }
 
+    public List<Contact> findByPhoneNumberOrEmail(String phoneNumber, String email) {
+        try {
+            return jdbcTemplate.query(
+                    getFindByPhoneNumberOrEmailQuery(),
+                    new Object[]{phoneNumber, email},
+                    this
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
+    }
+
+
     @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.contact");
@@ -109,5 +124,9 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
     @Override
     public String getFindOneQuery() {
         return queryService.getQuery("select.contact");
+    }
+
+    private String getFindByPhoneNumberOrEmailQuery() {
+        return queryService.getQuery("select.contact.by.phone_number.or.email");
     }
 }

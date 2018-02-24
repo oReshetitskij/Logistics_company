@@ -1,6 +1,7 @@
 package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.dao.impl.AddressDaoImpl;
+import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.*;
 
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -159,7 +162,18 @@ public class AdminController {
 
             return "/admin/admin_crud_employee";
         }
-        employeeService.create(form.getEmployee(), form.getRoleIds());
+        try {
+            employeeService.create(form.getEmployee(), form.getRoleIds());
+        } catch (NonUniqueRecordException ex) {
+            for (String duplicate: ex.duplicateFields()) {
+                bindingResult.rejectValue(duplicate, "Duplicate field");
+            }
+            List<Role> employeeRoles = roleService.findEmployeeRoles();
+            model.addAttribute("newEmployee", true);
+            model.addAttribute("roles", employeeRoles);
+
+            return "/admin/admin_crud_employee";
+        }
         return "redirect:/admin/employees";
     }
 
