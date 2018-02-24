@@ -5,7 +5,7 @@ import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.QueryService;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Repository
 public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -39,6 +39,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         c.setFirstName(rs.getString("first_name"));
         c.setLastName(rs.getString("last_name"));
         c.setEmail(rs.getString("email"));
+        c.setPhoneNumber(rs.getString("phone_number"));
         return c;
     }
 

@@ -1,5 +1,9 @@
 package edu.netcracker.project.logistic.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class Person {
@@ -28,6 +32,8 @@ public class Person {
     }
 
 
+    @NotNull
+    @Size(min = 6, max = 30)
     public String getUserName() {
         return userName;
     }
@@ -36,6 +42,8 @@ public class Person {
         this.userName = userName;
     }
 
+    @NotNull
+    @Size(min = 6, max = 30)
     public String getPassword() {
         return password;
     }
@@ -52,6 +60,7 @@ public class Person {
         this.registrationDate = registrationDate;
     }
 
+    @NotNull
     public Contact getContact() {
         return contact;
     }

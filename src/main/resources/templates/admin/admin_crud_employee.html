@@ -9,8 +9,8 @@
 
     <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../../static/css/admin.css" />
 
-    <script src="../../static/js/validate-password-confirm.js" th:src="@{/js/validate-password-confirm.js}"></script>
-
+    <script src="../../static/js/forms.js" th:src="@{/js/forms.js}"></script>
+    <link rel="stylesheet" href="../../static/css/multiselect.css" th:href="@{/css/multiselect.css}" />
 </head>
 <body>
 
@@ -24,13 +24,14 @@
         <div class="side-body">
             <div class="row">
 
-                <h1 style="text-align:center"> Employee profile </h1>
+                <h1 style="text-align:center" th:if="${!newEmployee}">Edit employee profile</h1>
+                <h1 style="text-align:center" th:if="${newEmployee}">Create employee</h1>
 
                 <div class="col-lg-10 col-md-6  col-lg-offset-1">
 
-                    <!-- Form for creating employee -->
                     <form style="" th:method = "post" th:action = "@{/admin/crud/employee/}"
                         th:if="${newEmployee}" th:object="${form}">
+                        <!-- Form for creating employee -->
 
                         <div class="form-group required">
                             <label for="first_name" class="control-label">First Name</label>
@@ -71,7 +72,7 @@
                             <label for="email" class="control-label">E-mail</label>
                             <input type="email" class="form-control" id="email" placeholder=""
                                    required="required" minlength="6" maxlength="254"
-                                   th:field="*{employee.email}"/>
+                                   th:field="*{employee.contact.email}"/>
                         </div>
 
                         <div class="form-group required">
@@ -81,28 +82,28 @@
                                    th:field="*{employee.contact.phoneNumber}"/>
                         </div>
 
-                        <div>
-                            <label for="role" class="control-label">Role</label>
-                            <select id="role" class="form-control" th:field="*{roleId}">
+                        <div class="form-group required">
+                            <label for="role" class="control-label">Roles</label>
+                            <br />
+                            <select id="role" multiple="multiple"
+                                    th:field="*{roleIds}">
                                 <option th:each="role: ${roles}"
                                         th:value="${role.roleId}"
-                                        th:with="name = ${#strings.toLowerCase(#strings.substring(role.roleName, 5))}"
-                                        th:text="${#strings.capitalize(name)}">Role</option>
+                                        th:text="${{role}}">Role</option>
                             </select>
                         </div>
 
                         <div style = "margin-top: 3em;" class="form-group">
-                            <button class="btn btn-primary">Save</button>
+                            <button class="btn btn-primary">Create</button>
                         </div>
                     </form>
 
-                    <!-- Form for updating employee -->
                     <form style="" method = "post"
                           th:if="${!newEmployee}"
                           th:action = "@{'/admin/crud/employee/' + ${form.employee.id}}"
                           th:object="${form}"
                     >
-
+                        <!-- Form for updating employee -->
                         <div class="form-group required">
                             <label for="first_name" class="control-label">First Name</label>
                             <input type="text" class="form-control" id="first_name" placeholder=""
@@ -127,7 +128,7 @@
                         <div class="form-group">
                             <label for="registration_date" class="control-label">Registration Date</label>
                             <input type="text" class="form-control" id="registration_date" placeholder="" readonly="readonly"
-                                th:value="*{employee.registrationDate}"/>
+                                th:value="*{{employee.registrationDate}}"/>
                         </div>
 
                         <div class="form-group required">
@@ -144,8 +145,19 @@
                                    th:field="*{employee.contact.phoneNumber}"/>
                         </div>
 
+                        <div class="form-group required">
+                            <label for="role" class="control-label">Roles</label>
+                            <br />
+                            <select id="role" multiple="multiple"
+                                    th:field="*{roleIds}">
+                                <option th:each="role: ${roles}"
+                                        th:value="${role.roleId}"
+                                        th:text="${{role}}">Role</option>
+                            </select>
+                        </div>
+
                         <div style = "margin-top: 3em;" class="form-group">
-                            <button class="btn btn-primary">Update</button>
+                            <button class="btn btn-primary">Save</button>
                             <button class="btn btn-danger">Delete</button>
                         </div>
 
@@ -163,5 +175,11 @@
     <div th:replace="fragments/left_menu :: left-menu-footer">
     </div>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" type="text/css"/>
+
+    <script>
+        createMultiSelect("#role");
+    </script>
 </body>
 </html>

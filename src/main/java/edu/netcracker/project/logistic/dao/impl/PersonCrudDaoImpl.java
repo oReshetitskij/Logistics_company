@@ -61,6 +61,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 ps.setObject(2, person.getUserName());
                 ps.setObject(3, person.getPassword());
                 ps.setObject(4, person.getRegistrationDate());
+                ps.setObject(5, person.getContact().getContactId());
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -70,7 +71,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 ps.setObject(1, person.getUserName());
                 ps.setObject(2, person.getPassword());
                 ps.setObject(3, person.getRegistrationDate());
-                ps.setObject(5, person.getContact().getContactId());
+                ps.setObject(4, person.getContact().getContactId());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("person_id");
