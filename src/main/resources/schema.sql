@@ -1,25 +1,26 @@
-DROP TABLE IF EXISTS logistic_company.registration_link;
-DROP TABLE IF EXISTS "logistic_company"."work_day";
-DROP TABLE IF EXISTS "logistic_company".person_role;
-DROP TABLE IF EXISTS "logistic_company"."advertisement";
-DROP TABLE IF EXISTS "logistic_company"."advertisement_type";
-DROP TABLE IF EXISTS "logistic_company"."order";
-DROP TABLE IF EXISTS "logistic_company"."address_contact";
-DROP TABLE IF EXISTS "logistic_company"."office";
-DROP TABLE IF EXISTS "logistic_company"."person";
-DROP TABLE IF EXISTS "logistic_company"."contact";
-DROP TABLE IF EXISTS "logistic_company"."address";
-DROP TABLE IF EXISTS "logistic_company"."role";
-DROP TABLE IF EXISTS "logistic_company"."order_status";
+DROP TABLE IF EXISTS logistic_company.registration_link CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."work_day" CASCADE;
+DROP TABLE IF EXISTS "logistic_company".person_role CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."advertisement" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."advertisement_type" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."order" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."person" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."contact_address" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."contact" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."address" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."role" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."bonus" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."office" CASCADE;
+DROP TABLE IF EXISTS "logistic_company"."order_status" CASCADE;
 
 
-DROP FUNCTION IF EXISTS logistic_company.delete_old_rows();
+DROP FUNCTION IF EXISTS logistic_company.delete_old_rows() CASCADE;
 
 
-DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id";
-DROP TYPE IF EXISTS logistic_company.WEEK_DAY;
+DROP SEQUENCE IF EXISTS "logistic_company"."main_seq_id" CASCADE;
+DROP TYPE IF EXISTS logistic_company.WEEK_DAY CASCADE;
 
-DROP SCHEMA IF EXISTS "logistic_company";
+DROP SCHEMA IF EXISTS "logistic_company" CASCADE;
 
 
 CREATE SCHEMA "logistic_company";
@@ -41,8 +42,8 @@ CREATE TABLE "logistic_company"."contact" (
   "contact_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
   "first_name"   VARCHAR(45) COLLATE "default"                   NOT NULL,
   "last_name"    VARCHAR(45) COLLATE "default"                   NOT NULL,
-  "phone_number" VARCHAR(45) COLLATE "default"                   NOT NULL
-
+  "phone_number" VARCHAR(45) COLLATE "default"                   NOT NULL,
+  "email"        VARCHAR(45) COLLATE "default"                   NOT NULL
 );
 
 CREATE TABLE "logistic_company"."person" (
@@ -51,7 +52,6 @@ CREATE TABLE "logistic_company"."person" (
   "password"          VARCHAR(200) COLLATE "default"                  NOT NULL,
   "registration_date" TIMESTAMP                                       NOT NULL DEFAULT NOW(),
   "manager_id"        INT,
-  "email"             VARCHAR(45) COLLATE "default"                        NOT NULL,
   "contact_id"        INT4                                            NOT NULL
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE "logistic_company"."advertisement"
   "advertisement_id"      INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)     NOT NULL,
   "description"           VARCHAR(1000) COLLATE "default"                     NOT NULL,
   "publication_date"      TIMESTAMP                                           NOT NULL DEFAULT NOW(),
-  "publication_date_end"  Date                                                NOT NULL,
+  "publication_date_end"  DATE                                                NOT NULL,
   "type_advertisement_id" INT4                                                NOT NULL
 );
 
@@ -108,9 +108,9 @@ CREATE TABLE "logistic_company"."order"
 
 CREATE TABLE "logistic_company"."office"
 (
-  "office_id"    INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
-  "name"         VARCHAR(60) COLLATE "default"                      NOT NULL,
-  "address_id"   INT4
+  "office_id"  INT4 DEFAULT nextval('main_seq_id' :: REGCLASS)    NOT NULL,
+  "name"       VARCHAR(60) COLLATE "default"                      NOT NULL,
+  "address_id" INT4
 );
 
 CREATE TABLE "logistic_company"."order_status"
@@ -121,15 +121,16 @@ CREATE TABLE "logistic_company"."order_status"
 
 
 CREATE TABLE "logistic_company"."address_contact"
-( "address_contact_id"    INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
-  "contact_id"            INT4,
-  "address_id"            INT4
+(
+  "address_contact_id" INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
+  "contact_id"         INT4,
+  "address_id"         INT4
 );
 
 CREATE TABLE "logistic_company"."address"
 (
   "address_id"   INT4 DEFAULT nextval('main_seq_id' :: REGCLASS) NOT NULL,
-  "address_name"  VARCHAR(150) COLLATE "default"                  NOT NULL
+  "address_name" VARCHAR(150) COLLATE "default"                  NOT NULL
 );
 
 CREATE TABLE logistic_company.registration_link
@@ -140,9 +141,11 @@ CREATE TABLE logistic_company.registration_link
 
 
 ALTER TABLE "logistic_company"."person"
-  ADD UNIQUE ("email");
+  ADD UNIQUE ("user_name");
 ALTER TABLE "logistic_company"."person"
   ADD UNIQUE ("contact_id");
+ALTER TABLE "logistic_company"."contact"
+  ADD UNIQUE ("email");
 ALTER TABLE logistic_company.registration_link
   ADD UNIQUE (person_id);
 
@@ -184,13 +187,13 @@ ALTER TABLE "logistic_company"."work_day"
   ADD FOREIGN KEY ("employee_id") REFERENCES "logistic_company"."person" (person_id);
 
 ALTER TABLE "logistic_company"."person"
-  ADD FOREIGN KEY("contact_id") REFERENCES "logistic_company"."contact"(contact_id);
+  ADD FOREIGN KEY ("contact_id") REFERENCES "logistic_company"."contact" (contact_id);
 
 ALTER TABLE "logistic_company"."order"
-  ADD FOREIGN KEY ("reseiver_id")REFERENCES "logistic_company"."address_contact"("address_contact_id");
+  ADD FOREIGN KEY ("reseiver_id") REFERENCES "logistic_company"."address_contact" ("address_contact_id");
 
 ALTER TABLE "logistic_company"."order"
-  ADD FOREIGN KEY ("sender_id") REFERENCES "logistic_company"."address_contact"("address_contact_id");
+  ADD FOREIGN KEY ("sender_id") REFERENCES "logistic_company"."address_contact" ("address_contact_id");
 
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("office_id") REFERENCES "logistic_company"."office" ("office_id");
@@ -205,9 +208,8 @@ ALTER TABLE "logistic_company"."address_contact"
   ADD FOREIGN KEY ("address_id") REFERENCES "logistic_company"."address" ("address_id");
 
 
-
-ALTER  TABLE "logistic_company"."office"
-  ADD  FOREIGN KEY ("address_id") REFERENCES  "logistic_company"."address"(address_id);
+ALTER TABLE "logistic_company"."office"
+  ADD FOREIGN KEY ("address_id") REFERENCES "logistic_company"."address" (address_id);
 
 ALTER TABLE "logistic_company"."order"
   ADD FOREIGN KEY ("courier_id") REFERENCES "logistic_company"."person" ("person_id");

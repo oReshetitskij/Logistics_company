@@ -1,29 +1,27 @@
 package edu.netcracker.project.logistic.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class Person {
-
     private Long id;
     private String userName;
     private String password;
     private LocalDateTime registrationDate;
-    private String email;
     private Contact contact;
 
-    public Person(String userName, String password, LocalDateTime registrationDate, String email, Contact contact) {
+    public Person(String userName, String password, LocalDateTime registrationDate, Contact contact) {
         this.userName = userName;
         this.password = password;
         this.registrationDate = registrationDate;
-        this.email = email;
         this.contact = contact;
     }
 
     public Person() {
-
     }
-
-
 
     public Long getId() {
         return id;
@@ -34,6 +32,8 @@ public class Person {
     }
 
 
+    @NotNull
+    @Size(min = 6, max = 30)
     public String getUserName() {
         return userName;
     }
@@ -42,6 +42,8 @@ public class Person {
         this.userName = userName;
     }
 
+    @NotNull
+    @Size(min = 6, max = 30)
     public String getPassword() {
         return password;
     }
@@ -58,14 +60,7 @@ public class Person {
         this.registrationDate = registrationDate;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    @NotNull
     public Contact getContact() {
         return contact;
     }
@@ -81,7 +76,6 @@ public class Person {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", registrationDate=" + registrationDate +
-                ", email='" + email + '\'' +
                 ", contact=" + contact +
                 '}';
     }

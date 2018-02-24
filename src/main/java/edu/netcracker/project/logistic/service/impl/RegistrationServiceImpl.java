@@ -89,7 +89,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         link.setPersonId(personData.getId());
         registrationLinkDao.save(link);
 
-        sendConfirmationRequest(contactData, personData.getEmail(), link);
+        sendConfirmationRequest(contactData, personData.getContact().getEmail(), link);
     }
 
     private void sendConfirmationRequest(Contact contact, String email, RegistrationLink link) throws MessagingException {
@@ -161,7 +161,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         data.setUserName(form.getUsername());
         data.setPassword(passwordEncoder.encode(form.getPassword()));
-        data.setEmail(form.getEmail());
+        data.getContact().setEmail(form.getEmail());
         data.setRegistrationDate(LocalDateTime.now());
 
         return data;

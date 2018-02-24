@@ -4,6 +4,8 @@ import edu.netcracker.project.logistic.dao.ContactDao;
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.RoleCrudDao;
+import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
+import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.PersonRole;
 import edu.netcracker.project.logistic.model.Role;
@@ -12,13 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,41 +42,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.roleDao = roleDao;
     }
 
-    @Transactional(rollbackFor = DataIntegrityViolationException.class)
+    @Transactional(rollbackFor = {NonUniqueRecordException.class, DataIntegrityViolationException.class})
     @Override
-    public Person save(Person employee, List<Long> roleIds) {
-        boolean previouslyRegistered = employee.getRegistrationDate() != null;
-        if (!previouslyRegistered) {
-            employee.setRegistrationDate(LocalDateTime.now());
-            contactDao.save(employee.getContact());
-        }
+    public Person create(Person employee, List<Long> roleIds) {
+        Set<String> duplicateFields = checkContactData(employee.getContact());
+        duplicateFields.addAll(checkPersonData(employee));
 
+        if (duplicateFields.size() != 0) {
+            throw new NonUniqueRecordException(duplicateFields);
+        }
+        employee.setRegistrationDate(LocalDateTime.now());
+        contactDao.save(employee.getContact());
         personDao.save(employee);
         contactDao.save(employee.getContact());
-
-        List<PersonRole> currentEmployeeRoles =
-                roleDao.getByPersonId(employee.getId())
-                        .stream()
-                        .filter(Role::isEmployeeRole)
-                        .map(r -> new PersonRole(employee.getId(), r.getRoleId()))
-                        .collect(Collectors.toList());
-
-        List<PersonRole> employeeRolesToAdd =
-                roleIds
-                        .stream()
-                        .map(roleId -> new PersonRole(employee.getId(), roleId))
-                        .collect(Collectors.toList());
-
-        try {
-            if (previouslyRegistered) {
-                personRoleDao.deleteMany(currentEmployeeRoles);
-            }
-            personRoleDao.saveMany(employeeRolesToAdd);
-        } catch (DataIntegrityViolationException ex) {
-            logger.error("Trying to give employee  role which not exists.");
-            throw ex;
-        }
+        updateRoles(employee, roleIds, false);
         return employee;
+    }
+
+    @Override
+    public Person update(Long id, Contact contact, List<Long> roleIds) {
+        Set<String> duplicateFields = checkContactData(contact);
+        if (duplicateFields.size() != 0) {
+            throw new NonUniqueRecordException(duplicateFields);
+        }
+        Optional<Person> opt = personDao.findOne(id);
+        if (!opt.isPresent()) {
+            throw new IllegalArgumentException(String.format("Can't find person #%s", id));
+        }
+        Person emp = opt.get();
+        Long contactId = emp.getContact().getContactId();
+        contact.setContactId(contactId);
+        contactDao.save(contact);
+        emp.setContact(contact);
+        updateRoles(emp, roleIds, true);
+        return emp;
     }
 
     @Transactional
@@ -121,5 +123,53 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean contains(Long id) {
         return findOne(id).isPresent();
+    }
+
+    private void updateRoles(Person employee, List<Long> roleIds, boolean previouslyRegistered) {
+        List<PersonRole> currentEmployeeRoles =
+                roleDao.getByPersonId(employee.getId())
+                        .stream()
+                        .filter(Role::isEmployeeRole)
+                        .map(r -> new PersonRole(employee.getId(), r.getRoleId()))
+                        .collect(Collectors.toList());
+
+        List<PersonRole> employeeRolesToAdd =
+                roleIds
+                        .stream()
+                        .map(roleId -> new PersonRole(employee.getId(), roleId))
+                        .collect(Collectors.toList());
+
+        try {
+            if (previouslyRegistered) {
+                personRoleDao.deleteMany(currentEmployeeRoles);
+            }
+            personRoleDao.saveMany(employeeRolesToAdd);
+        } catch (DataIntegrityViolationException ex) {
+            logger.error("Trying to give employee role which not exists.");
+            throw ex;
+        }
+    }
+
+    private Set<String> checkPersonData(Person person) {
+        Set<String> errors = new HashSet<>(1);
+        Optional<Person> opt = personDao.findOne(person.getUserName());
+        if (opt.isPresent()) {
+            errors.add("employee.userName");
+        }
+        return errors;
+    }
+
+    private Set<String> checkContactData(Contact contact) {
+        Set<String> errors = new HashSet<>(2);
+        List<Contact> duplicates =
+                contactDao.findByPhoneNumberOrEmail(contact.getPhoneNumber(), contact.getEmail());
+        for (Contact d : duplicates) {
+            if (d.getEmail().equals(contact.getEmail())) {
+                errors.add("employee.contact.email");
+            } else if (d.getPhoneNumber().equals(contact.getPhoneNumber())) {
+                errors.add("employee.contact.phoneNumber");
+            }
+        }
+        return errors;
     }
 }

@@ -23,55 +23,48 @@ import java.time.LocalDateTime;
 @Controller
 public class TestController {
 
- @Autowired
- private OfficeDao officeDao;
+    @Autowired
+    private OfficeDao officeDao;
 
-   private PersonService personService;
+    private PersonService personService;
 
-   @Autowired
+    @Autowired
     AddressService addressService;
 
-   @Autowired
+    @Autowired
     ContactDao contactDao;
 
-   AddressDaoImpl addressDao;
-  private   RoleService roleService;
+    AddressDaoImpl addressDao;
+    private RoleService roleService;
 
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public TestController(PersonService personService,RoleService roleService, BCryptPasswordEncoder passwordEncoder ) {
-        this.personService=personService;
-        this.roleService=roleService;
+    public TestController(PersonService personService, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
+        this.personService = personService;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping(value = "/test")
     public String test(Model model) {
         Address address = new Address("м. Київ");
-        Address address1 = new Address((long)3,"м. Житомир");
+        Address address1 = new Address((long) 3, "м. Житомир");
         addressService.save(address);
         addressService.save(address1);
         addressService.findOne(3L);
 
         LocalDateTime localDate = LocalDateTime.now();
-        Contact contact = new Contact( 10L ,"lol", "lol", "+2312312313");
-        contactDao.save(contact);
-        Person person1 = new Person("nick_nam23e", "112121232", localDate, "sdfffsfs23df",contact);
-        personService.savePerson(person1);
-        personService.findOne("nick_nam23e");
-         Office office = new Office( 1l, "werewr", address1);
-        Office office1 = new Office( 1l, "werew1r", address);
-        officeDao.findByDepartment("м. Київ");
+//        Contact contact = new Contact(1L, "lol", "lol", "+2312312313");
+//        contactDao.save(contact);
+//        Person person1 = new Person("nick_name", "1121212", localDate, "sdfffsfsdf", contact);
+//        personService.savePerson(person1);
+        Office office = new Office("werewr", address1);
         System.out.println(office);
-         officeDao.save(office);
-         officeDao.save(office1);
-        System.out.println(office1);
-         officeDao.findOne(1L);
-         officeDao.contains(1L);
-        contactDao.save(contact);
+        officeDao.save(office);
+        officeDao.findOne(1L);
+        officeDao.contains(1L);
         contactDao.findOne(1L);
-        System.out.println(contact);
 
         return "test";
     }

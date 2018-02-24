@@ -14,8 +14,6 @@ import java.util.Optional;
 
 @Service
 public class ContactServiceImpl implements ContactService {
-
-
     private ContactDao contactDao;
 
     @Autowired

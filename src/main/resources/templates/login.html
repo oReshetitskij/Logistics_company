@@ -2,22 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
-    <th:block th:replace="fragments/header :: header-bootstrap-config" />
+    <th:block th:replace="fragments/header :: header-bootstrap-config"/>
 
-    <link th:href="@{/css/login.css}" href="../static/css/login.css" rel="stylesheet" />
+    <link th:href="@{/css/login.css}" href="../static/css/login.css" rel="stylesheet"/>
 
-    <th:block th:replace="fragments/header :: header-bootstrap-config-IE" />
+    <th:block th:replace="fragments/header :: header-bootstrap-config-IE"/>
 
 </head>
 <body>
-    <div class= "container">
-        <div  class = "row">
-            <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
 
-                <h1>Log in</h1>
+            <h1>Log in</h1>
 
-                <form th:action = "@{/login}" method = "post"  class="form-horizontal" >
-                    <fieldset>
+            <form th:action="@{/login}" method="post" class="form-horizontal">
+                <fieldset>
 
                     <div th:if="${param.error}">
                         <div class="alert alert-danger">
@@ -30,23 +30,25 @@
                         </div>
                     </div>
 
-                    <div class="form-group" >
+                    <div class="form-group">
                         <label class="control-label col-sm-2" for="username">Login:</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control input-lg" id="username" name="username" required="required" />
+                            <input type="text" class="form-control input-lg" id="username" name="username"
+                                   required="required"/>
                         </div>
                     </div>
 
-                    <div class="form-group" >
+                    <div class="form-group">
                         <label class="control-label col-sm-2" for="password">Password:</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control input-lg" name="password" id="password" required="required" />
+                            <input type="password" class="form-control input-lg" name="password" id="password"
+                                   required="required"/>
                         </div>
                     </div>
 
                     <div class="form-group login-group-checkbox">
                         <div class="row">
-                            <div class = "col-sm-2">
+                            <div class="col-sm-2">
                             </div>
                             <div class = "col-sm-10">
                                 <input style="margin-left:1em" type="checkbox" id="remember_me" name="remember-me" />
@@ -57,23 +59,24 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button  type="submit" class="btn btn-success">Enter</button>
+                            <button type="submit" class="btn btn-success">Enter</button>
                         </div>
                     </div>
-                    </fieldset>
-                </form>
+                </fieldset>
+            </form>
 
-                <div class="etc-login-form">
-                    <p>forgot your password? <a th:href = "@{__${#httpServletRequest.requestURI}__/forgot/password}">click here</a></p>
-                    <p>new user? <a th:href = "@{/registration}">create new account</a></p>
-                </div>
-
+            <div class="etc-login-form">
+                <p>forgot your password? <a th:href="@{__${#httpServletRequest.requestURI}__/forgot/password}">click
+                    here</a></p>
+                <p>new user? <a th:href="@{/registration}">create new account</a></p>
             </div>
+
         </div>
     </div>
+</div>
 
-    <div th:replace="fragments/footer :: footer">
-    </div>
+<div th:replace="fragments/footer :: footer">
+</div>
 
 </body>
 </html>

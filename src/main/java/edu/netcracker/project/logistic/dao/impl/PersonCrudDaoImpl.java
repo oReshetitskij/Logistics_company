@@ -43,7 +43,6 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
             person.setUserName(resultSet.getString("user_name"));
             person.setPassword(resultSet.getString("password"));
             person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
-            person.setEmail(resultSet.getString("email"));
 
             Contact contact = contactMapper.mapRow(resultSet, i);
             person.setContact(contact);
@@ -62,7 +61,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 ps.setObject(2, person.getUserName());
                 ps.setObject(3, person.getPassword());
                 ps.setObject(4, person.getRegistrationDate());
-                ps.setObject(5, person.getEmail());
+                ps.setObject(5, person.getContact().getContactId());
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -72,8 +71,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 ps.setObject(1, person.getUserName());
                 ps.setObject(2, person.getPassword());
                 ps.setObject(3, person.getRegistrationDate());
-                ps.setObject(4, person.getEmail());
-                ps.setObject(5, person.getContact().getContactId());
+                ps.setObject(4, person.getContact().getContactId());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("person_id");
@@ -128,7 +126,6 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         List<Person> matches = jdbcTemplate.query(
                 getFindByEmailOrUsernameQuery(),
                 pss -> {
-                    pss.setString(1, person.getEmail());
                     pss.setString(2, person.getUserName());
                 },
                 getMapper()
@@ -138,7 +135,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         for (Person match : matches) {
             if (match.getUserName().equals(person.getUserName())) {
                 duplicateFields.add("username");
-            } else if (match.getEmail().equals(person.getEmail())) {
+            } else if (match.getContact().getEmail().equals(person.getContact().getEmail())) {
                 duplicateFields.add("email");
             }
         }
