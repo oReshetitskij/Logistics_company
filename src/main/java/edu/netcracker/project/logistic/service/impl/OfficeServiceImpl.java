@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class OfficeServiceImpl implements OfficeService {
 
-    private OfficeDao officeDao;
+    OfficeDao officeDao;
 
 
     @Autowired

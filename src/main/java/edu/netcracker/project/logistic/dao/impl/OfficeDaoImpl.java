@@ -2,6 +2,7 @@ package edu.netcracker.project.logistic.dao.impl;
 
 import edu.netcracker.project.logistic.dao.OfficeDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
+import edu.netcracker.project.logistic.model.Address;
 import edu.netcracker.project.logistic.model.Office;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.slf4j.LoggerFactory;
@@ -25,15 +26,17 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
+    private RowMapper<Address> addressRowMapper;
 
-    @Autowired
-    private AddressDaoImpl addressService;
 
-    @Autowired
-    public OfficeDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
+    public OfficeDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService,  RowMapper<Address> addressRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
+        this.addressRowMapper = addressRowMapper;
     }
+
+    @Autowired
+
 
     private RowMapper<Office> getMapper() {
         return (resultSet, i) ->
@@ -41,7 +44,9 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
             Office office = new Office();
             office.setOfficeId(resultSet.getLong("office_id"));
             office.setName(resultSet.getString("name"));
-            office.setAddress(addressService.findOne1(resultSet.getLong("address_id")));
+
+            Address address = addressRowMapper.mapRow(resultSet, i);
+            office.setAddress(address);
 
             return office;
         };
@@ -109,6 +114,7 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
                 getAllOfficesByDepartment(),
                 new Object[]{department},
                 getMapper());
+
 
     }
 

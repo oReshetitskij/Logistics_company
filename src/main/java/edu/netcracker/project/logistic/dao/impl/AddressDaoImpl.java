@@ -14,29 +14,29 @@ import org.springframework.stereotype.Repository;
 
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
 
 @Repository
-public class AddressDaoImpl implements AddressDao, QueryDao {
+public class AddressDaoImpl implements AddressDao, QueryDao, RowMapper<Address> {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
 
-    private RowMapper<Address> getMapper() {
-        return (resultSet, i) ->
-        {
-            Address address = new Address();
-            address.setId(resultSet.getLong("address_id"));
-            address.setName(resultSet.getString("address_name"));
-            return address;
-        };
 
+
+    @Override
+    public Address mapRow(ResultSet resultSet, int i) throws SQLException {
+        Address address = new Address();
+        address.setId(resultSet.getLong("address_id"));
+        address.setName(resultSet.getString("address_name"));
+        return address;
     }
-
 
     @Autowired
     public AddressDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService) {
@@ -81,7 +81,7 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
             Address address = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
                     new Object[]{aLong},
-                    getMapper());
+                    this);
             logger.info("Find address");
             return Optional.of(address);
         } catch (EmptyResultDataAccessException e) {
@@ -94,7 +94,7 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
         Address address = jdbcTemplate.queryForObject(
                 getFindOneQuery(),
                 new Object[]{aLong},
-                getMapper());
+                this);
         logger.info("Find1 address");
         return address;
 
@@ -119,4 +119,6 @@ public class AddressDaoImpl implements AddressDao, QueryDao {
     public String getFindOneQuery() {
         return queryService.getQuery("select.address");
     }
+
+
 }
