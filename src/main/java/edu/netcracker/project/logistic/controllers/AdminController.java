@@ -1,14 +1,24 @@
 package edu.netcracker.project.logistic.controllers;
 
+import edu.netcracker.project.logistic.dao.AddressDao;
 import edu.netcracker.project.logistic.dao.impl.AddressDaoImpl;
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.*;
+
+import edu.netcracker.project.logistic.model.Advertisement;
+import edu.netcracker.project.logistic.model.AdvertisementType;
+import edu.netcracker.project.logistic.model.Office;
+
+import edu.netcracker.project.logistic.service.AdvertisementService;
+
+import edu.netcracker.project.logistic.validation.EmployeeFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,19 +34,23 @@ public class AdminController {
     private RoleService roleService;
     private AdvertisementService advertisementService;
     private AddressService addressService;
-    @Autowired
     private AddressDaoImpl addressDao;
+    private EmployeeFormValidator employeeFormValidator;
+
 
     @Autowired
-    public AdminController(EmployeeService employeeService, OfficeService officeService,
+    public AdminController(OfficeService officeService, EmployeeService employeeService,
                            ContactService contactService, RoleService roleService,
-                           AdvertisementService advertisementService, AddressService addressService) {
-        this.employeeService = employeeService;
+                           AdvertisementService advertisementService, EmployeeFormValidator employeeFormValidator,
+                           AddressService addressService, AddressDaoImpl addressDao) {
         this.officeService = officeService;
+        this.employeeService = employeeService;
         this.contactService = contactService;
         this.roleService = roleService;
         this.advertisementService = advertisementService;
         this.addressService = addressService;
+        this.addressDao = addressDao;
+        this.employeeFormValidator = employeeFormValidator;
     }
 
     @GetMapping("/advertisements")
@@ -75,15 +89,16 @@ public class AdminController {
         }
         Person emp = opt.get();
 
-        List<Role> roles =
+        List<Long> roles =
                 roleService.findRolesByPersonId(emp.getId())
                         .stream()
                         .filter(Role::isEmployeeRole)
+                        .map(Role::getRoleId)
                         .collect(Collectors.toList());
 
         EmployeeForm employeeForm = new EmployeeForm();
         employeeForm.setEmployee(emp);
-        employeeForm.setRoles(roles);
+        employeeForm.setRoleIds(roles);
 
         model.addAttribute("form", employeeForm);
 
@@ -91,9 +106,15 @@ public class AdminController {
     }
 
     @PostMapping("/crud/employee/{id}")
-    public String updateEmployee(@PathVariable int id, Model model, BindingResult result,
-                                 @ModelAttribute("form") EmployeeForm form) {
-        throw new UnsupportedOperationException();
+    public String updateEmployee(@PathVariable int id, Model model,
+                                 @ModelAttribute("form") @Valid EmployeeForm form,
+                                 BindingResult result) {
+        if (result.hasErrors()) {
+            return "/admin/admin_crud_employee";
+        }
+
+        employeeService.save(form.getEmployee(), form.getRoleIds());
+        return "redirect:/admin/employees";
     }
 
     @PostMapping("/crud/employee/{id}/delete")
@@ -102,40 +123,39 @@ public class AdminController {
         return "/admin/admin_employees";
     }
 
-    @GetMapping("/crud/employee")
-    public String createEmployee(Model model) {
-        Person emp = new Person();
-        emp.setContact(new Contact());
-        CreateEmployeeForm form = new CreateEmployeeForm();
-        form.setEmployee(emp);
-
-        List<Role> employeeRoles = roleService.findEmployeeRoles();
-
-        model.addAttribute("form", form);
-        model.addAttribute("newEmployee", true);
-        model.addAttribute("roles", employeeRoles);
-
-        return "/admin/admin_crud_employee";
-    }
-
-    @PostMapping("/crud/employee")
-    public String doCreateEmployee(Model model,
-                                   @ModelAttribute("form") CreateEmployeeForm form,
-                                   BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<Role> employeeRoles = roleService.findEmployeeRoles();
-            model.addAttribute("newEmployee", true);
-            model.addAttribute("roles", employeeRoles);
-
-            return "/admin/admin_crud_employee";
-        }
-        employeeService.save(form.getEmployee(), Collections.singletonList(form.getRoleId()));
-        return "redirect:/admin/employees";
-    }
+//    @GetMapping("/crud/employee")
+//    public String createEmployee(Model model) {
+//        Person emp = new Person();
+//        emp.setContact(new Contact());
+//        CreateEmployeeForm form = new CreateEmployeeForm();
+//        form.setEmployee(emp);
+//
+//        List<Role> employeeRoles = roleService.findEmployeeRoles();
+//
+//        model.addAttribute("form", form);
+//        model.addAttribute("newEmployee", true);
+//        model.addAttribute("roles", employeeRoles);
+//
+//        return "/admin/admin_crud_employee";
+//    }
+//
+//    @PostMapping("/crud/employee")
+//    public String doCreateEmployee(Model model,
+//                                   @ModelAttribute("form") CreateEmployeeForm form,
+//                                   BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            List<Role> employeeRoles = roleService.findEmployeeRoles();
+//            model.addAttribute("newEmployee", true);
+//            model.addAttribute("roles", employeeRoles);
+//
+//            return "/admin/admin_crud_employee";
+//        }
+//        employeeService.save(form.getEmployee(), Collections.singletonList(form.getRoleId()));
+//        return "redirect:/admin/employees";
+//    }
 
     @GetMapping("/crud/office")
     public String createOffice(Model model) {
-
         model.addAttribute("office", new Office());
         return "/admin/admin_crud_office";
     }
@@ -167,12 +187,9 @@ public class AdminController {
     }
 
     @PostMapping("/FindOfficeByDepartment")
-    public String  findByDepartment(@RequestParam String department, Model model)
-    {
-
-       model.addAttribute("offices", officeService.findByDepartment(department));
+    public String findByDepartment(@RequestParam String department, Model model) {
+        model.addAttribute("offices", officeService.findByDepartment(department));
         return "/admin/admin_offices";
 
     }
-
 }

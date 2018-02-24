@@ -31,7 +31,6 @@ public class OrderDaoImpl implements OrderDao, QueryDao {
             person.setUserName(resultSet.getString("user_name"));
             person.setPassword(resultSet.getString("password"));
             person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
-            person.setEmail(resultSet.getString("email"));
 
             Contact contact = new Contact();
             contact.setContactId(resultSet.getLong("contact_id"));

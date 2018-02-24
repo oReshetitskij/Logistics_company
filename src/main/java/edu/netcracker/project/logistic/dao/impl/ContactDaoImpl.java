@@ -38,6 +38,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         c.setContactId(rs.getLong("contact_id"));
         c.setFirstName(rs.getString("first_name"));
         c.setLastName(rs.getString("last_name"));
+        c.setEmail(rs.getString("email"));
         return c;
     }
 
@@ -51,6 +52,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
                 ps.setObject(2, contact.getFirstName());
                 ps.setObject(3, contact.getLastName());
                 ps.setObject(4, contact.getPhoneNumber());
+                ps.setObject(5, contact.getEmail());
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -60,6 +62,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
                 ps.setObject(1, contact.getFirstName());
                 ps.setObject(2, contact.getLastName());
                 ps.setObject(3, contact.getPhoneNumber());
+                ps.setObject(4, contact.getEmail());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("contact_id");
