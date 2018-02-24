@@ -46,6 +46,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Person create(Person employee, List<Long> roleIds) {
         Set<String> duplicateFields = checkContactData(employee.getContact());
+        duplicateFields.addAll(checkPersonData(employee));
+
         if (duplicateFields.size() != 0) {
             throw new NonUniqueRecordException(duplicateFields);
         }
@@ -146,6 +148,15 @@ public class EmployeeServiceImpl implements EmployeeService {
             logger.error("Trying to give employee role which not exists.");
             throw ex;
         }
+    }
+
+    private Set<String> checkPersonData(Person person) {
+        Set<String> errors = new HashSet<>(1);
+        Optional<Person> opt = personDao.findOne(person.getUserName());
+        if (opt.isPresent()) {
+            errors.add("employee.userName");
+        }
+        return errors;
     }
 
     private Set<String> checkContactData(Contact contact) {
