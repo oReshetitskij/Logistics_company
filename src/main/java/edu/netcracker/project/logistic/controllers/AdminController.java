@@ -1,6 +1,5 @@
 package edu.netcracker.project.logistic.controllers;
 
-import edu.netcracker.project.logistic.dao.impl.AddressDaoImpl;
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,7 @@ public class AdminController {
     private RoleService roleService;
     private AdvertisementService advertisementService;
     private AddressService addressService;
-    @Autowired
-    private AddressDaoImpl addressDao;
+
 
     @Autowired
     public AdminController(EmployeeService employeeService, OfficeService officeService,
@@ -156,21 +154,22 @@ public class AdminController {
 
     @PostMapping("/crud/office")
     public String saveOffice(@ModelAttribute("office") OfficeForm officeForm) {
+
         Office office = new Office(
                 officeForm.getOfficeId(),
                 officeForm.getName(),
-                addressDao.findOne1(officeForm.getAddress())
+                addressService.findOne(officeForm.getAddress()).get()
         );
         System.out.println(office);
         officeService.save(office);
         return "redirect:/admin/offices";
     }
 
-    @PostMapping("/FindOfficeByDepartment")
-    public String  findByDepartment(@RequestParam String department, Model model)
-    {
 
-       model.addAttribute("offices", officeService.findByDepartment(department));
+    @PostMapping("/FindOfficeByDepartment")
+    public String findByDepartment(@RequestParam String department, Model model) {
+
+        model.addAttribute("offices", officeService.findByDepartment(department));
         return "/admin/admin_offices";
 
     }
