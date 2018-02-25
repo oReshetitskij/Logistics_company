@@ -7,8 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface PersonCrudDao extends CrudDao<Person, Long> {
-   Optional<Person> findOne(String username);
-   List<Person> findAll();
-   List<Person> findAllEmployees();
-   Set<String> findDuplicateFields(Person person);
+    Optional<Person> findOne(String username);
+
+    List<Person> findAll();
+
+    List<Person> findAllEmployees();
 }

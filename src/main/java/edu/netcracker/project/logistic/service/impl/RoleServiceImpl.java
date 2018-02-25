@@ -11,9 +11,12 @@ import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
+    private RoleCrudDao roleCrudDao;
 
     @Autowired
-    RoleCrudDao roleCrudDao;
+    public RoleServiceImpl(RoleCrudDao roleCrudDao) {
+        this.roleCrudDao = roleCrudDao;
+    }
 
     @Override
     public void save(Role role) {
@@ -48,5 +51,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findEmployeeRoles() {
         return roleCrudDao.findEmployeeRoles();
+    }
+
+    @Override
+    public List<Role> findClientRoles() {
+        return roleCrudDao.findClientRoles();
     }
 }
