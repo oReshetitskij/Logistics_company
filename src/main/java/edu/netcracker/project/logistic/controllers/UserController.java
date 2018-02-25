@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/personal")
-    public String showPersonalArea(Model model, Principal principal){
+    public String viewPersonalArea(Model model, Principal principal){
 
         String username = principal.getName();
 
@@ -41,10 +42,23 @@ public class UserController {
         return "/user/user_personal_area";
     }
 
-    @PostMapping("/personal")
-    public String updatePersonalArea(){
+    @GetMapping(value = "/personal/{id}")
+    public String changePersonalArea(){
+        return "/error/404";
+    }
+
+    @PostMapping(value = "/personal/{id}", params = "action=save")
+    public String updatePersonalArea(@PathVariable Long id){
 
 
         return "/user/user_personal_area";
+    }
+
+    @PostMapping(value = "/personal/{id}", params = "action=delete")
+    public String deletePersonalArea(@PathVariable Long id){
+
+        personService.delete(id);
+        return "redirect:/login?delete";
+
     }
 }
