@@ -51,6 +51,10 @@ public class UserController {
                                      @ModelAttribute("user") Person user,
                                      BindingResult bindingResult){
 
+        if (bindingResult.hasErrors()) {
+            return "/user/user_personal_area";
+        }
+
         userService.update(user);
         return "redirect:/user/personal";
     }
