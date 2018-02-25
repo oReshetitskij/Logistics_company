@@ -11,13 +11,15 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
+public class RoleCrudDaoImpl implements RoleCrudDao, QueryDao, RowMapper<Role> {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -27,17 +29,13 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         this.queryService = queryService;
     }
 
-    private RowMapper<Role> getMapper() {
-        return ((resultSet, i) ->
-        {
-            Role role = new Role();
-            role.setRoleId(resultSet.getLong("role_id"));
-            role.setRoleName(resultSet.getString("role_name"));
-            role.setEmployeeRole(resultSet.getBoolean("is_employee_role"));
-            return role;
-
-        });
-
+    @Override
+    public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Role role = new Role();
+        role.setRoleId(rs.getLong("role_id"));
+        role.setRoleName(rs.getString("role_name"));
+        role.setEmployeeRole(rs.getBoolean("is_employee_role"));
+        return role;
     }
 
     private RowMapper<Role> getMapperForAll() {
@@ -48,7 +46,6 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
             role.setEmployeeRole(resultSet.getBoolean("is_employee_role"));
             return role;
         });
-
     }
 
     @Override
@@ -70,7 +67,7 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
 
                 return ps;
             }, keyHolder);
-            Number key = (Number)keyHolder.getKeys().get("role_id");
+            Number key = (Number) keyHolder.getKeys().get("role_id");
             role.setRoleId(key.longValue());
         }
         return role;
@@ -92,7 +89,7 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
             role = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
                     new Object[]{aLong},
-                    getMapper());
+                    this);
             return Optional.of(role);
 
         } catch (EmptyResultDataAccessException e) {
@@ -106,8 +103,8 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         try {
             Role role = jdbcTemplate.queryForObject(
                     getFindByNameQuery(),
-                    new Object[] { name },
-                    getMapper()
+                    new Object[]{name},
+                    this
             );
             return Optional.of(role);
         } catch (EmptyResultDataAccessException e) {
@@ -123,7 +120,7 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
     @Override
     public List<Role> getByPersonId(Long personId) {
         try {
-            return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId}, getMapper());
+            return jdbcTemplate.query(getByPersonIdQuery(), new Object[]{personId}, this);
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
         }
@@ -134,7 +131,7 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         try {
             return jdbcTemplate.query(
                     getEmployeeRoles(),
-                    getMapper()
+                    this
             );
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
@@ -145,7 +142,9 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         return queryService.getQuery("role.name.user");
     }
 
-    private String getByPersonIdQuery() { return queryService.getQuery("select.role.by.person_id"); }
+    private String getByPersonIdQuery() {
+        return queryService.getQuery("select.role.by.person_id");
+    }
 
     @Override
     public String getInsertQuery() {
@@ -167,7 +166,9 @@ public class RoleCrudDaoImpl  implements RoleCrudDao,QueryDao {
         return queryService.getQuery("select.role");
     }
 
-    private String getFindByNameQuery() { return queryService.getQuery("select.role.by.name"); }
+    private String getFindByNameQuery() {
+        return queryService.getQuery("select.role.by.name");
+    }
 
     private String getEmployeeRoles() {
         return queryService.getQuery("select.role.employee");

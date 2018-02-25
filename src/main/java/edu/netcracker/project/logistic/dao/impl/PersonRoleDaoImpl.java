@@ -7,7 +7,6 @@ import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -74,6 +73,14 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
     }
 
     @Override
+    public void deleteByPersonId(Long personId) {
+        jdbcTemplate.update(
+                getDeleteByPersonIdQuery(),
+                personId
+        );
+    }
+
+    @Override
     public void saveMany(List<PersonRole> personRoles) {
         List<Object[]> batchParams =
                 personRoles
@@ -105,5 +112,9 @@ public class PersonRoleDaoImpl implements PersonRoleDao, QueryDao {
     @Override
     public String getFindOneQuery() {
         return queryService.getQuery("select.person_role");
+    }
+
+    private String getDeleteByPersonIdQuery() {
+        return queryService.getQuery("delete.person_role.by.person_id");
     }
 }
