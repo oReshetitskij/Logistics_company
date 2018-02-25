@@ -61,10 +61,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Person update(Long id, Contact contact, List<Long> roleIds) {
-        Set<String> duplicateFields = checkContactData(contact);
-        if (duplicateFields.size() != 0) {
-            throw new NonUniqueRecordException(duplicateFields);
-        }
         Optional<Person> opt = personDao.findOne(id);
         if (!opt.isPresent()) {
             throw new IllegalArgumentException(String.format("Can't find person #%s", id));
@@ -72,6 +68,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Person emp = opt.get();
         Long contactId = emp.getContact().getContactId();
         contact.setContactId(contactId);
+        Set<String> duplicateFields = checkContactData(contact);
+        if (duplicateFields.size() != 0) {
+            throw new NonUniqueRecordException(duplicateFields);
+        }
         contactDao.save(contact);
         emp.setContact(contact);
         updateRoles(emp, roleIds, true);
@@ -153,7 +153,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Set<String> checkPersonData(Person person) {
         Set<String> errors = new HashSet<>(1);
         Optional<Person> opt = personDao.findOne(person.getUserName());
-        if (opt.isPresent()) {
+        if (opt.isPresent() &&
+                !opt.get().getId().equals(person.getId())) {
             errors.add("employee.userName");
         }
         return errors;
@@ -164,9 +165,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Contact> duplicates =
                 contactDao.findByPhoneNumberOrEmail(contact.getPhoneNumber(), contact.getEmail());
         for (Contact d : duplicates) {
-            if (d.getEmail().equals(contact.getEmail())) {
+            if (!d.getContactId().equals(contact.getContactId()) && d.getEmail().equals(contact.getEmail())) {
                 errors.add("employee.contact.email");
-            } else if (d.getPhoneNumber().equals(contact.getPhoneNumber())) {
+            } else if (!d.getContactId().equals(contact.getContactId()) && d.getPhoneNumber().equals(contact.getPhoneNumber())) {
                 errors.add("employee.contact.phoneNumber");
             }
         }
