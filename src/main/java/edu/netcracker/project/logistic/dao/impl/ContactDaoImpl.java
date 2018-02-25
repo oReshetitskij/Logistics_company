@@ -38,6 +38,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         c.setContactId(rs.getLong("contact_id"));
         c.setFirstName(rs.getString("first_name"));
         c.setLastName(rs.getString("last_name"));
+        c.setPhoneNumber(rs.getString("phone_number"));
         return c;
     }
 
