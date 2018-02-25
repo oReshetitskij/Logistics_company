@@ -45,12 +45,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackFor = {NonUniqueRecordException.class, DataIntegrityViolationException.class})
     @Override
     public Person create(Person employee, List<Long> roleIds) {
-        Set<String> duplicateFields = checkContactData(employee.getContact());
-        duplicateFields.addAll(checkPersonData(employee));
-
-        if (duplicateFields.size() != 0) {
-            throw new NonUniqueRecordException(duplicateFields);
-        }
         employee.setRegistrationDate(LocalDateTime.now());
         contactDao.save(employee.getContact());
         personDao.save(employee);
@@ -68,10 +62,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Person emp = opt.get();
         Long contactId = emp.getContact().getContactId();
         contact.setContactId(contactId);
-        Set<String> duplicateFields = checkContactData(contact);
-        if (duplicateFields.size() != 0) {
-            throw new NonUniqueRecordException(duplicateFields);
-        }
         contactDao.save(contact);
         emp.setContact(contact);
         updateRoles(emp, roleIds, true);
@@ -148,29 +138,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             logger.error("Trying to give employee role which not exists.");
             throw ex;
         }
-    }
-
-    private Set<String> checkPersonData(Person person) {
-        Set<String> errors = new HashSet<>(1);
-        Optional<Person> opt = personDao.findOne(person.getUserName());
-        if (opt.isPresent() &&
-                !opt.get().getId().equals(person.getId())) {
-            errors.add("employee.userName");
-        }
-        return errors;
-    }
-
-    private Set<String> checkContactData(Contact contact) {
-        Set<String> errors = new HashSet<>(2);
-        List<Contact> duplicates =
-                contactDao.findByPhoneNumberOrEmail(contact.getPhoneNumber(), contact.getEmail());
-        for (Contact d : duplicates) {
-            if (!d.getContactId().equals(contact.getContactId()) && d.getEmail().equals(contact.getEmail())) {
-                errors.add("employee.contact.email");
-            } else if (!d.getContactId().equals(contact.getContactId()) && d.getPhoneNumber().equals(contact.getPhoneNumber())) {
-                errors.add("employee.contact.phoneNumber");
-            }
-        }
-        return errors;
     }
 }
