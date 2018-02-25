@@ -4,16 +4,14 @@ import edu.netcracker.project.logistic.dao.ContactDao;
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Contact;
-import edu.netcracker.project.logistic.model.EmployeeForm;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
-import org.springframework.validation.Validator;
 
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class CreateEmployeeValidator extends AbstractEmployeeValidator {
@@ -25,22 +23,18 @@ public class CreateEmployeeValidator extends AbstractEmployeeValidator {
         this.validator = validator;
     }
 
-    public void validate(EmployeeForm form, Errors errors) {
-        Person emp = form.getEmployee();
-        validator.validate(emp, errors);
+    public void validate(Person employee, Errors errors) {
+        validator.validate(employee, errors);
 
-        Contact contact = emp.getContact();
+        Contact contact = employee.getContact();
         validator.validate(contact, errors);
 
-        List<Long> roleIds = form.getRoleIds();
-        if (roleIds == null) {
-            errors.reject("roleIds can't be null");
-        } else if (roleIds.size() < 1) {
-            errors.rejectValue("roleIds", "", "Must contain at least one role");
+        Set<Role> roles = employee.getRoles();
+        if (roles == null || roles.size() < 1) {
+            errors.rejectValue("roles", "", "At least one role must be selected");
         }
-
-        checkPersonData(form.getEmployee(), errors);
-        checkContactData(form.getEmployee().getContact(), errors);
-        checkRoleData(form.getRoleIds(), errors);
+        checkPersonData(employee, errors);
+        checkContactData(employee, errors);
+        checkRoleData(employee, errors);
     }
 }

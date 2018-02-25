@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -91,30 +92,18 @@ public class AdminController {
         }
         Person emp = opt.get();
 
-        List<Long> empRoles =
-                roleService.findRolesByPersonId(emp.getId())
-                        .stream()
-                        .filter(Role::isEmployeeRole)
-                        .map(Role::getRoleId)
-                        .collect(Collectors.toList());
-
-        EmployeeForm employeeForm = new EmployeeForm();
-        employeeForm.setEmployee(emp);
-        employeeForm.setRoleIds(empRoles);
-
         List<Role> employeeRoles = roleService.findEmployeeRoles();
         model.addAttribute("roles", employeeRoles);
-        model.addAttribute("form", employeeForm);
+        model.addAttribute("employee", emp);
 
         return "/admin/admin_crud_employee";
     }
 
     @PostMapping("/crud/employee/{id}")
     public String updateEmployee(@PathVariable long id, Model model,
-                                 @ModelAttribute("form") EmployeeForm form,
-                                 BindingResult result,
-                                 @RequestBody String body) {
-        updateEmployeeValidator.validate(form, result);
+                                 @ModelAttribute("employee") Person employee,
+                                 BindingResult result) {
+        updateEmployeeValidator.validate(employee, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", false);
@@ -122,8 +111,8 @@ public class AdminController {
 
             return "/admin/admin_crud_employee";
         }
-        form.getEmployee().setId(id);
-        employeeService.update(id, form.getEmployee().getContact(), form.getRoleIds());
+        employee.setId(id);
+        employeeService.update(employee);
         return "redirect:/admin/employees";
     }
 
@@ -135,33 +124,32 @@ public class AdminController {
 
     @GetMapping("/crud/employee")
     public String createEmployee(Model model) {
-        Person emp = new Person();
-        emp.setContact(new Contact());
-        EmployeeForm form = new EmployeeForm();
-        form.setEmployee(emp);
+        Person employee = new Person();
+        employee.setContact(new Contact());
+        employee.setRoles(new HashSet<>());
 
-        List<Role> employeeRoles = roleService.findEmployeeRoles();
+        List<Role> availableRoles = roleService.findEmployeeRoles();
 
-        model.addAttribute("form", form);
+        model.addAttribute("employee", employee);
         model.addAttribute("newEmployee", true);
-        model.addAttribute("roles", employeeRoles);
+        model.addAttribute("availableRoles", availableRoles);
 
         return "/admin/admin_crud_employee";
     }
 
     @PostMapping("/crud/employee")
     public String doCreateEmployee(Model model,
-                                   @ModelAttribute("form") EmployeeForm form,
+                                   @ModelAttribute("employee") Person employee,
                                    BindingResult bindingResult) {
-        createEmployeeValidator.validate(form, bindingResult);
+        createEmployeeValidator.validate(employee, bindingResult);
         if (bindingResult.hasErrors()) {
-            List<Role> employeeRoles = roleService.findEmployeeRoles();
+            List<Role> availableRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", true);
-            model.addAttribute("roles", employeeRoles);
+            model.addAttribute("availableRoles", availableRoles);
 
             return "/admin/admin_crud_employee";
         }
-        employeeService.create(form.getEmployee(), form.getRoleIds());
+        employeeService.create(employee);
         return "redirect:/admin/employees";
     }
 

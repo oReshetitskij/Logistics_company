@@ -44,28 +44,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional(rollbackFor = {NonUniqueRecordException.class, DataIntegrityViolationException.class})
     @Override
-    public Person create(Person employee, List<Long> roleIds) {
+    public Person create(Person employee) {
         employee.setRegistrationDate(LocalDateTime.now());
         contactDao.save(employee.getContact());
         personDao.save(employee);
-        contactDao.save(employee.getContact());
-        updateRoles(employee, roleIds, false);
         return employee;
     }
 
     @Override
-    public Person update(Long id, Contact contact, List<Long> roleIds) {
-        Optional<Person> opt = personDao.findOne(id);
+    public Person update(Person employee) {
+        Long personId = employee.getId();
+        Optional<Person> opt = personDao.findOne(personId);
         if (!opt.isPresent()) {
-            throw new IllegalArgumentException(String.format("Can't find person #%s", id));
+            throw new IllegalArgumentException(String.format("Can't find person #%s", personId));
         }
-        Person emp = opt.get();
-        Long contactId = emp.getContact().getContactId();
-        contact.setContactId(contactId);
-        contactDao.save(contact);
-        emp.setContact(contact);
-        updateRoles(emp, roleIds, true);
-        return emp;
+        Person existing = opt.get();
+        Long contactId = existing.getContact().getContactId();
+        Contact updatedContact = existing.getContact();
+        updatedContact.setContactId(contactId);
+        contactDao.save(updatedContact);
+        return employee;
     }
 
     @Transactional
@@ -113,30 +111,5 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean contains(Long id) {
         return findOne(id).isPresent();
-    }
-
-    private void updateRoles(Person employee, List<Long> roleIds, boolean previouslyRegistered) {
-        List<PersonRole> currentEmployeeRoles =
-                roleDao.getByPersonId(employee.getId())
-                        .stream()
-                        .filter(Role::isEmployeeRole)
-                        .map(r -> new PersonRole(employee.getId(), r.getRoleId()))
-                        .collect(Collectors.toList());
-
-        List<PersonRole> employeeRolesToAdd =
-                roleIds
-                        .stream()
-                        .map(roleId -> new PersonRole(employee.getId(), roleId))
-                        .collect(Collectors.toList());
-
-        try {
-            if (previouslyRegistered) {
-                personRoleDao.deleteMany(currentEmployeeRoles);
-            }
-            personRoleDao.saveMany(employeeRolesToAdd);
-        } catch (DataIntegrityViolationException ex) {
-            logger.error("Trying to give employee role which not exists.");
-            throw ex;
-        }
     }
 }
