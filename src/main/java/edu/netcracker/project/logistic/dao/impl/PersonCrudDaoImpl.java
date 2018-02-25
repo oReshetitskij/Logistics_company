@@ -2,10 +2,12 @@ package edu.netcracker.project.logistic.dao.impl;
 
 
 import edu.netcracker.project.logistic.dao.PersonCrudDao;
+import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 
+import edu.netcracker.project.logistic.model.PersonRole;
 import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -27,14 +31,16 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
+    private PersonRoleDao personRoleDao;
     private RowMapper<Contact> contactMapper;
     private RowMapper<Role> roleMapper;
 
     @Autowired
     PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService,
-                      RowMapper<Contact> contactMapper, RowMapper<Role> roleMapper) {
+                      PersonRoleDao personRoleDao, RowMapper<Contact> contactMapper, RowMapper<Role> roleMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
+        this.personRoleDao = personRoleDao;
         this.contactMapper = contactMapper;
         this.roleMapper = roleMapper;
     }
@@ -58,6 +64,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
         return person;
     }
 
+    @Transactional
     @Override
     public Person save(Person person) {
         boolean hasPrimaryKey = person.getId() != null;
@@ -84,6 +91,13 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
             Number key = (Number) keyHolder.getKeys().get("person_id");
             person.setId(key.longValue());
         }
+        // Save roles
+        personRoleDao.deleteByPersonId(person.getId());
+        List<PersonRole> personRoles = person.getRoles()
+                .stream()
+                .map(r -> new PersonRole(person.getId(), r.getRoleId()))
+                .collect(Collectors.toList());
+        personRoleDao.saveMany(personRoles);
         return person;
     }
 
