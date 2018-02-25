@@ -175,12 +175,37 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
         }
     }
 
+    private List<Person> extractMany(ResultSet rs) throws SQLException {
+        List<Person> result = new ArrayList<>();
+
+        boolean rowsLeft = rs.next();
+        for (int i = 0; rowsLeft; i++) {
+            Person person = new Person();
+            person.setId(rs.getLong("person_id"));
+            person.setUserName(rs.getString("user_name"));
+            person.setPassword(rs.getString("password"));
+            person.setRegistrationDate(rs.getTimestamp("registration_date").toLocalDateTime());
+
+            Contact contact = contactMapper.mapRow(rs, i);
+            person.setContact(contact);
+
+            Set<Role> roles = new HashSet<>();
+            do {
+                roles.add(roleMapper.mapRow(rs, i));
+                rowsLeft = rs.next();
+            } while (rowsLeft && rs.getLong("person_id") == person.getId());
+            person.setRoles(roles);
+            result.add(person);
+        }
+        return result;
+    }
+
     @Override
     public List<Person> findAllEmployees() {
         try {
             return jdbcTemplate.query(
                     getFindAllEmployeesQuery(),
-                    this
+                    this::extractMany
             );
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
