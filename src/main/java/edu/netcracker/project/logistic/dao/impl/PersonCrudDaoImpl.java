@@ -6,6 +6,7 @@ import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 
+import edu.netcracker.project.logistic.model.Role;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,40 +16,46 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
 
 @Repository
-public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
+public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Person> {
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
     private RowMapper<Contact> contactMapper;
+    private RowMapper<Role> roleMapper;
 
     @Autowired
-    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService, RowMapper<Contact> contactMapper) {
+    PersonCrudDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService,
+                      RowMapper<Contact> contactMapper, RowMapper<Role> roleMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
         this.contactMapper = contactMapper;
+        this.roleMapper = roleMapper;
     }
 
+    @Override
+    public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Person person = new Person();
+        person.setId(rs.getLong("person_id"));
+        person.setUserName(rs.getString("user_name"));
+        person.setPassword(rs.getString("password"));
+        person.setRegistrationDate(rs.getTimestamp("registration_date").toLocalDateTime());
 
+        Contact contact = contactMapper.mapRow(rs, rowNum);
+        person.setContact(contact);
 
-    private RowMapper<Person> getMapper() {
-        return (resultSet, i) ->
-        {
-            Person person = new Person();
-            person.setId(resultSet.getLong("person_id"));
-            person.setUserName(resultSet.getString("user_name"));
-            person.setPassword(resultSet.getString("password"));
-            person.setRegistrationDate(resultSet.getTimestamp("registration_date").toLocalDateTime());
-
-            Contact contact = contactMapper.mapRow(resultSet, i);
-            person.setContact(contact);
-
-            return person;
-        };
+        Set<Role> roles = new HashSet<>();
+        do {
+            roles.add(roleMapper.mapRow(rs, rowNum));
+        } while (rs.next());
+        person.setRoles(roles);
+        return person;
     }
 
     @Override
@@ -96,7 +103,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
             person = jdbcTemplate.queryForObject(
                     getFindOneQuery(),
                     new Object[]{aLong},
-                    getMapper());
+                    this);
             return Optional.of(person);
 
         } catch (EmptyResultDataAccessException e) {
@@ -112,7 +119,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
             person = jdbcTemplate.queryForObject(
                     getFindOneByUsernameQuery(),
                     new Object[]{username},
-                    getMapper());
+                    this);
             return Optional.ofNullable(person);
 
         } catch (EmptyResultDataAccessException e) {
@@ -128,7 +135,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
                 pss -> {
                     pss.setString(2, person.getUserName());
                 },
-                getMapper()
+                this
         );
 
         Set<String> duplicateFields = new HashSet<>();
@@ -147,7 +154,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         try {
             return jdbcTemplate.query(
                     getFindAllQuery(),
-                    getMapper()
+                    this
             );
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
@@ -159,7 +166,7 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao {
         try {
             return jdbcTemplate.query(
                     getFindAllEmployeesQuery(),
-                    getMapper()
+                    this
             );
         } catch (EmptyResultDataAccessException ex) {
             return Collections.emptyList();
