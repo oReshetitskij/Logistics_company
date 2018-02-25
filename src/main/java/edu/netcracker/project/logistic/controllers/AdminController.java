@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +37,6 @@ public class AdminController {
     private AddressService addressService;
     private UpdateEmployeeValidator updateEmployeeValidator;
     private CreateEmployeeValidator createEmployeeValidator;
-
 
 
     @Autowired
@@ -111,7 +112,8 @@ public class AdminController {
     @PostMapping("/crud/employee/{id}")
     public String updateEmployee(@PathVariable long id, Model model,
                                  @ModelAttribute("form") EmployeeForm form,
-                                 BindingResult result) {
+                                 BindingResult result,
+                                 @RequestBody String body) {
         updateEmployeeValidator.validate(form, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
@@ -159,18 +161,7 @@ public class AdminController {
 
             return "/admin/admin_crud_employee";
         }
-        try {
-            employeeService.create(form.getEmployee(), form.getRoleIds());
-        } catch (NonUniqueRecordException ex) {
-            for (String duplicate: ex.duplicateFields()) {
-                bindingResult.rejectValue(duplicate, "Duplicate field");
-            }
-            List<Role> employeeRoles = roleService.findEmployeeRoles();
-            model.addAttribute("newEmployee", true);
-            model.addAttribute("roles", employeeRoles);
-
-            return "/admin/admin_crud_employee";
-        }
+        employeeService.create(form.getEmployee(), form.getRoleIds());
         return "redirect:/admin/employees";
     }
 

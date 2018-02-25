@@ -1,5 +1,8 @@
 package edu.netcracker.project.logistic.validation;
 
+import edu.netcracker.project.logistic.dao.ContactDao;
+import edu.netcracker.project.logistic.dao.PersonCrudDao;
+import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.EmployeeForm;
 import edu.netcracker.project.logistic.model.Person;
@@ -11,11 +14,12 @@ import org.springframework.validation.SmartValidator;
 import java.util.List;
 
 @Component
-public class UpdateEmployeeValidator {
+public class UpdateEmployeeValidator extends AbstractEmployeeValidator {
     private SmartValidator validator;
 
     @Autowired
-    public UpdateEmployeeValidator(SmartValidator validator) {
+    public UpdateEmployeeValidator(SmartValidator validator, PersonCrudDao personDao, RoleCrudDao roleDao, ContactDao contactDao) {
+        super(roleDao, personDao, contactDao);
         this.validator = validator;
     }
 
@@ -31,5 +35,7 @@ public class UpdateEmployeeValidator {
         }
         Contact contact = emp.getContact();
         validator.validate(contact, errors);
+        checkContactData(contact, errors);
+        checkRoleData(roleIds, errors);
     }
 }

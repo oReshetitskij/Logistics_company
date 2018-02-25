@@ -1,5 +1,8 @@
 package edu.netcracker.project.logistic.validation;
 
+import edu.netcracker.project.logistic.dao.ContactDao;
+import edu.netcracker.project.logistic.dao.PersonCrudDao;
+import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.EmployeeForm;
 import edu.netcracker.project.logistic.model.Person;
@@ -13,11 +16,12 @@ import org.springframework.validation.Validator;
 import java.util.List;
 
 @Component
-public class CreateEmployeeValidator {
+public class CreateEmployeeValidator extends AbstractEmployeeValidator {
     private SmartValidator validator;
 
     @Autowired
-    public CreateEmployeeValidator(SmartValidator validator) {
+    public CreateEmployeeValidator(SmartValidator validator, RoleCrudDao roleDao, PersonCrudDao personDao, ContactDao contactDao) {
+        super(roleDao, personDao, contactDao);
         this.validator = validator;
     }
 
@@ -34,5 +38,9 @@ public class CreateEmployeeValidator {
         } else if (roleIds.size() < 1) {
             errors.rejectValue("roleIds", "Must contain at least one role");
         }
+
+        checkPersonData(form.getEmployee(), errors);
+        checkContactData(form.getEmployee().getContact(), errors);
+        checkRoleData(form.getRoleIds(), errors);
     }
 }
