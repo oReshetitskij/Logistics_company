@@ -2,15 +2,14 @@ package edu.netcracker.project.logistic.controllers;
 
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.PersonService;
+import edu.netcracker.project.logistic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -19,11 +18,11 @@ import java.util.Optional;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    private PersonService personService;
+    private UserService userService;
 
     @Autowired
-    public UserController(PersonService personService){
-        this.personService = personService;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping("/personal")
@@ -31,7 +30,7 @@ public class UserController {
 
         String username = principal.getName();
 
-        Optional<Person> person = personService.findOne(username);
+        Optional<Person> person = userService.findOne(username);
 
         if (!person.isPresent()){
             return "/error/403";
@@ -48,16 +47,18 @@ public class UserController {
     }
 
     @PostMapping(value = "/personal/{id}", params = "action=save")
-    public String updatePersonalArea(@PathVariable Long id){
+    public String updatePersonalArea(@PathVariable Long id,
+                                     @ModelAttribute("user") Person user,
+                                     BindingResult bindingResult){
 
-
-        return "/user/user_personal_area";
+        userService.update(user);
+        return "redirect:/user/personal";
     }
 
     @PostMapping(value = "/personal/{id}", params = "action=delete")
     public String deletePersonalArea(@PathVariable Long id){
 
-        personService.delete(id);
+        userService.delete(id);
         return "redirect:/login?delete";
 
     }
