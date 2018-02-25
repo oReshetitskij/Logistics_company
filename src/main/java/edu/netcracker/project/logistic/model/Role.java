@@ -1,5 +1,7 @@
 package edu.netcracker.project.logistic.model;
 
+import java.util.Objects;
+
 public class Role {
     private Long roleId;
     private String roleName;
@@ -43,5 +45,20 @@ public class Role {
                 ", roleName='" + roleName + '\'' +
                 ", isEmployeeRole=" + isEmployeeRole +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return isEmployeeRole == role.isEmployeeRole &&
+                Objects.equals(roleId, role.roleId) &&
+                Objects.equals(roleName, role.roleName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roleId, roleName, isEmployeeRole);
     }
 }
