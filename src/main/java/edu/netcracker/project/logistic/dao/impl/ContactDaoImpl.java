@@ -5,7 +5,7 @@ import edu.netcracker.project.logistic.dao.QueryDao;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.service.QueryService;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,12 +17,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContactDaoImpl.class);
 
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
@@ -38,6 +40,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         c.setContactId(rs.getLong("contact_id"));
         c.setFirstName(rs.getString("first_name"));
         c.setLastName(rs.getString("last_name"));
+        c.setEmail(rs.getString("email"));
         c.setPhoneNumber(rs.getString("phone_number"));
         return c;
     }
@@ -52,6 +55,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
                 ps.setObject(2, contact.getFirstName());
                 ps.setObject(3, contact.getLastName());
                 ps.setObject(4, contact.getPhoneNumber());
+                ps.setObject(5, contact.getEmail());
             });
         } else {
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,6 +65,7 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
                 ps.setObject(1, contact.getFirstName());
                 ps.setObject(2, contact.getLastName());
                 ps.setObject(3, contact.getPhoneNumber());
+                ps.setObject(4, contact.getEmail());
                 return ps;
             }, keyHolder);
             Number key = (Number) keyHolder.getKeys().get("contact_id");
@@ -88,6 +93,19 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
         }
     }
 
+    public List<Contact> findByPhoneNumberOrEmail(String phoneNumber, String email) {
+        try {
+            return jdbcTemplate.query(
+                    getFindByPhoneNumberOrEmailQuery(),
+                    new Object[]{phoneNumber, email},
+                    this
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
+    }
+
+
     @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.contact");
@@ -106,5 +124,9 @@ public class ContactDaoImpl implements ContactDao, QueryDao, RowMapper<Contact> 
     @Override
     public String getFindOneQuery() {
         return queryService.getQuery("select.contact");
+    }
+
+    private String getFindByPhoneNumberOrEmailQuery() {
+        return queryService.getQuery("select.contact.by.phone_number.or.email");
     }
 }

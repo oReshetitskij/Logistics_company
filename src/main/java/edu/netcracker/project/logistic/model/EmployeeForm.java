@@ -1,10 +1,14 @@
 package edu.netcracker.project.logistic.model;
 
+import org.hibernate.validator.constraints.Email;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class EmployeeForm {
     private Person employee;
-    private List<Role> roles;
+    private List<Long> roleIds;
 
     public Person getEmployee() {
         return employee;
@@ -14,11 +18,11 @@ public class EmployeeForm {
         this.employee = employee;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public List<Long> getRoleIds() {
+        return roleIds;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
     }
 }

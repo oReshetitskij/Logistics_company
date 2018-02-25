@@ -28,15 +28,12 @@ public class OfficeDaoImpl implements OfficeDao, QueryDao {
     private QueryService queryService;
     private RowMapper<Address> addressRowMapper;
 
-
+    @Autowired
     public OfficeDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService,  RowMapper<Address> addressRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
         this.addressRowMapper = addressRowMapper;
     }
-
-    @Autowired
-
 
     private RowMapper<Office> getMapper() {
         return (resultSet, i) ->

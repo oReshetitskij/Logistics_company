@@ -5,12 +5,12 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 
 public class RegistrationForm {
-    String firstName;
-    String lastName;
-    String username;
-    String password;
-    String email;
-    String phoneNumber;
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
+    private String email;
+    private String phoneNumber;
 
     @NotNull
     @Size(min = 1, max = 45)
@@ -63,6 +63,8 @@ public class RegistrationForm {
         this.email = email;
     }
 
+    @NotNull
+    @Size(min = 7, max = 15)
     public String getPhoneNumber() {
         return phoneNumber;
     }
