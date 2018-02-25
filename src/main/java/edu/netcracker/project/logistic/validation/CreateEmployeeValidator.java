@@ -36,7 +36,7 @@ public class CreateEmployeeValidator extends AbstractEmployeeValidator {
         if (roleIds == null) {
             errors.reject("roleIds can't be null");
         } else if (roleIds.size() < 1) {
-            errors.rejectValue("roleIds", "Must contain at least one role");
+            errors.rejectValue("roleIds", "", "Must contain at least one role");
         }
 
         checkPersonData(form.getEmployee(), errors);

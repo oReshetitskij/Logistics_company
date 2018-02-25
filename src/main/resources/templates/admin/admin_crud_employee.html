@@ -51,6 +51,7 @@
                             <label for="username" class="control-label">Username</label>
                             <input type="text" class="form-control" id="username" placeholder=""
                                    required="required" minlength="6" maxlength="30"
+                                   oninput="clearErrorStyles(this)"
                                    th:field="*{employee.userName}"/>
                             <div class="has-error help-block"
                                  th:if="${#fields.hasErrors('employee.userName')}">
@@ -79,6 +80,7 @@
                             <label for="email" class="control-label">E-mail</label>
                             <input type="email" class="form-control" id="email" placeholder=""
                                    required="required" minlength="6" maxlength="254"
+                                   oninput="clearErrorStyles(this)"
                                    th:field="*{employee.contact.email}"/>
                             <div class="has-error help-block"
                                  th:if="${#fields.hasErrors('employee.contact.email')}">
@@ -91,6 +93,7 @@
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" class="form-control" id="phone" placeholder=""
                                    required="required" minlength="7" maxlength="15"
+                                   oninput="clearErrorStyles(this)"
                                    th:field="*{employee.contact.phoneNumber}"/>
                             <div class="has-error help-block"
                                  th:if="${#fields.hasErrors('employee.contact.phoneNumber')}">
@@ -144,6 +147,7 @@
                             <label for="username" class="control-label">Username</label>
                             <input type="text" class="form-control" id="username" placeholder="" readonly="readonly"
                                    required="required" minlength="6" maxlength="30"
+                                   oninput="clearErrorStyles(this)"
                                    th:value="*{employee.userName}"/>
                         </div>
 
@@ -158,6 +162,7 @@
                             <label for="email" class="control-label">E-mail</label>
                             <input type="email" class="form-control" id="email" placeholder=""
                                    required="required" minlength="6" maxlength="254"
+                                   oninput="clearErrorStyles(this)"
                                    th:field="*{employee.contact.email}"/>
                             <div class="has-error help-block"
                                  th:if="${#fields.hasErrors('employee.contact.email')}">
@@ -170,6 +175,7 @@
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" class="form-control" id="phone" placeholder=""
                                    required="required" minlength="7" maxlength="15"
+                                   oninput="clearErrorStyles(this)"
                                    th:field="*{employee.contact.phoneNumber}"/>
                             <div class="has-error help-block"
                                  th:if="${#fields.hasErrors('employee.contact.phoneNumber')}">
