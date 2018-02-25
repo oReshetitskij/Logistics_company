@@ -11,24 +11,15 @@ import org.springframework.validation.Errors;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractEmployeeValidator {
+public abstract class AbstractPersonValidator {
     protected RoleCrudDao roleDao;
     protected PersonCrudDao personDao;
     protected ContactDao contactDao;
 
-    public AbstractEmployeeValidator(RoleCrudDao roleDao, PersonCrudDao personDao, ContactDao contactDao) {
+    public AbstractPersonValidator(RoleCrudDao roleDao, PersonCrudDao personDao, ContactDao contactDao) {
         this.roleDao = roleDao;
         this.personDao = personDao;
         this.contactDao = contactDao;
-    }
-
-    protected void checkRoleData(Person employee, Errors errors) {
-        Set<Role> rolesCopy = new HashSet<>(employee.getRoles());
-        Set<Role> employeeRoles = new HashSet<>(roleDao.findEmployeeRoles());
-        rolesCopy.removeAll(employeeRoles);
-        if (rolesCopy.size() != 0) {
-            errors.rejectValue("employee.roles", "Only employee roles can be set.");
-        }
     }
 
     protected void checkPersonData(Person person, Errors errors) {

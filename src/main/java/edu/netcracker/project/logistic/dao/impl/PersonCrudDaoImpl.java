@@ -143,27 +143,6 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
     }
 
     @Override
-    public Set<String> findDuplicateFields(Person person) {
-        List<Person> matches = jdbcTemplate.query(
-                getFindByEmailOrUsernameQuery(),
-                pss -> {
-                    pss.setString(2, person.getUserName());
-                },
-                this
-        );
-
-        Set<String> duplicateFields = new HashSet<>();
-        for (Person match : matches) {
-            if (match.getUserName().equals(person.getUserName())) {
-                duplicateFields.add("username");
-            } else if (match.getContact().getEmail().equals(person.getContact().getEmail())) {
-                duplicateFields.add("email");
-            }
-        }
-        return duplicateFields;
-    }
-
-    @Override
     public List<Person> findAll() {
         try {
             return jdbcTemplate.query(

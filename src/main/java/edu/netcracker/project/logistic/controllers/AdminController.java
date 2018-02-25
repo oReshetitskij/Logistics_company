@@ -1,7 +1,5 @@
 package edu.netcracker.project.logistic.controllers;
 
-import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
-
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.*;
 
@@ -11,20 +9,16 @@ import edu.netcracker.project.logistic.model.Office;
 
 import edu.netcracker.project.logistic.service.AdvertisementService;
 
-import edu.netcracker.project.logistic.validation.CreateEmployeeValidator;
-import edu.netcracker.project.logistic.validation.UpdateEmployeeValidator;
+import edu.netcracker.project.logistic.validation.EmployeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -32,28 +26,23 @@ import java.util.stream.Collectors;
 public class AdminController {
     private EmployeeService employeeService;
     private OfficeService officeService;
-    private ContactService contactService;
     private RoleService roleService;
     private AdvertisementService advertisementService;
     private AddressService addressService;
-    private UpdateEmployeeValidator updateEmployeeValidator;
-    private CreateEmployeeValidator createEmployeeValidator;
+    private EmployeeValidator employeeValidator;
 
 
     @Autowired
     public AdminController(OfficeService officeService, EmployeeService employeeService,
-                           ContactService contactService, RoleService roleService,
-                           AdvertisementService advertisementService, UpdateEmployeeValidator updateEmployeeValidator,
+                           RoleService roleService, AdvertisementService advertisementService,
                            AddressService addressService,
-                           CreateEmployeeValidator createEmployeeValidator) {
+                           EmployeeValidator employeeValidator) {
         this.officeService = officeService;
         this.employeeService = employeeService;
-        this.contactService = contactService;
         this.roleService = roleService;
         this.advertisementService = advertisementService;
         this.addressService = addressService;
-        this.updateEmployeeValidator = updateEmployeeValidator;
-        this.createEmployeeValidator = createEmployeeValidator;
+        this.employeeValidator = employeeValidator;
     }
 
     @GetMapping("/advertisements")
@@ -103,7 +92,7 @@ public class AdminController {
     public String updateEmployee(@PathVariable long id, Model model,
                                  @ModelAttribute("employee") Person employee,
                                  BindingResult result) {
-        updateEmployeeValidator.validate(employee, result);
+        employeeValidator.validateUpdateData(employee, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", false);
@@ -141,7 +130,7 @@ public class AdminController {
     public String doCreateEmployee(Model model,
                                    @ModelAttribute("employee") Person employee,
                                    BindingResult bindingResult) {
-        createEmployeeValidator.validate(employee, bindingResult);
+        employeeValidator.validateCreateData(employee, bindingResult);
         if (bindingResult.hasErrors()) {
             List<Role> availableRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", true);
