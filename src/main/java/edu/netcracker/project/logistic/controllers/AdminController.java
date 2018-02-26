@@ -76,17 +76,17 @@ public class AdminController {
 
     @GetMapping("/crud/employee/{id}")
     public String employeeProfile(@PathVariable long id, Model model) {
-        model.addAttribute("newEmployee", false);
-
         Optional<Person> opt = employeeService.findOne(id);
         if (!opt.isPresent()) {
             return "redirect:/error/404";
         }
         Person emp = opt.get();
-
         List<Role> employeeRoles = roleService.findEmployeeRoles();
-        model.addAttribute("roles", employeeRoles);
+
+        model.addAttribute("newEmployee", false);
         model.addAttribute("employee", emp);
+        model.addAttribute("availableRoles", employeeRoles);
+
 
         return "/admin/admin_crud_employee";
     }
@@ -99,8 +99,7 @@ public class AdminController {
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", false);
-            model.addAttribute("roles", employeeRoles);
-
+            model.addAttribute("availableRoles", employeeRoles);
             return "/admin/admin_crud_employee";
         }
         employee.setId(id);

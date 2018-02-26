@@ -10,21 +10,26 @@ function clearErrorStyles(input) {
     var parent = input.parentElement;
     parent.classList.remove("has-error");
     var children = parent.children;
+    var removalNeeded = false;
     for (var i = 0; i < children.length; i++) {
-        if (i < 2) continue; // skip label and input
-        parent.removeChild(children[i]);
+        if (removalNeeded) {
+            parent.removeChild(children[i]);
+        }
+        if (children[i] === input) removalNeeded = true;
     }
 }
 
 function createMultiSelect(selector) {
     var el = $(selector);
+    var elContainer = null;
+
     $(document).ready(function () {
         el.multiselect({
             numberDisplayed: 3,
             delimiterText: ", ",
             allSelectedText: false,
             onChange: function (option, checked, select) {
-                clearErrorStyles(el);
+                clearErrorStyles(elContainer);
                 var values = [];
                 el.find("option").each(function () {
                     values.push(this.selected);
@@ -37,6 +42,7 @@ function createMultiSelect(selector) {
                 }
             },
             onInitialized: function (select, container) {
+                elContainer = container[0];
                 setTimeout(function () {
                     var values = [];
                     el.find("option").each(function () {
