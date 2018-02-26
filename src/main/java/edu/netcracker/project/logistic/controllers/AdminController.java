@@ -1,7 +1,5 @@
 package edu.netcracker.project.logistic.controllers;
 
-import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
-
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.*;
 
@@ -11,19 +9,17 @@ import edu.netcracker.project.logistic.model.Office;
 
 import edu.netcracker.project.logistic.service.AdvertisementService;
 
-import edu.netcracker.project.logistic.validation.CreateEmployeeValidator;
-import edu.netcracker.project.logistic.validation.UpdateEmployeeValidator;
+import edu.netcracker.project.logistic.validation.EmployeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -31,28 +27,23 @@ import java.util.stream.Collectors;
 public class AdminController {
     private EmployeeService employeeService;
     private OfficeService officeService;
-    private ContactService contactService;
     private RoleService roleService;
     private AdvertisementService advertisementService;
     private AddressService addressService;
-    private UpdateEmployeeValidator updateEmployeeValidator;
-    private CreateEmployeeValidator createEmployeeValidator;
+    private EmployeeValidator employeeValidator;
 
 
     @Autowired
     public AdminController(OfficeService officeService, EmployeeService employeeService,
-                           ContactService contactService, RoleService roleService,
-                           AdvertisementService advertisementService, UpdateEmployeeValidator updateEmployeeValidator,
+                           RoleService roleService, AdvertisementService advertisementService,
                            AddressService addressService,
-                           CreateEmployeeValidator createEmployeeValidator) {
+                           EmployeeValidator employeeValidator) {
         this.officeService = officeService;
         this.employeeService = employeeService;
-        this.contactService = contactService;
         this.roleService = roleService;
         this.advertisementService = advertisementService;
         this.addressService = addressService;
-        this.updateEmployeeValidator = updateEmployeeValidator;
-        this.createEmployeeValidator = createEmployeeValidator;
+        this.employeeValidator = employeeValidator;
     }
 
     @GetMapping("/advertisements")
@@ -76,54 +67,44 @@ public class AdminController {
     }
 
     @GetMapping("/employees")
-    public String getAllEmployees(Model model) {
-        model.addAttribute("employees", employeeService.findAll());
+    public String getAllEmployees(Model model, @ModelAttribute("searchForm") SearchForm searchForm) {
+        List<Person> employees = employeeService.search(searchForm);
+        model.addAttribute("employees", employees);
+        model.addAttribute("availableRoles", roleService.findEmployeeRoles());
         return "/admin/admin_employees";
     }
 
     @GetMapping("/crud/employee/{id}")
     public String employeeProfile(@PathVariable long id, Model model) {
-        model.addAttribute("newEmployee", false);
-
         Optional<Person> opt = employeeService.findOne(id);
         if (!opt.isPresent()) {
             return "redirect:/error/404";
         }
         Person emp = opt.get();
-
-        List<Long> empRoles =
-                roleService.findRolesByPersonId(emp.getId())
-                        .stream()
-                        .filter(Role::isEmployeeRole)
-                        .map(Role::getRoleId)
-                        .collect(Collectors.toList());
-
-        EmployeeForm employeeForm = new EmployeeForm();
-        employeeForm.setEmployee(emp);
-        employeeForm.setRoleIds(empRoles);
-
         List<Role> employeeRoles = roleService.findEmployeeRoles();
-        model.addAttribute("roles", employeeRoles);
-        model.addAttribute("form", employeeForm);
+
+        model.addAttribute("newEmployee", false);
+        model.addAttribute("employee", emp);
+        model.addAttribute("availableRoles", employeeRoles);
+
 
         return "/admin/admin_crud_employee";
     }
 
     @PostMapping("/crud/employee/{id}")
     public String updateEmployee(@PathVariable long id, Model model,
-                                 @ModelAttribute("form") EmployeeForm form,
-                                 BindingResult result,
-                                 @RequestBody String body) {
-        updateEmployeeValidator.validate(form, result);
+                                 @ModelAttribute("employee") Person employee,
+                                 BindingResult result) {
+        employee.setId(id);
+        employeeValidator.validateUpdateData(employee, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", false);
-            model.addAttribute("roles", employeeRoles);
-
+            model.addAttribute("availableRoles", employeeRoles);
             return "/admin/admin_crud_employee";
         }
-        form.getEmployee().setId(id);
-        employeeService.update(id, form.getEmployee().getContact(), form.getRoleIds());
+        employee.setId(id);
+        employeeService.update(employee);
         return "redirect:/admin/employees";
     }
 
@@ -135,33 +116,32 @@ public class AdminController {
 
     @GetMapping("/crud/employee")
     public String createEmployee(Model model) {
-        Person emp = new Person();
-        emp.setContact(new Contact());
-        EmployeeForm form = new EmployeeForm();
-        form.setEmployee(emp);
+        Person employee = new Person();
+        employee.setContact(new Contact());
+        employee.setRoles(new HashSet<>());
 
-        List<Role> employeeRoles = roleService.findEmployeeRoles();
+        List<Role> availableRoles = roleService.findEmployeeRoles();
 
-        model.addAttribute("form", form);
+        model.addAttribute("employee", employee);
         model.addAttribute("newEmployee", true);
-        model.addAttribute("roles", employeeRoles);
+        model.addAttribute("availableRoles", availableRoles);
 
         return "/admin/admin_crud_employee";
     }
 
     @PostMapping("/crud/employee")
     public String doCreateEmployee(Model model,
-                                   @ModelAttribute("form") EmployeeForm form,
+                                   @ModelAttribute("employee") Person employee,
                                    BindingResult bindingResult) {
-        createEmployeeValidator.validate(form, bindingResult);
+        employeeValidator.validateCreateData(employee, bindingResult);
         if (bindingResult.hasErrors()) {
-            List<Role> employeeRoles = roleService.findEmployeeRoles();
+            List<Role> availableRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", true);
-            model.addAttribute("roles", employeeRoles);
+            model.addAttribute("availableRoles", availableRoles);
 
             return "/admin/admin_crud_employee";
         }
-        employeeService.create(form.getEmployee(), form.getRoleIds());
+        employeeService.create(employee);
         return "redirect:/admin/employees";
     }
 

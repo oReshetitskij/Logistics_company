@@ -4,6 +4,8 @@ import edu.netcracker.project.logistic.dao.*;
 import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
 import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.RegistrationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -21,18 +23,17 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @PropertySource("classpath:application.properties")
 public class RegistrationServiceImpl implements RegistrationService {
+    private final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
+
     private PersonCrudDao personDao;
     private RegistrationLinkDao registrationLinkDao;
     private RoleCrudDao roleDao;
     private ContactDao contactDao;
-    private PersonRoleDao personRoleDao;
     private PasswordEncoder passwordEncoder;
 
     private JavaMailSender sender;
@@ -45,11 +46,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                                    TemplateEngine templateEngine, Environment env,
                                    HttpServletRequest request, PersonCrudDao personDao,
                                    RegistrationLinkDao registrationLinkDao, RoleCrudDao roleDao,
-                                   ContactDao contactDao, PersonRoleDao personRoleDao,
-                                   PasswordEncoder passwordEncoder) {
+                                   ContactDao contactDao, PasswordEncoder passwordEncoder) {
         this.personDao = personDao;
         this.registrationLinkDao = registrationLinkDao;
-        this.personRoleDao = personRoleDao;
         this.roleDao = roleDao;
         this.contactDao = contactDao;
         this.sender = sender;
@@ -60,39 +59,28 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Transactional
-    public void register(RegistrationForm form) throws MessagingException, NonUniqueRecordException {
-        Person personData = getPersonData(form);
-        Contact contactData = getContactData(form);
-
-        Set<String> duplicates = personDao.findDuplicateFields(personData);
-        if (!duplicates.isEmpty()) {
-            throw new NonUniqueRecordException(duplicates);
-        }
-
-        personDao.save(personData);
-        contactDao.save(contactData);
-
+    public void register(Person user) throws MessagingException, NonUniqueRecordException {
+        user.setRegistrationDate(LocalDateTime.now());
         Role unconfirmedRole = roleDao.getByName("ROLE_UNCONFIRMED")
                 .orElseThrow(() -> new IllegalStateException("Can't find 'Unconfired person' role"));
 
-        PersonRole unconfirmedPerson = new PersonRole();
-        unconfirmedPerson.setPersonId(personData.getId());
-        unconfirmedPerson.setRoleId(unconfirmedRole.getRoleId());
-        personRoleDao.save(unconfirmedPerson);
+        user.setRoles(Collections.singleton(unconfirmedRole));
+        contactDao.save(user.getContact());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        personDao.save(user);
 
         UUID id = generateId();
-        while (registrationLinkDao.contains(id)) {
-            id = generateId();
-        }
         RegistrationLink link = new RegistrationLink();
         link.setRegistrationLinkId(id);
-        link.setPersonId(personData.getId());
+        link.setPersonId(user.getId());
         registrationLinkDao.save(link);
 
-        sendConfirmationRequest(contactData, personData.getContact().getEmail(), link);
+        sendConfirmationRequest(user, link);
     }
 
-    private void sendConfirmationRequest(Contact contact, String email, RegistrationLink link) throws MessagingException {
+    private void sendConfirmationRequest(Person user, RegistrationLink link) throws MessagingException {
+        Contact contact = user.getContact();
+
         Context ctx = new Context();
         ctx.setVariable("firstName", contact.getFirstName());
         ctx.setVariable("lastName", contact.getLastName());
@@ -116,7 +104,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         msg.setSubject("Verify email address");
         String from = env.getProperty("spring.mail.username");
         msg.setFrom(from);
-        msg.setTo(email);
+        msg.setTo(contact.getEmail());
         msg.setText(htmlContent, true);
 
         sender.send(mimeMessage);
@@ -128,53 +116,29 @@ public class RegistrationServiceImpl implements RegistrationService {
                 () -> new IllegalArgumentException("Can't find user with given id")
         );
 
+        Optional<Person> opt = personDao.findOne(data.getPersonId());
+        if (!opt.isPresent()) {
+            logger.error("Can't find person for link %s", data.getRegistrationLinkId());
+            throw new IllegalStateException("Invalid registration link");
+        }
+        Person user = opt.get();
+
         List<Role> roles = roleDao.getByPersonId(data.getPersonId());
-        Role unconfirmedRole =
+        boolean unconfirmedUser =
                 roles
                         .stream()
-                        .filter(r -> r.getRoleName().equals("ROLE_UNCONFIRMED"))
-                        .findFirst()
-                        .orElseThrow(() ->
-                                new IllegalStateException(
-                                        String.format(
-                                                "Account #%d is already confirmed",
-                                                data.getPersonId())
-                                )
-                        );
+                        .anyMatch(r -> r.getRoleName().equals("ROLE_UNCONFIRMED"));
 
-        PersonRole personRole = new PersonRole();
-        personRole.setPersonId(data.getPersonId());
-        personRole.setRoleId(unconfirmedRole.getRoleId());
-        personRoleDao.delete(personRole);
+        if (!unconfirmedUser) {
+            logger.error("User #%s already confirmed account", user.getId());
+            throw new IllegalStateException("Account already confirmed");
+        }
 
         Role clientRole = roleDao.getByName("ROLE_USER")
                 .orElseThrow(() -> new IllegalStateException("Can't find 'User' role"));
 
-        PersonRole client = new PersonRole();
-        client.setPersonId(data.getPersonId());
-        client.setRoleId(clientRole.getRoleId());
-        personRoleDao.save(client);
-    }
-
-    private Person getPersonData(RegistrationForm form) {
-        Person data = new Person();
-
-        data.setUserName(form.getUsername());
-        data.setPassword(passwordEncoder.encode(form.getPassword()));
-        data.getContact().setEmail(form.getEmail());
-        data.setRegistrationDate(LocalDateTime.now());
-
-        return data;
-    }
-
-    private Contact getContactData(RegistrationForm form) {
-        Contact data = new Contact();
-
-        data.setFirstName(form.getFirstName());
-        data.setLastName(form.getLastName());
-        data.setPhoneNumber(form.getPhoneNumber());
-
-        return data;    
+        user.setRoles(Collections.singleton(clientRole));
+        personDao.save(user);
     }
 
     private UUID generateId() {

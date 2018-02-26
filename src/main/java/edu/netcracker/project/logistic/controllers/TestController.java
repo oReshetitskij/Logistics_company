@@ -12,6 +12,7 @@ import edu.netcracker.project.logistic.service.PersonService;
 import edu.netcracker.project.logistic.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +38,10 @@ public class TestController {
     AddressDaoImpl addressDao;
     private RoleService roleService;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public TestController(PersonService personService, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
+    public TestController(PersonService personService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.personService = personService;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;

@@ -1,6 +1,8 @@
 package edu.netcracker.project.logistic.formatter;
 
+import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.model.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +11,21 @@ import java.util.Locale;
 
 @Component
 public class RoleFormatter implements Formatter<Role> {
+    private RoleCrudDao roleDao;
+
+    @Autowired
+    public RoleFormatter(RoleCrudDao roleDao) {
+        this.roleDao = roleDao;
+    }
+
     @Override
     public Role parse(String text, Locale locale) throws ParseException {
-        throw new ParseException("This parser can only convert to String", 0);
+        try {
+            return roleDao.findOne(Long.parseLong(text))
+                    .orElseThrow(() -> new ParseException("Invalid role id", 0));
+        } catch (NumberFormatException ex) {
+            throw new ParseException("Invalid role id", 0);
+        }
     }
 
     @Override

@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Service
 public interface PersonService {
-
     void savePerson(Person person);
 
     void delete(Long aLong);
@@ -19,8 +18,4 @@ public interface PersonService {
     Optional<Person> findOne(String username);
 
     boolean exists(Long aLong);
-
-
-
-
 }

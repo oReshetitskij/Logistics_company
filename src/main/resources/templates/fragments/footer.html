@@ -3,24 +3,24 @@
 <head>
 </head>
 <body>
-<div th:fragment="footer">
+<th:block th:fragment="footer">
 
 
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- jQuery local fallback -->
-    <script type="text/javascript">
-        <![CDATA[
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
         window.jQuery || document.write('<script src="../../static/local/jquery.min.js"><\/script>')
-        ]]>
+        /*]]>*/
     </script>
     <!-- Bootstrap JS CDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Bootstrap JS local fallback -->
-    <script>
-        <![CDATA[
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         if(typeof($.fn.modal) === 'undefined') {document.write('<script src="../../static/local/bootstrap.min.js"><\/script>')}
-        ]]>
+        /*]]>*/
     </script>
     <!-- Bootstrap CSS local fallback -->
     <div id="bootstrapCssTest" class="hidden"></div>
@@ -33,6 +33,6 @@
     </script>
 
 
-</div>
+</th:block>
 </body>
 </html>

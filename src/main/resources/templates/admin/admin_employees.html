@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <th:block th:replace="fragments/header :: header-bootstrap-config" />
-
-
     <th:block th:replace="fragments/header :: header-bootstrap-config-IE" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../../static/css/admin.css" />
+    <script th:src="@{/js/forms.js}" src="../../static/js/forms.js"></script>
+    <style>
+        @media (min-width: 768px)  {
+            #from-date {
+                margin-right: 5px;
+            }
+        }
 
-    <link rel="stylesheet" th:href="@{/css/admin.css}" type="text/css" href="../static/css/admin.css" />
+        @media (max-width: 767px) {
+            #from-date {
+                margin-bottom: 5px;
+            }
+        }
 
-
+        .glyphicon-search {
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
@@ -26,30 +38,47 @@
 
                 <div class="col-lg-10 col-md-6  col-lg-offset-1">
                     <div class="well">
-                        <h3 align="center">Search Filter</h3>
-                        <form class="form-horizontal">
+                        <h3 align="center">Search Filters</h3>
+                        <form method="get" class="form-horizontal"
+                              th:object="${searchForm}">
 
                             <div class="form-group">
-                                <label for="first_name" class="control-label">First Name</label>
-                                <input type="text" class="form-control" id="first_name" />
+                                <label for="first-name" class="control-label">First Name</label>
+                                <input type="text" class="form-control" id="first-name"
+                                    th:field="*{firstName}" />
                             </div>
 
                             <div class="form-group">
-                                <label for="last_name" class="control-label">Last Name</label>
-                                <input type="text" class="form-control" id="last_name" />
+                                <label for="last-name" class="control-label">Last Name</label>
+                                <input type="text" class="form-control" id="last-name"
+                                    th:field="*{lastName}"/>
                             </div>
 
                             <div class="form-group">
-                                <label for="employee_type" class="control-label">Role</label>
-                                <select class="form-control" name="" id="employee_type">
-                                    <option value="">Any</option>
-                                    <option value="">Manager</option>
-                                    <option value="">Call center agent</option>
-                                    <option value="">Courier</option>
+                                <label for="role" class="control-label">Role</label>
+                                <br />
+                                <select id="role" multiple="multiple"
+                                        th:field="*{roleIds}">
+                                    <option th:each="role: ${availableRoles}"
+                                            th:value="${role.roleId}"
+                                            th:text="${{role}}">Role</option>
                                 </select>
                             </div>
 
-                            <p class="text-center"><a href="#" class="btn btn-danger glyphicon glyphicon-search" role="button"></a></p>
+                            <div class="form-group">
+                                <label class="control-label">Registration date interval</label>
+                                <div class="form-inline">
+                                    <input type="date" class="form-control" id="from-date" title="From"
+                                        th:field="*{{from}}"/>
+                                    <input type="date" class="form-control" id="to-date" title="To"
+                                        th:field="*{{to}}"/>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary">
+                                <a href="#" class="glyphicon glyphicon-search"></a>
+                                Search
+                            </button>
                         </form>
                     </div>
 
@@ -90,11 +119,14 @@
     </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer">
-    </div>
+    <th:block th:replace="fragments/footer :: footer"/>
+    <th:block th:replace="fragments/left_menu :: left-menu-footer" />
 
-    <div th:replace="fragments/left_menu :: left-menu-footer">
-    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" type="text/css"/>
 
+    <script>
+        createMultiSelect("#role");
+    </script>
 </body>
 </html>

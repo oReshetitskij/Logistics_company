@@ -13,11 +13,10 @@ import java.util.Optional;
 @Service
 public class PersonServiceImpl implements PersonService {
     private PasswordEncoder passwordEncoder;
-
     private PersonCrudDao personCrudDao;
 
     @Autowired
-    public PersonServiceImpl(BCryptPasswordEncoder passwordEncoder, PersonCrudDao personCrudDao) {
+    public PersonServiceImpl(PersonCrudDao personCrudDao, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.personCrudDao = personCrudDao;
     }

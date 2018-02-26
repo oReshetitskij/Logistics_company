@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Service
 public interface RoleService {
-
     void save(Role role);
 
     void delete(Long aLong);
@@ -22,4 +21,6 @@ public interface RoleService {
     List<Role> findRolesByPersonId(Long id);
 
     List<Role> findEmployeeRoles();
+
+    List<Role> findClientRoles();
 }

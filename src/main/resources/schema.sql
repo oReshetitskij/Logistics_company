@@ -146,6 +146,8 @@ ALTER TABLE "logistic_company"."person"
   ADD UNIQUE ("contact_id");
 ALTER TABLE "logistic_company"."contact"
   ADD UNIQUE ("email");
+ALTER TABLE "logistic_company"."contact"
+  ADD UNIQUE ("phone_number");
 ALTER TABLE logistic_company.registration_link
   ADD UNIQUE (person_id);
 
@@ -226,7 +228,7 @@ DECLARE
   row_count INT;
 BEGIN
   DELETE FROM person
-  WHERE person.registration_date < NOW() - INTERVAL '20 second' AND person_id IN (SELECT person_id
+  WHERE person.registration_date < NOW() - INTERVAL '24 hour' AND person_id IN (SELECT person_id
                                                                                   FROM person_role
                                                                                   WHERE role_id IN (SELECT
                                                                                                       logistic_company.role.role_id

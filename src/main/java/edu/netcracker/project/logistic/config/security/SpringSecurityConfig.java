@@ -24,15 +24,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SpringSecurityConfig(AccessDeniedHandler accessDeniedHandler,
-                                AuthenticationSuccessHandler authenticationSuccessHandler,
-                                UserDetailsService userDetailsService
-    ) {
+                                AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.accessDeniedHandler = accessDeniedHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.userDetailsService = userDetailsService;
     }
 
+    public UserDetailsService getUserDetailsService() {
+        return userDetailsService;
+    }
 
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
