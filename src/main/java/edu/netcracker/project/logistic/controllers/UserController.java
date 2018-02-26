@@ -78,6 +78,7 @@ public class UserController {
         }
 
         Person person = optionalPerson.get();
+        String oldUsername = person.getUserName();
         person.setUserName(userForm.getUserName());
         Contact contact = person.getContact();
         contact.setFirstName(userForm.getFirstName());
@@ -93,6 +94,12 @@ public class UserController {
         }
 
         userService.update(person);
+
+        if (!oldUsername.equals(person.getUserName())){
+            SecurityContextHolder.clearContext();
+            return "redirect:/login?changeUsername";
+        }
+
         return "redirect:/user/personal?save";
     }
 
