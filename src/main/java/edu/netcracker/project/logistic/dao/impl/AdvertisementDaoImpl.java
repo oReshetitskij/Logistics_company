@@ -46,10 +46,11 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
         jdbcTemplate.update(psc -> {
             String query = getInsertQuery();
             PreparedStatement ps = psc.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, advertisement.getName());
+            ps.setObject(1, advertisement.getCaption());
             ps.setObject(2, advertisement.getDescription());
             ps.setObject(3, LocalDateTime.now());
-            ps.setObject(4, advertisement.getType().getId());
+            ps.setObject(4, LocalDateTime.now().plusWeeks(2));
+            ps.setObject(5, advertisement.getType().getId());
             return ps;
         }, keyHolder);
         Number key = (Number) keyHolder.getKeys().get("advertisement_id");

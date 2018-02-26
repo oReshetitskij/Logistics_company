@@ -55,7 +55,7 @@ public class AdminController {
     }
 
     @PostMapping("/advertisements")
-    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement, Model model) {
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement) {
         advertisementService.save(advertisement);
         return "redirect:/admin/advertisements?success";
     }
