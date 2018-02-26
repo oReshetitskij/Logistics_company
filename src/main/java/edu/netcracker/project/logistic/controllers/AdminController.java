@@ -48,14 +48,22 @@ public class AdminController {
 
     @GetMapping("/advertisements")
     public String adminAdvertisements(Model model) {
-        Advertisement advertisement = new Advertisement();
-        advertisement.setType(new AdvertisementType());
-        model.addAttribute("advertisement", advertisement);
+        AdvertisementForm advertisementForm = new AdvertisementForm();
+        model.addAttribute("advertisement", advertisementForm);
         return "/admin/admin_advertisements";
     }
 
     @PostMapping("/advertisements")
-    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement) {
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm) {
+
+        Advertisement advertisement = new Advertisement();
+        advertisement.setId(advertisementForm.getId());
+        advertisement.setCaption(advertisementForm.getCaption());
+        advertisement.setDescription(advertisementForm.getDescription());
+        AdvertisementType advertisementType = new AdvertisementType();
+        advertisementType.setName(advertisementForm.getType());
+        advertisement.setType(advertisementType);
+
         advertisementService.save(advertisement);
         return "redirect:/admin/advertisements?success";
     }
