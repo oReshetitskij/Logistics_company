@@ -4,6 +4,7 @@ import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.model.Person;
 import edu.netcracker.project.logistic.model.Role;
+import edu.netcracker.project.logistic.model.SearchForm;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,4 +18,5 @@ public interface EmployeeService {
     Optional<Person> findOne(Long id);
     List<Person> findAll();
     boolean contains(Long id);
+    List<Person> search(SearchForm searchForm);
 }

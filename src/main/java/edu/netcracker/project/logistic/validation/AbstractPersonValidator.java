@@ -31,6 +31,9 @@ public abstract class AbstractPersonValidator {
     }
 
     protected void checkContactData(Person employee, Errors errors) {
+        Person person = personDao.findOne(employee.getId()).orElse(employee);
+        employee.getContact().setContactId(person.getContact().getContactId());
+
         Contact contact = employee.getContact();
         List<Contact> duplicates =
                 contactDao.findByPhoneNumberOrEmail(contact.getPhoneNumber(), contact.getEmail());

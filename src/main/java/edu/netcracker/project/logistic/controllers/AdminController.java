@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -66,24 +67,26 @@ public class AdminController {
     }
 
     @GetMapping("/employees")
-    public String getAllEmployees(Model model) {
-        model.addAttribute("employees", employeeService.findAll());
+    public String getAllEmployees(Model model, @ModelAttribute("searchForm") SearchForm searchForm) {
+        List<Person> employees = employeeService.search(searchForm);
+        model.addAttribute("employees", employees);
+        model.addAttribute("availableRoles", roleService.findEmployeeRoles());
         return "/admin/admin_employees";
     }
 
     @GetMapping("/crud/employee/{id}")
     public String employeeProfile(@PathVariable long id, Model model) {
-        model.addAttribute("newEmployee", false);
-
         Optional<Person> opt = employeeService.findOne(id);
         if (!opt.isPresent()) {
             return "redirect:/error/404";
         }
         Person emp = opt.get();
-
         List<Role> employeeRoles = roleService.findEmployeeRoles();
-        model.addAttribute("roles", employeeRoles);
+
+        model.addAttribute("newEmployee", false);
         model.addAttribute("employee", emp);
+        model.addAttribute("availableRoles", employeeRoles);
+
 
         return "/admin/admin_crud_employee";
     }
@@ -92,12 +95,12 @@ public class AdminController {
     public String updateEmployee(@PathVariable long id, Model model,
                                  @ModelAttribute("employee") Person employee,
                                  BindingResult result) {
+        employee.setId(id);
         employeeValidator.validateUpdateData(employee, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
             model.addAttribute("newEmployee", false);
-            model.addAttribute("roles", employeeRoles);
-
+            model.addAttribute("availableRoles", employeeRoles);
             return "/admin/admin_crud_employee";
         }
         employee.setId(id);
