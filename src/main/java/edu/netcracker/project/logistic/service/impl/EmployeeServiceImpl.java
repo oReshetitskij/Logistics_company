@@ -5,10 +5,7 @@ import edu.netcracker.project.logistic.dao.PersonCrudDao;
 import edu.netcracker.project.logistic.dao.PersonRoleDao;
 import edu.netcracker.project.logistic.dao.RoleCrudDao;
 import edu.netcracker.project.logistic.exception.NonUniqueRecordException;
-import edu.netcracker.project.logistic.model.Contact;
-import edu.netcracker.project.logistic.model.Person;
-import edu.netcracker.project.logistic.model.PersonRole;
-import edu.netcracker.project.logistic.model.Role;
+import edu.netcracker.project.logistic.model.*;
 import edu.netcracker.project.logistic.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,5 +108,27 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean contains(Long id) {
         return findOne(id).isPresent();
+    }
+
+    @Override
+    public List<Person> search(SearchForm searchForm) {
+        Set<Long> availableRoleIds =
+                roleDao
+                        .findEmployeeRoles()
+                        .stream()
+                        .map(Role::getRoleId)
+                        .collect(Collectors.toSet());
+        List<Long> searchRoleIds = (searchForm.getRoleIds() != null) ? searchForm.getRoleIds() : new ArrayList<>();
+        // Leave only employee roles
+        for (Long id: searchRoleIds) {
+            if (!availableRoleIds.contains(id)) {
+                searchRoleIds.remove(id);
+            }
+        }
+        if (searchRoleIds.isEmpty()) {
+            searchRoleIds.addAll(availableRoleIds);
+        }
+        searchForm.setRoleIds(searchRoleIds);
+        return personDao.search(searchForm);
     }
 }

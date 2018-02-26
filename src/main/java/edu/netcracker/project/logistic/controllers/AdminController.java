@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +67,10 @@ public class AdminController {
     }
 
     @GetMapping("/employees")
-    public String getAllEmployees(Model model) {
-        model.addAttribute("employees", employeeService.findAll());
+    public String getAllEmployees(Model model, @ModelAttribute("searchForm") SearchForm searchForm) {
+        List<Person> employees = employeeService.search(searchForm);
+        model.addAttribute("employees", employees);
+        model.addAttribute("availableRoles", roleService.findEmployeeRoles());
         return "/admin/admin_employees";
     }
 
