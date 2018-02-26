@@ -95,6 +95,7 @@ public class AdminController {
     public String updateEmployee(@PathVariable long id, Model model,
                                  @ModelAttribute("employee") Person employee,
                                  BindingResult result) {
+        employee.setId(id);
         employeeValidator.validateUpdateData(employee, result);
         if (result.hasErrors()) {
             List<Role> employeeRoles = roleService.findEmployeeRoles();
