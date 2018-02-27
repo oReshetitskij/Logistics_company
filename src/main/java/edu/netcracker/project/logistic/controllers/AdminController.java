@@ -57,7 +57,6 @@ public class AdminController {
     public String publishAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm) {
 
         Advertisement advertisement = new Advertisement();
-        advertisement.setId(advertisementForm.getId());
         advertisement.setCaption(advertisementForm.getCaption());
         advertisement.setDescription(advertisementForm.getDescription());
         AdvertisementType advertisementType = new AdvertisementType();
@@ -68,13 +67,46 @@ public class AdminController {
         return "redirect:/admin/crud/advertisement?success";
     }
 
+    @GetMapping("/crud/advertisement/update/{id}")
+    public String showAdvertisementData(@PathVariable long id, Model model){
+        AdvertisementForm advertisementForm = new AdvertisementForm();
+
+        Optional<Advertisement> advertisementOptional = advertisementService.findOne(id);
+        if (!advertisementOptional.isPresent()){
+            return "redirect:/error/404";
+        }
+
+        Advertisement advertisement = advertisementOptional.get();
+        advertisementForm.setId(advertisement.getId());
+        advertisementForm.setCaption(advertisement.getCaption());
+        advertisementForm.setDescription(advertisement.getDescription());
+        advertisementForm.setType(advertisement.getType().getName());
+
+        model.addAttribute("advertisement", advertisementForm);
+        model.addAttribute("update", true);
+        return "/admin/admin_crud_advertisement";
+    }
+
     @PostMapping("/crud/advertisement/update/{id}")
-    public String updateAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm){
-        return null;
+    public String updateAdvertisement(@PathVariable long id,
+                                      @ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm){
+
+        Optional<Advertisement> advertisementOptional = advertisementService.findOne(id);
+        if (!advertisementOptional.isPresent()){
+            return "redirect:/error/404";
+        }
+
+        Advertisement advertisement = advertisementOptional.get();
+        advertisement.setCaption(advertisementForm.getCaption());
+        advertisement.setDescription(advertisementForm.getDescription());
+        advertisement.getType().setName(advertisementForm.getType());
+        advertisementService.update(advertisement);
+
+        return "redirect:/admin/advertisements?update=success";
     }
 
     @PostMapping("/crud/advertisement/delete/{id}")
-    public String deleteAdvertisement(@PathVariable long id, Model model){
+    public String deleteAdvertisement(@PathVariable long id){
         advertisementService.delete(id);
         return "redirect:/admin/advertisements?delete=success";
     }

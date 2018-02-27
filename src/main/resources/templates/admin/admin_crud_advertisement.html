@@ -23,7 +23,13 @@
         <div class="side-body">
             <div class="row">
 
-                <h1 style="text-align:center"> Create new advertisement </h1>
+                <div th:if="${update}">
+                    <h3 align="center">Update advertisement</h3>
+                </div>
+                <div th:unless="${update}">
+                    <h1 style="text-align:center"> Create new advertisement </h1>
+                </div>
+
 
                 <div class="col-lg-10 col-md-6  col-lg-offset-1">
 
@@ -35,9 +41,13 @@
 
                     <div class="well">
 
-                        <h3 align="center">New Advertisement</h3>
+                        <div th:unless="${update}">
+                            <h3 align="center">New Advertisement</h3>
+                        </div>
 
-                        <form class="form-horizontal" method="post" th:action= "@{/admin/crud/advertisement}" th:object="${advertisement}" >
+                        <form class="form-horizontal" method="post"
+                              th:action="${update} ? @{'/admin/crud/advertisement/update/' + ${advertisement.id}} : @{/admin/crud/advertisement}"
+                              th:object="${advertisement}" >
 
                             <div class="form-group">
                                 <label for="advertisement_type" class="control-label">Type</label>
@@ -61,7 +71,7 @@
                                           required="required" minlength="10" maxlength="1000"></textarea>
                             </div>
 
-                            <p class="text-center"><input type="submit"  class="btn btn-success" value="Publish" /></p>
+                            <p class="text-center"><input type="submit" class="btn btn-success" value="Publish" /></p>
                         </form>
 
                     </div>
@@ -72,10 +82,7 @@
     </div>
 
     <th:block th:replace="fragments/footer :: footer"/>
-
-
     <th:block th:replace="fragments/left_menu :: left-menu-footer" />
-
 
 </body>
 </html>

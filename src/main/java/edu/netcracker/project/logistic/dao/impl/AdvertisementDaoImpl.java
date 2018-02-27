@@ -8,6 +8,7 @@ import edu.netcracker.project.logistic.model.AdvertisementType;
 import edu.netcracker.project.logistic.model.Contact;
 import edu.netcracker.project.logistic.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -82,6 +83,22 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
     }
 
     @Override
+    public void update(Advertisement advertisement){
+
+        AdvertisementType advertisementType = advertisement.getType();
+        String advertisementTypeName = advertisementType.getName();
+        Optional<AdvertisementType> type = advertisementTypeDao.getByName(advertisementTypeName);
+        if (type.isPresent()) {
+            advertisement.setType(type.get());
+        }
+        jdbcTemplate.update(getUpdateQuery(),
+                advertisement.getCaption(),
+                advertisement.getDescription(),
+                advertisement.getType().getId(),
+                advertisement.getId());
+    }
+
+    @Override
     public void delete(Long id) {
         jdbcTemplate.update(getDeleteQuery(), ps ->
         {
@@ -89,9 +106,20 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
         });
     }
 
+
+
     @Override
-    public Optional<Advertisement> findOne(Long aLong) {
-        return Optional.empty();
+    public Optional<Advertisement> findOne(Long id) {
+
+        try {
+            Advertisement advertisement = jdbcTemplate.queryForObject(
+                    getFindOneQuery(),
+                    new Object[]{id},
+                    getMapper());
+            return Optional.of(advertisement);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -109,6 +137,10 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
         return null;
     }
 
+    String getUpdateQuery() {
+        return queryService.getQuery("update.advertisement");
+    }
+
     @Override
     public String getDeleteQuery() {
         return queryService.getQuery("delete.advertisement");
@@ -116,7 +148,7 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
 
     @Override
     public String getFindOneQuery() {
-        return null;
+        return queryService.getQuery("select.advertisement");
     }
 
     public String getAllAdvertisements(){
