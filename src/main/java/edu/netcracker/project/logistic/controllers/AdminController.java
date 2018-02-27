@@ -46,14 +46,14 @@ public class AdminController {
         this.employeeValidator = employeeValidator;
     }
 
-    @GetMapping("/advertisements")
-    public String adminAdvertisements(Model model) {
+    @GetMapping("/crud/advertisement")
+    public String crateAdvertisementForm(Model model) {
         AdvertisementForm advertisementForm = new AdvertisementForm();
         model.addAttribute("advertisement", advertisementForm);
-        return "/admin/admin_advertisements";
+        return "/admin/admin_crud_advertisement";
     }
 
-    @PostMapping("/advertisements")
+    @PostMapping("/crud/advertisement")
     public String publishAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm) {
 
         Advertisement advertisement = new Advertisement();
@@ -65,8 +65,26 @@ public class AdminController {
         advertisement.setType(advertisementType);
 
         advertisementService.save(advertisement);
-        return "redirect:/admin/advertisements?success";
+        return "redirect:/admin/crud/advertisement?success";
     }
+
+    @PostMapping("/crud/advertisement/update/{id}")
+    public String updateAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm){
+        return null;
+    }
+
+    @PostMapping("/crud/advertisement/delete/{id}")
+    public String deleteAdvertisement(@PathVariable long id, Model model){
+        advertisementService.delete(id);
+        return "redirect:/admin/advertisements?delete=success";
+    }
+
+    @GetMapping("/advertisements")
+    public String getAllAdvertisements(Model model){
+        model.addAttribute("advertisements", advertisementService.findAll());
+        return "/admin/admin_advertisements";
+    }
+
 
     @GetMapping("/offices")
     public String getAllOffice(Model model) {

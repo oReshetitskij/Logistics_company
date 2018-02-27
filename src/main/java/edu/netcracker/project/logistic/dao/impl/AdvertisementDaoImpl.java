@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,12 +26,33 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
     private JdbcTemplate jdbcTemplate;
     private QueryService queryService;
     private AdvertisementTypeDao advertisementTypeDao;
+    private RowMapper<AdvertisementType> advertisementTypeRowMapper;
 
     @Autowired
-    public AdvertisementDaoImpl(JdbcTemplate jdbcTemplate, QueryService queryService, AdvertisementTypeDao advertisementTypeDao) {
+    public AdvertisementDaoImpl(JdbcTemplate jdbcTemplate,
+                                QueryService queryService,
+                                AdvertisementTypeDao advertisementTypeDao,
+                                RowMapper<AdvertisementType> advertisementTypeRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryService = queryService;
         this.advertisementTypeDao = advertisementTypeDao;
+        this.advertisementTypeRowMapper = advertisementTypeRowMapper;
+    }
+
+    private RowMapper<Advertisement> getMapper() {
+        return (resultSet, i) ->
+        {
+            Advertisement advertisement = new Advertisement();
+            advertisement.setId(resultSet.getLong("advertisement_id"));
+            advertisement.setCaption(resultSet.getString("caption"));
+            advertisement.setDescription(resultSet.getString("description"));
+            advertisement.setPublicationDate(resultSet.getTimestamp("publication_date").toLocalDateTime());
+
+            AdvertisementType advertisementType = advertisementTypeRowMapper.mapRow(resultSet, i);
+            advertisement.setType(advertisementType);
+
+            return advertisement;
+        };
     }
 
     @Override
@@ -70,6 +92,11 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
     }
 
     @Override
+    public List<Advertisement> allOffices() {
+        return jdbcTemplate.query(getAllAdvertisements(), getMapper());
+    }
+
+    @Override
     public String getInsertQuery() {
         return queryService.getQuery("insert.advertisement");
     }
@@ -87,5 +114,9 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
     @Override
     public String getFindOneQuery() {
         return null;
+    }
+
+    public String getAllAdvertisements(){
+        return queryService.getQuery("all.advertisements");
     }
 }
