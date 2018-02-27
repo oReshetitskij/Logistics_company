@@ -1,10 +1,13 @@
 package edu.netcracker.project.logistic.model;
 
+import java.time.LocalDateTime;
+
 public class Advertisement {
 
     private Long id;
-    private String name;
+    private String caption;
     private String description;
+    private LocalDateTime publicationDate;
     private AdvertisementType type;
 
     public Long getId() {
@@ -15,12 +18,12 @@ public class Advertisement {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCaption() {
+        return caption;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public String getDescription() {
@@ -29,6 +32,14 @@ public class Advertisement {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(LocalDateTime publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public AdvertisementType getType() {
@@ -43,7 +54,7 @@ public class Advertisement {
     public String toString() {
         return "Advertisement{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", caption='" + caption + '\'' +
                 ", description='" + description + '\'' +
                 ", type=" + type +
                 '}';

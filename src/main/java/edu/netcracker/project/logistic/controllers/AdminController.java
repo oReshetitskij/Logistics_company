@@ -46,19 +46,77 @@ public class AdminController {
         this.employeeValidator = employeeValidator;
     }
 
-    @GetMapping("/advertisements")
-    public String adminAdvertisements(Model model) {
+    @GetMapping("/crud/advertisement")
+    public String crateAdvertisementForm(Model model) {
+        AdvertisementForm advertisementForm = new AdvertisementForm();
+        model.addAttribute("advertisement", advertisementForm);
+        return "/admin/admin_crud_advertisement";
+    }
+
+    @PostMapping("/crud/advertisement")
+    public String publishAdvertisement(@ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm) {
+
         Advertisement advertisement = new Advertisement();
-        advertisement.setType(new AdvertisementType());
-        model.addAttribute("advertisement", advertisement);
+        advertisement.setCaption(advertisementForm.getCaption());
+        advertisement.setDescription(advertisementForm.getDescription());
+        AdvertisementType advertisementType = new AdvertisementType();
+        advertisementType.setName(advertisementForm.getType());
+        advertisement.setType(advertisementType);
+
+        advertisementService.save(advertisement);
+        return "redirect:/admin/crud/advertisement?success";
+    }
+
+    @GetMapping("/crud/advertisement/update/{id}")
+    public String showAdvertisementData(@PathVariable long id, Model model){
+        AdvertisementForm advertisementForm = new AdvertisementForm();
+
+        Optional<Advertisement> advertisementOptional = advertisementService.findOne(id);
+        if (!advertisementOptional.isPresent()){
+            return "redirect:/error/404";
+        }
+
+        Advertisement advertisement = advertisementOptional.get();
+        advertisementForm.setId(advertisement.getId());
+        advertisementForm.setCaption(advertisement.getCaption());
+        advertisementForm.setDescription(advertisement.getDescription());
+        advertisementForm.setType(advertisement.getType().getName());
+
+        model.addAttribute("advertisement", advertisementForm);
+        model.addAttribute("update", true);
+        return "/admin/admin_crud_advertisement";
+    }
+
+    @PostMapping("/crud/advertisement/update/{id}")
+    public String updateAdvertisement(@PathVariable long id,
+                                      @ModelAttribute(value = "advertisement") AdvertisementForm advertisementForm){
+
+        Optional<Advertisement> advertisementOptional = advertisementService.findOne(id);
+        if (!advertisementOptional.isPresent()){
+            return "redirect:/error/404";
+        }
+
+        Advertisement advertisement = advertisementOptional.get();
+        advertisement.setCaption(advertisementForm.getCaption());
+        advertisement.setDescription(advertisementForm.getDescription());
+        advertisement.getType().setName(advertisementForm.getType());
+        advertisementService.update(advertisement);
+
+        return "redirect:/admin/advertisements?update=success";
+    }
+
+    @PostMapping("/crud/advertisement/delete/{id}")
+    public String deleteAdvertisement(@PathVariable long id){
+        advertisementService.delete(id);
+        return "redirect:/admin/advertisements?delete=success";
+    }
+
+    @GetMapping("/advertisements")
+    public String getAllAdvertisements(Model model){
+        model.addAttribute("advertisements", advertisementService.findAll());
         return "/admin/admin_advertisements";
     }
 
-    @PostMapping("/advertisements")
-    public String publishAdvertisement(@ModelAttribute(value = "advertisement") Advertisement advertisement, Model model) {
-        advertisementService.save(advertisement);
-        return "redirect:/admin/advertisements?success";
-    }
 
     @GetMapping("/offices")
     public String getAllOffice(Model model) {
