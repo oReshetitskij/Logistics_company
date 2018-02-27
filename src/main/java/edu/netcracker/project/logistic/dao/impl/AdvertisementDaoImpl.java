@@ -82,8 +82,11 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        jdbcTemplate.update(getDeleteQuery(), ps ->
+        {
+            ps.setObject(1, id);
+        });
     }
 
     @Override
@@ -108,7 +111,7 @@ public class AdvertisementDaoImpl implements AdvertisementDao, QueryDao {
 
     @Override
     public String getDeleteQuery() {
-        return null;
+        return queryService.getQuery("delete.advertisement");
     }
 
     @Override
