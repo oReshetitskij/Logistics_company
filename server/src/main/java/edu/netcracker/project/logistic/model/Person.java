@@ -1,5 +1,6 @@
 package edu.netcracker.project.logistic.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -56,6 +57,7 @@ public class Person {
         this.password = password;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }

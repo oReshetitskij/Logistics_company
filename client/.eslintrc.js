@@ -25,10 +25,9 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
-    // don't require .vue extension when importing
+    // don't require .vue extension when importing in js files
     'import/extensions': ['error', 'always', {
       js: 'never',
-      vue: 'never'
     }],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
@@ -40,6 +39,14 @@ module.exports = {
         'e' // for e.returnvalue
       ]
     }],
+    // disallow dangling commas
+    "comma-dangle": ["error", "never"],
+    // remove rule for parens if body is multiline
+    "arrow-parens": "off",
+    // exclude 'err' for API requests
+    "no-unused-vars": ["error", { "argsIgnorePattern": "err" }],
+    // double quoutes
+    "quotes": ["error", "double"],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {
       optionalDependencies: ['test/unit/index.js']

@@ -42,6 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/**").permitAll() // Temporary allow API request for everyone
                 .antMatchers("/", "/index", "/registration", "/registration/complete", "/registration/confirm", "/test", "/login/forgot/password").permitAll()
                 .antMatchers("/employee").hasAnyRole("ADMIN", "MANAGER", "COURIER", "CALL_CENTER_AGENT")
                 .antMatchers("/user").hasRole("USER")
