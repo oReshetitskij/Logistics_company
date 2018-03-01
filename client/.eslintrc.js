@@ -47,6 +47,8 @@ module.exports = {
     "no-unused-vars": ["error", { "argsIgnorePattern": "err" }],
     // double quoutes
     "quotes": ["error", "double"],
+    // CRLF line endings
+    "linebreak-style": ["error", "windows"],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {
       optionalDependencies: ['test/unit/index.js']

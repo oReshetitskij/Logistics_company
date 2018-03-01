@@ -18,8 +18,12 @@
                 <div class="form-group">
                     <label for="role" class="control-label">Role</label>
                     <br />
-                    <select id="role" multiple>
-                        <option>Role</option>
+                    <select id="role" v-model="searchForm.roleIds" multiple>
+                        <option v-for="role in roles"
+                            :value="role.roleId"
+                            :key="role.roleId">
+                            {{ role.roleName }}
+                        </option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -87,6 +91,7 @@ export default {
         to: ""
       },
       employees: [],
+      roles: [],
       requestFailed: false
     };
   },
@@ -118,6 +123,19 @@ export default {
     }
   },
   mounted() {
+    // Load all roles
+    this.changeLoading(true);
+    fetch("http://localhost:8090/api/employees/roles")
+      .then(res => res.json())
+      .then(roles => {
+        this.changeLoading(false);
+        this.roles = roles;
+      })
+      .catch(err => {
+        this.changeLoading(false);
+      });
+
+    // Load all employees
     this.changeLoading(true);
     fetch("http://localhost:8090/api/employees")
       .then(res => res.json())
