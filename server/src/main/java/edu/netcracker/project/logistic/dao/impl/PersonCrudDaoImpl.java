@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,7 +110,6 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
         {
             ps.setObject(1, aLong);
         });
-
     }
 
     @Override
@@ -201,14 +201,19 @@ public class PersonCrudDaoImpl implements PersonCrudDao, QueryDao, RowMapper<Per
         String lastName = searchForm.getLastName();
         lastName = lastName == null ? "%%" : String.format("%%%s%%", lastName);
 
-        LocalDateTime from = searchForm.getFrom();
-        if (from == null) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime from;
+        if (searchForm.getFrom() == null) {
             from = LocalDateTime.MIN;
+        } else {
+            from = now.with(searchForm.getFrom());
         }
 
-        LocalDateTime to = searchForm.getTo();
-        if (to == null) {
-            to = LocalDateTime.now();
+        LocalDateTime to;
+        if (searchForm.getTo() == null) {
+            to = now;
+        } else {
+            to = now.with(searchForm.getTo());
         }
 
         Map<String, Object> paramMap = new HashMap<>(5);

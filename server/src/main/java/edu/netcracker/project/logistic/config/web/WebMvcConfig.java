@@ -1,5 +1,6 @@
 package edu.netcracker.project.logistic.config.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,4 +33,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		return messageSource;
 	}
 
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper().findAndRegisterModules();
+	}
 }

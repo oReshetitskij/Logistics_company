@@ -1,13 +1,16 @@
 package edu.netcracker.project.logistic.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class SearchForm {
     private String firstName;
     private String lastName;
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private LocalDate from;
+    private LocalDate to;
     private List<Long> roleIds;
 
     public String getFirstName() {
@@ -26,19 +29,21 @@ public class SearchForm {
         this.lastName = lastName;
     }
 
-    public LocalDateTime getFrom() {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public LocalDate getFrom() {
         return from;
     }
 
-    public void setFrom(LocalDateTime from) {
+    public void setFrom(LocalDate from) {
         this.from = from;
     }
 
-    public LocalDateTime getTo() {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    public LocalDate getTo() {
         return to;
     }
 
-    public void setTo(LocalDateTime to) {
+    public void setTo(LocalDate to) {
         this.to = to;
     }
 

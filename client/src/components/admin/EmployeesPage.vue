@@ -7,11 +7,13 @@
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="first-name" class="control-label">First Name</label>
-                    <input type="text" class="form-control" id="first-name" />
+                    <input type="text" class="form-control" id="first-name"
+                        v-model="searchForm.firstName" />
                 </div>
                 <div class="form-group">
                     <label for="last-name" class="control-label">Last Name</label>
-                    <input type="text" class="form-control" id="last-name" />
+                    <input type="text" class="form-control" id="last-name"
+                        v-model="searchForm.lastName"/>
                 </div>
                 <div class="form-group">
                     <label for="role" class="control-label">Role</label>
@@ -24,9 +26,11 @@
                     <label class="control-label">Registration date interval</label>
                     <div class="form-inline">
                         <input type="date" class="form-control"
-                            id="from-date" title="From" />
+                            id="from-date" title="From"
+                            v-model="searchForm.from"/>
                         <input type="date" class="form-control"
-                            id="to-date" title="To"/>
+                            id="to-date" title="To"
+                            v-model="searchForm.to"/>
                     </div>
                 </div>
                 <button class="btn btn-primary" @click="onSearchClick">
@@ -78,7 +82,7 @@ export default {
       searchForm: {
         firstName: "",
         lastName: "",
-        role: [],
+        roleIds: [],
         from: "",
         to: ""
       },
@@ -87,7 +91,31 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["changeLoading"])
+    ...mapMutations(["changeLoading"]),
+    onSearchClick(e) {
+      if (e) e.preventDefault();
+
+      fetch("http://localhost:8090/api/employees/search", {
+        method: "POST",
+        body: JSON.stringify(this.searchForm),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          if (res.status === 200) return res.json();
+          throw Error("Invalid status code");
+        })
+        .then(emps => {
+          this.changeLoading(false);
+          this.requestFailed = false;
+          this.employees = emps;
+        })
+        .catch(err => {
+          this.changeLoading(false);
+          this.requestFailed = true;
+        });
+    }
   },
   mounted() {
     this.changeLoading(true);
